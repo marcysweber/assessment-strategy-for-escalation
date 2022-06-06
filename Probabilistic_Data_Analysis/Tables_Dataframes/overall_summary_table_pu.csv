@@ -1,0 +1,7 @@
+,Knowledge.Self,History.Self,Knowledge.Opponent,History.Opponent,Knowledge.Mutual,History.Mutual,
+Attack Proportion,0.5,0.5,0.5,0.5,0.5,0.5,0.5
+Directional Consitancy Index,0.408,0.413,0.450,0.383,0.432,0.394,0.413
+Triangle Transitivity,0.737,0.677,0.650,0.588,0.655,0.669,0.663
+Steepness,0.422,0.422,0.423,0.378,0.400,0.391,0.406
+Average Attacks,450.000,450.000,450.000,450.000,450.000,450.000,450.000
+Average Avoids,450.000,450.000,450.000,450.000,450.000,450.000,450.000
