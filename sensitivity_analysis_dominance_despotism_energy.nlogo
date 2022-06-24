@@ -143,6 +143,7 @@ to setup
     create-defeats-to other turtles
   ]
 
+  ;show regrowth-denominator
   set regrowth-rate (quality-max / regrowth-denominator)
 
 
@@ -179,7 +180,7 @@ to create_clumped_resources ;; picks a new center-point and then generates a clu
   ]
 
   let quality-range (range (quality-max-clumped / 2) quality-max-clumped)
-  show quality-range
+  ;show quality-range
 
   ask resource-patches [
 

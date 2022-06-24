@@ -12,9 +12,9 @@ nl <- nl(nlversion = "6.2.2",
 ch2vars <- list(
        #resource variables
        "quality-max-clumped" = list(min = 15, max = 50, qfun = "qunif"),
-       "quality-max-uniform" = list(min = 1, max = 10, qfun = "qunif"),
+       "quality-max-uniform" = list(min = 2, max = 10, qfun = "qunif"),
        "regrow-freq" = list(min = 10, max = 50, qfun = "qunif"),
-       "regrowth-denominator" = list(min = 1, max = 5, qfun = "qunif"),
+       "regrowth-denominator" = list(min = 2, max = 5, qfun = "qunif"),
       
        #sensory variables
        "max-nearest-primates" = list(min = 2, max = 10, qfun = "qunif"),
@@ -30,7 +30,6 @@ ch2vars <- list(
        "max-rhp" = list(min = 2, max = 10, qfun = "qunif"),
        "change-in-dom-score" = list(min = 0.001, max = 0.1, qfun = "qunif"),
        "dom-score-decay-when-high" = list(min = 0.001, max = 0.1, qfun = "qunif")
-       
 )
 
 nl@experiment <- experiment(expname = "ch2amnatMEErhpcl",
@@ -52,16 +51,16 @@ nl@experiment <- experiment(expname = "ch2amnatMEErhpcl",
 
 nl@simdesign <- simdesign_morris(nl = nl,
                                  morristype = "oat",
-                                 morrislevels = 5,
+                                 morrislevels = 13,
                                  morrisr = 1000,
-                                 morrisgridjump = 5, 
+                                 morrisgridjump = 7, 
                                  nseeds = 1)
 
 
 progressr::handlers("progress")
 
 library(future)
-plan(multicore)
+plan(multisession)
 
 resultsMorrisch2 <- progressr::with_progress(run_nl_all(nl))
 
