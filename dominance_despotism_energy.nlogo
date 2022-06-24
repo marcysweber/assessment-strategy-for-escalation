@@ -356,11 +356,10 @@ to move  ;; this is something already asked of primates, so don't ask primates a
   ;; movement will be a compromise between resources, movement cohesion, avoidance
 
 
-
+  ;; first, change direction via either "wander" or "forage"
   (ifelse
-    stored-energy = 0 [;; this is effectively a placeholder - want to instead look at the trend of energy loss
+    stored-energy = 0 [;; this is effectively a placeholder - agents started with 10 energy and never lost any, so this was never called.
       wander
-
     ]
     (not empty? visible-resources) [
       forage
@@ -369,15 +368,15 @@ to move  ;; this is something already asked of primates, so don't ask primates a
       wander
       ])
 
-
+  ;; then, check that path ahead is clear; if someone is there, decide whether to attack or not
   (ifelse any? other primates-on patch-ahead 1
     [decide_to_attack]
     [
       fd 1
       set daily-distance-traveled daily-distance-traveled + 1
-
   ])
 ;
+
   if any? other primates-here [
     move-to min-one-of (patches with [not any? primates-here]) [distance myself]
     ;show "I had to jump away because someone was there!"
@@ -389,11 +388,11 @@ to forage ;;
   ;;type "changing heading to " type max-one-of patches in-cone resource-detection-radius visual-angle [penergy] type "\n"
 end
 
-to wander ;; this is mutually exclusive with forage, disperse -
-  ; should it also include align, move-towards, etc?
+to wander ;; this is mutually exclusive with forage -
+
   set heading heading + ((random 30) - 15) ;; totally random turns
-  ;; this needs it's own algorithm to allow for no visible-resources, but can still do
-  ;; proximity behavior if it sees and primates
+
+
 end
 
 
@@ -412,13 +411,16 @@ end
 to-report new_headings
   let change-in-heading 0 ;;; i think this might be causing an issue
 
+  ;;agent responds to either conspecifics or resources
+
   carefully [
-  (ifelse (any? nearest-primates AND (distance min-one-of nearest-primates [distance myself]) > 7) [
-    set change-in-heading heading-towards-nearest-primates
+    (ifelse (any? nearest-primates AND (distance min-one-of nearest-primates [distance myself]) > 7) [
+      ;;agent is too far from other primates, so ignore resources and point towards nearest-primates
+      set change-in-heading heading-towards-nearest-primates
       ;show "heading towards " show nearest-primates
       set patch-picked no-patches
   ]
-  [ ;;; nearest-primates are close enough, so go about your business - or you have no nearest-primates at all
+  [ ;;; nearest-primates are close enough, so pick the best visible patch - or you have no nearest-primates at all
      (ifelse (is-patch? patch-picked) and (member? patch-picked visible-resources) [
           set change-in-heading towards patch-picked
           ;show "still heading towards" show patch-picked
@@ -1396,7 +1398,7 @@ false
 Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 @#$#@#$#@
-NetLogo 6.2.0
+NetLogo 6.2.2
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
