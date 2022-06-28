@@ -736,9 +736,118 @@ to-report avoids-complete
 end
 
 
+to-report n-interactions
+  report sum [attack-counter] of attacks + sum [avoid-counter] of fightsavoided
+end
+
+
+to-report proportion-attacking
+  let n-attacks sum [attack-counter] of attacks
+  let n-avoids sum [avoid-counter] of fightsavoided
+
+  report n-attacks / (n-attacks + n-avoids)
+
+end
+
+
+to-report dir-cons-index-wins
+  ;; directional consistency index is the average of the following for all dyads:
+  ;; (high - low) / (high + low)
+  ;; where high is the outcomes of the  behavioral actor of higher occurence and low is the behavioral outcomes of the actor with lower occurence
+
+  let dci 0
+  let dci-list []
+
+  ask primates [
+
+    ask other primates [
+      let a [victory-counter] of in-victory-from myself
+      let b [victory-counter] of out-victory-to myself
+
+    (ifelse (a > b) [ ;;did you win more than me?
+        let index (a - b) / (a + b)
+        set dci-list lput index dci-list
+
+      ][;; or did i win more than you?
+        let index (b - a) / (b + a)
+        set dci-list lput index dci-list
+      ])
+
+
+    ]
+  ]
+
+  set dci mean dci-list
+  report dci
+
+end
 
 
 
+to-report dir-cons-index-attacks
+  ;; directional consistency index is the average of the following for all dyads:
+  ;; (high - low) / (high + low)
+  ;; where high is the outcomes of the  behavioral actor of higher occurence and low is the behavioral outcomes of the actor with lower occurence
+
+  let dci 0
+  let dci-list []
+
+  ask primates [
+
+    ask other primates [
+      let a [attack-counter] of in-attack-from myself
+      let b [attack-counter] of out-attacks-to myself
+
+    (ifelse (a > b) [ ;;did you win more than me?
+        let index (a - b) / (a + b)
+        set dci-list lput index dci-list
+
+      ][;; or did i win more than you?
+        let index (b - a) / (b + a)
+        set dci-list lput index dci-list
+      ])
+
+
+    ]
+  ]
+
+  set dci mean dci-list
+  report dci
+
+end
+
+
+to-report dir-cons-index-avoids
+  ;; directional consistency index is the average of the following for all dyads:
+  ;; (high - low) / (high + low)
+  ;; where high is the outcomes of the  behavioral actor of higher occurence and low is the behavioral outcomes of the actor with lower occurence
+
+  let dci 0
+  let dci-list []
+
+  ask primates [
+
+    ask other primates [
+      let a [avoid-counter] of in-fightsavoided-from myself
+      let b [avoid-counter] of out-fightsavoided-to myself
+
+    (ifelse (a > b) [ ;;did you win more than me?
+        let index (a - b) / (a + b)
+        set dci-list lput index dci-list
+
+      ][;; or did i win more than you?
+        let index (b - a) / (b + a)
+        set dci-list lput index dci-list
+      ])
+
+
+    ]
+  ]
+
+  set dci mean dci-list
+  report dci
+
+end
 
 
 
@@ -1060,7 +1169,7 @@ SLIDER
 771
 55
 944
-89
+88
 quality-max-clumped
 quality-max-clumped
 0
@@ -1075,7 +1184,7 @@ SLIDER
 765
 106
 938
-140
+139
 quality-max-uniform
 quality-max-uniform
 0
@@ -1090,7 +1199,7 @@ SLIDER
 1068
 381
 1241
-415
+414
 starting-pop-primates
 starting-pop-primates
 0
@@ -1105,7 +1214,7 @@ SLIDER
 766
 205
 941
-239
+238
 regrowth-denominator
 regrowth-denominator
 0
@@ -1120,7 +1229,7 @@ SLIDER
 1091
 184
 1312
-218
+217
 other-primate-detection-radius
 other-primate-detection-radius
 0
@@ -1135,7 +1244,7 @@ SLIDER
 1100
 237
 1294
-271
+270
 resource-detection-radius
 resource-detection-radius
 0
@@ -1150,7 +1259,7 @@ SLIDER
 1401
 69
 1574
-103
+102
 max-rhp
 max-rhp
 0
@@ -1165,7 +1274,7 @@ SLIDER
 761
 155
 934
-189
+188
 regrow-freq
 regrow-freq
 0
@@ -1180,7 +1289,7 @@ SLIDER
 1110
 102
 1283
-136
+135
 max-nearest-primates
 max-nearest-primates
 0
@@ -1195,7 +1304,7 @@ SLIDER
 814
 383
 987
-417
+416
 step-distance
 step-distance
 0
@@ -1210,7 +1319,7 @@ SLIDER
 1100
 143
 1297
-177
+176
 max-dist-nearest-primates
 max-dist-nearest-primates
 0
@@ -1225,7 +1334,7 @@ SLIDER
 1377
 106
 1550
-140
+139
 change-in-dom-score
 change-in-dom-score
 0.01
@@ -1240,7 +1349,7 @@ SLIDER
 1397
 140
 1606
-174
+173
 dom-score-decay-when-high
 dom-score-decay-when-high
 0.001
