@@ -27,6 +27,57 @@ ch2vars <- list(
   "dom-score-decay-when-high" = list(min = 0.001, max = 0.1, qfun = "qunif")
 )
 
+###################################################
+## practice
+
+nlpractice <- nl(nlversion = "6.2.2",
+                 nlpath = netlogopath2,
+                 modelpath = modelpath2,
+                 jvmmem = 8000)
+
+nlpractice@experiment <- experiment(expname = "ch2amnatMEEpractice",
+                                    outpath = outpath2,
+                                    repetition = 1,
+                                    tickmetrics = "false",
+                                    idsetup = "setup",
+                                    idgo = "go",
+                                    runtime = 1000,
+                                    stopcond = "(not any? patches with [penergy > 0])",
+                                    metrics = c("foraging-efficiency-time", 
+                                                "n-interactions", 
+                                                "proportion-attacking",
+                                                "dir-cons-index-wins",
+                                                "dir-cons-index-attacks",
+                                                "dir-cons-index-avoids"),
+                                    variables = list(
+                                      #resource variables
+                                      "quality-max-clumped" = list(min = 15, max = 50, qfun = "qunif"),
+                                      "quality-max-uniform" = list(min = 1, max = 10, qfun = "qunif")),
+                                    constants = list("asymmetry" = "\"deterministic\"",
+                                                     "assessment-who" = "\"mutual\"",
+                                                     "assessment-info" = "\"knowledge\"",
+                                                     "resource-dist" = "\"uniform\"")
+)           
+
+
+nlpractice@simdesign <- simdesign_morris(nl = nlpractice,
+                                         morristype = "oat",
+                                         morrislevels = 5,
+                                         morrisr = 100,
+                                         morrisgridjump = 4, 
+                                         nseeds = 1)
+
+
+progressr::handlers("progress")
+
+library(future)
+plan(multisession)
+
+resultsMorrisch2practice <- progressr::with_progress(run_nl_all(nlpractice))
+
+setsim(nlpractice, "simoutput")<-resultsMorrisch2practice
+analysispractice <- analyze_nl(nlpractice)
+
 
 
 ###########################################################################
@@ -76,6 +127,9 @@ resultsMorrisch2rhpcl <- progressr::with_progress(run_nl_all(nlrhpcl))
 
 setsim(nlrhpcl, "simoutput")<-resultsMorrisch2rhpcl
 analysisrhpcl <- analyze_nl(nlrhpcl)
+
+
+
 
 ######################################################
 ##second set, rhp uniform

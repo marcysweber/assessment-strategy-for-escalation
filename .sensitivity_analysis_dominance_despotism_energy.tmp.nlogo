@@ -742,6 +742,7 @@ end
 
 
 to-report proportion-attacking
+
   let n-attacks sum [attack-counter] of attacks
   let n-avoids sum [avoid-counter] of fightsavoided
 
@@ -764,20 +765,21 @@ to-report dir-cons-index-wins
       let a [victory-counter] of in-victory-from myself
       let b [victory-counter] of out-victory-to myself
 
-    (ifelse (a > b) [ ;;did you win more than me?
-        let index (a - b) / (a + b)
-        set dci-list lput index dci-list
+      if a > 0 or b > 0 [ ;; check that there is a valid interaction
+        (ifelse (a > b) [ ;;did you win more than me?
+            let index (a - b) / (a + b)
+            set dci-list lput index dci-list
 
-      ][;; or did i win more than you?
-        let index (b - a) / (b + a)
-        set dci-list lput index dci-list
-      ])
-
+          ][;; or did i win more than you?
+            let index (b - a) / (b + a)
+            set dci-list lput index dci-list
+          ])
+      ]
 
     ]
   ]
 
-  set dci mean dci-list
+  if not empty? dci-list [set dci mean dci-list]
   report dci
 
 end
@@ -796,22 +798,24 @@ to-report dir-cons-index-attacks
 
     ask other primates [
       let a [attack-counter] of in-attack-from myself
-      let b [attack-counter] of out-attacks-to myself
+      let b [attack-counter] of out-attack-to myself
 
-    (ifelse (a > b) [ ;;did you win more than me?
-        let index (a - b) / (a + b)
-        set dci-list lput index dci-list
+      if a > 0 or b > 0 [ ;; check that there is a valid interaction
+        (ifelse (a > b) [ ;;did you win more than me?
+          let index (a - b) / (a + b)
+          set dci-list lput index dci-list
 
-      ][;; or did i win more than you?
-        let index (b - a) / (b + a)
-        set dci-list lput index dci-list
-      ])
+        ][;; or did i win more than you?
+          let index (b - a) / (b + a)
+          set dci-list lput index dci-list
+        ])
+      ]
 
 
     ]
   ]
 
-  set dci mean dci-list
+    if not empty? dci-list [set dci mean dci-list]
   report dci
 
 end
@@ -828,23 +832,25 @@ to-report dir-cons-index-avoids
   ask primates [
 
     ask other primates [
-      let a [avoid-counter] of in-fightsavoided-from myself
-      let b [avoid-counter] of out-fightsavoided-to myself
+      let a [avoid-counter] of in-fightavoided-from myself
+      let b [avoid-counter] of out-fightavoided-to myself
 
-    (ifelse (a > b) [ ;;did you win more than me?
-        let index (a - b) / (a + b)
-        set dci-list lput index dci-list
+      if a > 0 or b > 0 [ ;; check that there is a valid interaction
+        (ifelse (a > b) [ ;;did you win more than me?
+          let index (a - b) / (a + b)
+          set dci-list lput index dci-list
 
-      ][;; or did i win more than you?
-        let index (b - a) / (b + a)
-        set dci-list lput index dci-list
-      ])
+        ][;; or did i win more than you?
+          let index (b - a) / (b + a)
+          set dci-list lput index dci-list
+        ])
+      ]
 
 
     ]
   ]
 
-  set dci mean dci-list
+    if not empty? dci-list [set dci mean dci-list]
   report dci
 
 end
