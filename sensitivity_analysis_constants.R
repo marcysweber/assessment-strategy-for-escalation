@@ -185,7 +185,7 @@ analysisrhpuni <- analyze_nl(nlrhpuni)
 nlhistcl <- nl(nlversion = "6.2.2",
          nlpath = netlogopath2,
          modelpath = modelpath2,
-         jvmmem = 8000)
+         jvmmem = 12000)
 
 nlhistcl@experiment <- experiment(expname = "ch2amnatMEErhpcl",
                             outpath = outpath2,
@@ -234,7 +234,7 @@ analysishistcl <- analyze_nl(nlhistcl)
 nlhistuni <- nl(nlversion = "6.2.2",
          nlpath = netlogopath2,
          modelpath = modelpath2,
-         jvmmem = 8000)
+         jvmmem = 12000)
 
 nlhistuni@experiment <- experiment(expname = "ch2amnatMEErhpcl",
                             outpath = outpath2,
@@ -275,3 +275,68 @@ resultsMorrisch2histuni <- progressr::with_progress(run_nl_all(nlhistuni))
 
 setsim(nlhistuni, "simoutput")<-resultsMorrisch2histuni
 analysishistuni <- analyze_nl(nlhistuni)
+
+
+
+
+
+
+library(ggplot2)
+
+analysishistcl <- split(analysishistcl, analysishistcl$metric)
+analysishistuni <- split(analysishistuni, analysishistuni$metric)
+analysisrhpcl <- split(analysisrhpcl, analysisrhpcl$metric)
+analysisrhpuni <- split(analysisrhpuni, analysisrhpuni$metric)
+
+
+ggplot(analysishistcl$`n-interactions_mean`, aes(x=reorder(parameter, -value), y=value, fill = index)) +
+  geom_bar(stat='identity', position='dodge') + 
+  scale_fill_manual(labels = c("mu (overall effect size)", 
+                               "mu-star (absolute value effect size)", 
+                               "sigma (non-linear and interaction effects)"),
+                    values = c("blue", "red", "orange")) + 
+  #geom_text(aes(label = value)) + 
+  labs(title = "Morris Elementary Effects, History Clumped, n interactions") + 
+  theme(legend.position="bottom", axis.text.x = element_text(angle = 45, vjust = 1, hjust=1))
+
+ggplot(analysishistcl$`proportion-attacking_mean`, aes(x=reorder(parameter, -value), y=value, fill = index)) +
+  geom_bar(stat='identity', position='dodge') + 
+  scale_fill_manual(labels = c("mu (overall effect size)", 
+                               "mu-star (absolute value effect size)", 
+                               "sigma (non-linear and interaction effects)"),
+                    values = c("blue", "red", "orange")) + 
+  #geom_text(aes(label = value)) + 
+  labs(title = "Morris Elementary Effects, History Clumped, prop attack") + 
+  theme(legend.position="bottom", axis.text.x = element_text(angle = 45, vjust = 1, hjust=1))
+
+ggplot(analysishistcl$`dir-cons-index-wins_mean`, aes(x=reorder(parameter, -value), y=value, fill = index)) +
+  geom_bar(stat='identity', position='dodge') + 
+  scale_fill_manual(labels = c("mu (overall effect size)", 
+                               "mu-star (absolute value effect size)", 
+                               "sigma (non-linear and interaction effects)"),
+                    values = c("blue", "red", "orange")) + 
+  #geom_text(aes(label = value)) + 
+  labs(title = "Morris Elementary Effects, History Clumped, DCI wins") + 
+  theme(legend.position="bottom", axis.text.x = element_text(angle = 45, vjust = 1, hjust=1))
+
+ggplot(analysishistcl$`dir-cons-index-avoids_mean`, aes(x=reorder(parameter, -value), y=value, fill = index)) +
+  geom_bar(stat='identity', position='dodge') + 
+  scale_fill_manual(labels = c("mu (overall effect size)", 
+                               "mu-star (absolute value effect size)", 
+                               "sigma (non-linear and interaction effects)"),
+                    values = c("blue", "red", "orange")) + 
+  #geom_text(aes(label = value)) + 
+  labs(title = "Morris Elementary Effects, History Clumped, DCI avoids") + 
+  theme(legend.position="bottom", axis.text.x = element_text(angle = 45, vjust = 1, hjust=1))
+
+
+ggplot(analysishistcl$`dir-cons-index-attacks_mean`, aes(x=reorder(parameter, -value), y=value, fill = index)) +
+  geom_bar(stat='identity', position='dodge') + 
+  scale_fill_manual(labels = c("mu (overall effect size)", 
+                               "mu-star (absolute value effect size)", 
+                               "sigma (non-linear and interaction effects)"),
+                    values = c("blue", "red", "orange")) + 
+  #geom_text(aes(label = value)) + 
+  labs(title = "Morris Elementary Effects, History Clumped, DCI attacks") + 
+  theme(legend.position="bottom", axis.text.x = element_text(angle = 45, vjust = 1, hjust=1))
+
