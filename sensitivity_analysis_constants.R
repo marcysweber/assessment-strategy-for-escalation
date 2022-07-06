@@ -289,6 +289,8 @@ analysisrhpcl <- split(analysisrhpcl, analysisrhpcl$metric)
 analysisrhpuni <- split(analysisrhpuni, analysisrhpuni$metric)
 
 
+pdf("Github/dominance/AmNatMEEhistoryclumped.pdf")
+
 ggplot(analysishistcl$`n-interactions_mean`, aes(x=reorder(parameter, -value), y=value, fill = index)) +
   geom_bar(stat='identity', position='dodge') + 
   scale_fill_manual(labels = c("mu (overall effect size)", 
@@ -297,7 +299,7 @@ ggplot(analysishistcl$`n-interactions_mean`, aes(x=reorder(parameter, -value), y
                     values = c("blue", "red", "orange")) + 
   #geom_text(aes(label = value)) + 
   labs(title = "Morris Elementary Effects, History Clumped, n interactions") + 
-  theme(legend.position="bottom", axis.text.x = element_text(angle = 45, vjust = 1, hjust=1))
+  theme(legend.position="bottom", axis.text.x = element_text(angle = 60, vjust = 1, hjust=1))
 
 ggplot(analysishistcl$`proportion-attacking_mean`, aes(x=reorder(parameter, -value), y=value, fill = index)) +
   geom_bar(stat='identity', position='dodge') + 
@@ -307,7 +309,7 @@ ggplot(analysishistcl$`proportion-attacking_mean`, aes(x=reorder(parameter, -val
                     values = c("blue", "red", "orange")) + 
   #geom_text(aes(label = value)) + 
   labs(title = "Morris Elementary Effects, History Clumped, prop attack") + 
-  theme(legend.position="bottom", axis.text.x = element_text(angle = 45, vjust = 1, hjust=1))
+  theme(legend.position="bottom", axis.text.x = element_text(angle = 60, vjust = 1, hjust=1))
 
 ggplot(analysishistcl$`dir-cons-index-wins_mean`, aes(x=reorder(parameter, -value), y=value, fill = index)) +
   geom_bar(stat='identity', position='dodge') + 
@@ -317,17 +319,7 @@ ggplot(analysishistcl$`dir-cons-index-wins_mean`, aes(x=reorder(parameter, -valu
                     values = c("blue", "red", "orange")) + 
   #geom_text(aes(label = value)) + 
   labs(title = "Morris Elementary Effects, History Clumped, DCI wins") + 
-  theme(legend.position="bottom", axis.text.x = element_text(angle = 45, vjust = 1, hjust=1))
-
-ggplot(analysishistcl$`dir-cons-index-avoids_mean`, aes(x=reorder(parameter, -value), y=value, fill = index)) +
-  geom_bar(stat='identity', position='dodge') + 
-  scale_fill_manual(labels = c("mu (overall effect size)", 
-                               "mu-star (absolute value effect size)", 
-                               "sigma (non-linear and interaction effects)"),
-                    values = c("blue", "red", "orange")) + 
-  #geom_text(aes(label = value)) + 
-  labs(title = "Morris Elementary Effects, History Clumped, DCI avoids") + 
-  theme(legend.position="bottom", axis.text.x = element_text(angle = 45, vjust = 1, hjust=1))
+  theme(legend.position="bottom", axis.text.x = element_text(angle = 60, vjust = 1, hjust=1))
 
 
 ggplot(analysishistcl$`dir-cons-index-attacks_mean`, aes(x=reorder(parameter, -value), y=value, fill = index)) +
@@ -338,5 +330,223 @@ ggplot(analysishistcl$`dir-cons-index-attacks_mean`, aes(x=reorder(parameter, -v
                     values = c("blue", "red", "orange")) + 
   #geom_text(aes(label = value)) + 
   labs(title = "Morris Elementary Effects, History Clumped, DCI attacks") + 
-  theme(legend.position="bottom", axis.text.x = element_text(angle = 45, vjust = 1, hjust=1))
+  theme(legend.position="bottom", axis.text.x = element_text(angle = 60, vjust = 1, hjust=1))
+
+ggplot(analysishistcl$`dir-cons-index-avoids_mean`, aes(x=reorder(parameter, -value), y=value, fill = index)) +
+  geom_bar(stat='identity', position='dodge') + 
+  scale_fill_manual(labels = c("mu (overall effect size)", 
+                               "mu-star (absolute value effect size)", 
+                               "sigma (non-linear and interaction effects)"),
+                    values = c("blue", "red", "orange")) + 
+  #geom_text(aes(label = value)) + 
+  labs(title = "Morris Elementary Effects, History Clumped, DCI avoids") + 
+  theme(legend.position="bottom", axis.text.x = element_text(angle = 60, vjust = 1, hjust=1))
+
+ggplot(analysishistcl$`foraging-efficiency-time_mean`, aes(x=reorder(parameter, -value), y=value, fill = index)) +
+  geom_bar(stat='identity', position='dodge') + 
+  scale_fill_manual(labels = c("mu (overall effect size)", 
+                               "mu-star (absolute value effect size)", 
+                               "sigma (non-linear and interaction effects)"),
+                    values = c("blue", "red", "orange")) + 
+  #geom_text(aes(label = value)) + 
+  labs(title = "Morris Elementary Effects, History Clumped, foraging") + 
+  theme(legend.position="bottom", axis.text.x = element_text(angle = 60, vjust = 1, hjust=1))
+
+dev.off()
+
+pdf("Github/dominance/AmNatMEEhistoryuniform.pdf")
+
+ggplot(analysishistuni$`n-interactions_mean`, aes(x=reorder(parameter, -value), y=value, fill = index)) +
+  geom_bar(stat='identity', position='dodge') + 
+  scale_fill_manual(labels = c("mu (overall effect size)", 
+                               "mu-star (absolute value effect size)", 
+                               "sigma (non-linear and interaction effects)"),
+                    values = c("blue", "red", "orange")) + 
+  #geom_text(aes(label = value)) + 
+  labs(title = "Morris Elementary Effects, History Uniform, n interactions") + 
+  theme(legend.position="bottom", axis.text.x = element_text(angle = 60, vjust = 1, hjust=1))
+
+ggplot(analysishistuni$`proportion-attacking_mean`, aes(x=reorder(parameter, -value), y=value, fill = index)) +
+  geom_bar(stat='identity', position='dodge') + 
+  scale_fill_manual(labels = c("mu (overall effect size)", 
+                               "mu-star (absolute value effect size)", 
+                               "sigma (non-linear and interaction effects)"),
+                    values = c("blue", "red", "orange")) + 
+  #geom_text(aes(label = value)) + 
+  labs(title = "Morris Elementary Effects, History Uniform, prop attack") + 
+  theme(legend.position="bottom", axis.text.x = element_text(angle = 60, vjust = 1, hjust=1))
+
+ggplot(analysishistuni$`dir-cons-index-wins_mean`, aes(x=reorder(parameter, -value), y=value, fill = index)) +
+  geom_bar(stat='identity', position='dodge') + 
+  scale_fill_manual(labels = c("mu (overall effect size)", 
+                               "mu-star (absolute value effect size)", 
+                               "sigma (non-linear and interaction effects)"),
+                    values = c("blue", "red", "orange")) + 
+  #geom_text(aes(label = value)) + 
+  labs(title = "Morris Elementary Effects, History Uniform, DCI wins") + 
+  theme(legend.position="bottom", axis.text.x = element_text(angle = 60, vjust = 1, hjust=1))
+
+
+ggplot(analysishistuni$`dir-cons-index-attacks_mean`, aes(x=reorder(parameter, -value), y=value, fill = index)) +
+  geom_bar(stat='identity', position='dodge') + 
+  scale_fill_manual(labels = c("mu (overall effect size)", 
+                               "mu-star (absolute value effect size)", 
+                               "sigma (non-linear and interaction effects)"),
+                    values = c("blue", "red", "orange")) + 
+  #geom_text(aes(label = value)) + 
+  labs(title = "Morris Elementary Effects, History Uniform, DCI attacks") + 
+  theme(legend.position="bottom", axis.text.x = element_text(angle = 60, vjust = 1, hjust=1))
+
+ggplot(analysishistuni$`dir-cons-index-avoids_mean`, aes(x=reorder(parameter, -value), y=value, fill = index)) +
+  geom_bar(stat='identity', position='dodge') + 
+  scale_fill_manual(labels = c("mu (overall effect size)", 
+                               "mu-star (absolute value effect size)", 
+                               "sigma (non-linear and interaction effects)"),
+                    values = c("blue", "red", "orange")) + 
+  #geom_text(aes(label = value)) + 
+  labs(title = "Morris Elementary Effects, History Uniform, DCI avoids") + 
+  theme(legend.position="bottom", axis.text.x = element_text(angle = 60, vjust = 1, hjust=1))
+
+ggplot(analysishistuni$`foraging-efficiency-time_mean`, aes(x=reorder(parameter, -value), y=value, fill = index)) +
+  geom_bar(stat='identity', position='dodge') + 
+  scale_fill_manual(labels = c("mu (overall effect size)", 
+                               "mu-star (absolute value effect size)", 
+                               "sigma (non-linear and interaction effects)"),
+                    values = c("blue", "red", "orange")) + 
+  #geom_text(aes(label = value)) + 
+  labs(title = "Morris Elementary Effects, History Uniform, foraging") + 
+  theme(legend.position="bottom", axis.text.x = element_text(angle = 60, vjust = 1, hjust=1))
+
+dev.off()
+
+
+pdf("Github/dominance/AmNatMEErhpclumped.pdf")
+
+ggplot(analysisrhpcl$`n-interactions_mean`, aes(x=reorder(parameter, -value), y=value, fill = index)) +
+  geom_bar(stat='identity', position='dodge') + 
+  scale_fill_manual(labels = c("mu (overall effect size)", 
+                               "mu-star (absolute value effect size)", 
+                               "sigma (non-linear and interaction effects)"),
+                    values = c("blue", "red", "orange")) + 
+  #geom_text(aes(label = value)) + 
+  labs(title = "Morris Elementary Effects, RHP Clumped, n interactions") + 
+  theme(legend.position="bottom", axis.text.x = element_text(angle = 60, vjust = 1, hjust=1))
+
+ggplot(analysisrhpcl$`proportion-attacking_mean`, aes(x=reorder(parameter, -value), y=value, fill = index)) +
+  geom_bar(stat='identity', position='dodge') + 
+  scale_fill_manual(labels = c("mu (overall effect size)", 
+                               "mu-star (absolute value effect size)", 
+                               "sigma (non-linear and interaction effects)"),
+                    values = c("blue", "red", "orange")) + 
+  #geom_text(aes(label = value)) + 
+  labs(title = "Morris Elementary Effects, RHP Clumped, prop attack") + 
+  theme(legend.position="bottom", axis.text.x = element_text(angle = 60, vjust = 1, hjust=1))
+
+ggplot(analysisrhpcl$`dir-cons-index-wins_mean`, aes(x=reorder(parameter, -value), y=value, fill = index)) +
+  geom_bar(stat='identity', position='dodge') + 
+  scale_fill_manual(labels = c("mu (overall effect size)", 
+                               "mu-star (absolute value effect size)", 
+                               "sigma (non-linear and interaction effects)"),
+                    values = c("blue", "red", "orange")) + 
+  #geom_text(aes(label = value)) + 
+  labs(title = "Morris Elementary Effects, RHP Clumped, DCI wins") + 
+  theme(legend.position="bottom", axis.text.x = element_text(angle = 60, vjust = 1, hjust=1))
+
+
+ggplot(analysisrhpcl$`dir-cons-index-attacks_mean`, aes(x=reorder(parameter, -value), y=value, fill = index)) +
+  geom_bar(stat='identity', position='dodge') + 
+  scale_fill_manual(labels = c("mu (overall effect size)", 
+                               "mu-star (absolute value effect size)", 
+                               "sigma (non-linear and interaction effects)"),
+                    values = c("blue", "red", "orange")) + 
+  #geom_text(aes(label = value)) + 
+  labs(title = "Morris Elementary Effects, RHP Clumped, DCI attacks") + 
+  theme(legend.position="bottom", axis.text.x = element_text(angle = 60, vjust = 1, hjust=1))
+
+ggplot(analysisrhpcl$`dir-cons-index-avoids_mean`, aes(x=reorder(parameter, -value), y=value, fill = index)) +
+  geom_bar(stat='identity', position='dodge') + 
+  scale_fill_manual(labels = c("mu (overall effect size)", 
+                               "mu-star (absolute value effect size)", 
+                               "sigma (non-linear and interaction effects)"),
+                    values = c("blue", "red", "orange")) + 
+  #geom_text(aes(label = value)) + 
+  labs(title = "Morris Elementary Effects, RHP Clumped, DCI avoids") + 
+  theme(legend.position="bottom", axis.text.x = element_text(angle = 60, vjust = 1, hjust=1))
+
+ggplot(analysisrhpcl$`foraging-efficiency-time_mean`, aes(x=reorder(parameter, -value), y=value, fill = index)) +
+  geom_bar(stat='identity', position='dodge') + 
+  scale_fill_manual(labels = c("mu (overall effect size)", 
+                               "mu-star (absolute value effect size)", 
+                               "sigma (non-linear and interaction effects)"),
+                    values = c("blue", "red", "orange")) + 
+  #geom_text(aes(label = value)) + 
+  labs(title = "Morris Elementary Effects, RHP Clumped, foraging") + 
+  theme(legend.position="bottom", axis.text.x = element_text(angle = 60, vjust = 1, hjust=1))
+
+dev.off()
+
+pdf("Github/dominance/AmNatMEEhistoryuniform.pdf")
+
+ggplot(analysishistuni$`n-interactions_mean`, aes(x=reorder(parameter, -value), y=value, fill = index)) +
+  geom_bar(stat='identity', position='dodge') + 
+  scale_fill_manual(labels = c("mu (overall effect size)", 
+                               "mu-star (absolute value effect size)", 
+                               "sigma (non-linear and interaction effects)"),
+                    values = c("blue", "red", "orange")) + 
+  #geom_text(aes(label = value)) + 
+  labs(title = "Morris Elementary Effects, History Uniform, n interactions") + 
+  theme(legend.position="bottom", axis.text.x = element_text(angle = 60, vjust = 1, hjust=1))
+
+ggplot(analysishistuni$`proportion-attacking_mean`, aes(x=reorder(parameter, -value), y=value, fill = index)) +
+  geom_bar(stat='identity', position='dodge') + 
+  scale_fill_manual(labels = c("mu (overall effect size)", 
+                               "mu-star (absolute value effect size)", 
+                               "sigma (non-linear and interaction effects)"),
+                    values = c("blue", "red", "orange")) + 
+  #geom_text(aes(label = value)) + 
+  labs(title = "Morris Elementary Effects, History Uniform, prop attack") + 
+  theme(legend.position="bottom", axis.text.x = element_text(angle = 60, vjust = 1, hjust=1))
+
+ggplot(analysishistuni$`dir-cons-index-wins_mean`, aes(x=reorder(parameter, -value), y=value, fill = index)) +
+  geom_bar(stat='identity', position='dodge') + 
+  scale_fill_manual(labels = c("mu (overall effect size)", 
+                               "mu-star (absolute value effect size)", 
+                               "sigma (non-linear and interaction effects)"),
+                    values = c("blue", "red", "orange")) + 
+  #geom_text(aes(label = value)) + 
+  labs(title = "Morris Elementary Effects, History Uniform, DCI wins") + 
+  theme(legend.position="bottom", axis.text.x = element_text(angle = 60, vjust = 1, hjust=1))
+
+
+ggplot(analysishistuni$`dir-cons-index-attacks_mean`, aes(x=reorder(parameter, -value), y=value, fill = index)) +
+  geom_bar(stat='identity', position='dodge') + 
+  scale_fill_manual(labels = c("mu (overall effect size)", 
+                               "mu-star (absolute value effect size)", 
+                               "sigma (non-linear and interaction effects)"),
+                    values = c("blue", "red", "orange")) + 
+  #geom_text(aes(label = value)) + 
+  labs(title = "Morris Elementary Effects, History Uniform, DCI attacks") + 
+  theme(legend.position="bottom", axis.text.x = element_text(angle = 60, vjust = 1, hjust=1))
+
+ggplot(analysishistuni$`dir-cons-index-avoids_mean`, aes(x=reorder(parameter, -value), y=value, fill = index)) +
+  geom_bar(stat='identity', position='dodge') + 
+  scale_fill_manual(labels = c("mu (overall effect size)", 
+                               "mu-star (absolute value effect size)", 
+                               "sigma (non-linear and interaction effects)"),
+                    values = c("blue", "red", "orange")) + 
+  #geom_text(aes(label = value)) + 
+  labs(title = "Morris Elementary Effects, History Uniform, DCI avoids") + 
+  theme(legend.position="bottom", axis.text.x = element_text(angle = 60, vjust = 1, hjust=1))
+
+ggplot(analysishistuni$`foraging-efficiency-time_mean`, aes(x=reorder(parameter, -value), y=value, fill = index)) +
+  geom_bar(stat='identity', position='dodge') + 
+  scale_fill_manual(labels = c("mu (overall effect size)", 
+                               "mu-star (absolute value effect size)", 
+                               "sigma (non-linear and interaction effects)"),
+                    values = c("blue", "red", "orange")) + 
+  #geom_text(aes(label = value)) + 
+  labs(title = "Morris Elementary Effects, History Uniform, foraging") + 
+  theme(legend.position="bottom", axis.text.x = element_text(angle = 60, vjust = 1, hjust=1))
+
+dev.off()
 
