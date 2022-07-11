@@ -485,68 +485,117 @@ ggplot(analysisrhpcl$`foraging-efficiency-time_mean`, aes(x=reorder(parameter, -
 
 dev.off()
 
-pdf("Github/dominance/AmNatMEEhistoryuniform.pdf")
+pdf("Github/dominance/AmNatMEErhpuniform.pdf")
 
-ggplot(analysishistuni$`n-interactions_mean`, aes(x=reorder(parameter, -value), y=value, fill = index)) +
+ggplot(analysisrhpuni$`n-interactions_mean`, aes(x=reorder(parameter, -value), y=value, fill = index)) +
   geom_bar(stat='identity', position='dodge') + 
   scale_fill_manual(labels = c("mu (overall effect size)", 
                                "mu-star (absolute value effect size)", 
                                "sigma (non-linear and interaction effects)"),
                     values = c("blue", "red", "orange")) + 
   #geom_text(aes(label = value)) + 
-  labs(title = "Morris Elementary Effects, History Uniform, n interactions") + 
+  labs(title = "Morris Elementary Effects, RHP Uniform, n interactions") + 
   theme(legend.position="bottom", axis.text.x = element_text(angle = 60, vjust = 1, hjust=1))
 
-ggplot(analysishistuni$`proportion-attacking_mean`, aes(x=reorder(parameter, -value), y=value, fill = index)) +
+ggplot(analysisrhpuni$`proportion-attacking_mean`, aes(x=reorder(parameter, -value), y=value, fill = index)) +
   geom_bar(stat='identity', position='dodge') + 
   scale_fill_manual(labels = c("mu (overall effect size)", 
                                "mu-star (absolute value effect size)", 
                                "sigma (non-linear and interaction effects)"),
                     values = c("blue", "red", "orange")) + 
   #geom_text(aes(label = value)) + 
-  labs(title = "Morris Elementary Effects, History Uniform, prop attack") + 
+  labs(title = "Morris Elementary Effects, RHP Uniform, prop attack") + 
   theme(legend.position="bottom", axis.text.x = element_text(angle = 60, vjust = 1, hjust=1))
 
-ggplot(analysishistuni$`dir-cons-index-wins_mean`, aes(x=reorder(parameter, -value), y=value, fill = index)) +
+ggplot(analysisrhpuni$`dir-cons-index-wins_mean`, aes(x=reorder(parameter, -value), y=value, fill = index)) +
   geom_bar(stat='identity', position='dodge') + 
   scale_fill_manual(labels = c("mu (overall effect size)", 
                                "mu-star (absolute value effect size)", 
                                "sigma (non-linear and interaction effects)"),
                     values = c("blue", "red", "orange")) + 
   #geom_text(aes(label = value)) + 
-  labs(title = "Morris Elementary Effects, History Uniform, DCI wins") + 
+  labs(title = "Morris Elementary Effects, RHP Uniform, DCI wins") + 
   theme(legend.position="bottom", axis.text.x = element_text(angle = 60, vjust = 1, hjust=1))
 
 
-ggplot(analysishistuni$`dir-cons-index-attacks_mean`, aes(x=reorder(parameter, -value), y=value, fill = index)) +
+ggplot(analysisrhpuni$`dir-cons-index-attacks_mean`, aes(x=reorder(parameter, -value), y=value, fill = index)) +
   geom_bar(stat='identity', position='dodge') + 
   scale_fill_manual(labels = c("mu (overall effect size)", 
                                "mu-star (absolute value effect size)", 
                                "sigma (non-linear and interaction effects)"),
                     values = c("blue", "red", "orange")) + 
   #geom_text(aes(label = value)) + 
-  labs(title = "Morris Elementary Effects, History Uniform, DCI attacks") + 
+  labs(title = "Morris Elementary Effects, RHP Uniform, DCI attacks") + 
   theme(legend.position="bottom", axis.text.x = element_text(angle = 60, vjust = 1, hjust=1))
 
-ggplot(analysishistuni$`dir-cons-index-avoids_mean`, aes(x=reorder(parameter, -value), y=value, fill = index)) +
+ggplot(analysisrhpuni$`dir-cons-index-avoids_mean`, aes(x=reorder(parameter, -value), y=value, fill = index)) +
   geom_bar(stat='identity', position='dodge') + 
   scale_fill_manual(labels = c("mu (overall effect size)", 
                                "mu-star (absolute value effect size)", 
                                "sigma (non-linear and interaction effects)"),
                     values = c("blue", "red", "orange")) + 
   #geom_text(aes(label = value)) + 
-  labs(title = "Morris Elementary Effects, History Uniform, DCI avoids") + 
+  labs(title = "Morris Elementary Effects, RHP Uniform, DCI avoids") + 
   theme(legend.position="bottom", axis.text.x = element_text(angle = 60, vjust = 1, hjust=1))
 
-ggplot(analysishistuni$`foraging-efficiency-time_mean`, aes(x=reorder(parameter, -value), y=value, fill = index)) +
+ggplot(analysisrhpuni$`foraging-efficiency-time_mean`, aes(x=reorder(parameter, -value), y=value, fill = index)) +
   geom_bar(stat='identity', position='dodge') + 
   scale_fill_manual(labels = c("mu (overall effect size)", 
                                "mu-star (absolute value effect size)", 
                                "sigma (non-linear and interaction effects)"),
                     values = c("blue", "red", "orange")) + 
   #geom_text(aes(label = value)) + 
-  labs(title = "Morris Elementary Effects, History Uniform, foraging") + 
+  labs(title = "Morris Elementary Effects, RHP Uniform, foraging") + 
   theme(legend.position="bottom", axis.text.x = element_text(angle = 60, vjust = 1, hjust=1))
 
 dev.off()
 
+
+
+
+
+
+
+
+
+library(reshape2)
+
+
+
+
+
+
+
+musigma_processing <- function(data) {
+  return(dcast(data, metric + parameter ~ index))
+}
+
+musigma_processing(analysishistcl$`dir-cons-index-attacks_mean`)
+
+analysishistclmusig <- data.frame()
+
+for (df in analysishistcl) {
+  analysishistclmusig <- rbind(analysishistclmusig, (musigma_processing(as.data.frame(df))))
+}
+
+analysishistunimusig <- data.frame()
+
+for (df in analysishistcl) {
+  analysishistunimusig <- rbind(analysishistunimusig, (musigma_processing(as.data.frame(df))))
+}
+
+analysisrhpclmusig <- data.frame()
+
+for (df in analysishistcl) {
+  analysisrhpclmusig <- rbind(analysisrhpclmusig, (musigma_processing(as.data.frame(df))))
+}
+
+analysisrhpunimusig <- data.frame()
+
+for (df in analysisrhpuni) {
+  analysisrhpunimusig <- rbind(analysisrhpunimusig, (musigma_processing(as.data.frame(df))))
+}
+
+
+
+ggplot(analysishistclmusig[analysishistclmusig$metric == 'dir-cons-index-attacks_mean',], aes(x = mustar, y = sigma)) + geom_point()
