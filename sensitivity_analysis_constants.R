@@ -838,3 +838,42 @@ ggplot(combinedresultsfixed, mapping = aes(x = `starting-pop-primates`, y = `dir
 
 
 # for resource-detection-radius: proportion-attacking, DCI-wins, DCI-attacks, foraging efficiency
+ggplot(combinedresults, mapping = aes(x = `resource-detection-radius`, y = `foraging-efficiency-time`)) + 
+  geom_jitter(size = 0.5) + 
+  geom_vline(xintercept = 4, color = "blue", size = 2) +
+  stat_summary(fun = "median", color = "red")
+
+ggplot(combinedresults, mapping = aes(x = `resource-detection-radius`, y = `proportion-attacking`)) + 
+  geom_jitter(size = 0.5) + 
+  geom_vline(xintercept = 4, color = "blue", size = 2) +
+  stat_summary(fun = "median", color = "red")
+
+ggplot(combinedresults, mapping = aes(x = `resource-detection-radius`, y = `dir-cons-index-wins`)) + 
+  geom_jitter(size = 0.5) + 
+  geom_vline(xintercept = 4, color = "blue", size = 2) +
+  stat_summary(fun = "median", color = "red")
+
+ggplot(combinedresults, mapping = aes(x = `resource-detection-radius`, y = `dir-cons-index-attacks`)) + 
+  geom_jitter(size = 0.5) + 
+  geom_vline(xintercept = 4, color = "blue", size = 2) +
+  stat_summary(fun = "median", color = "red")
+
+ggplot(combinedresultsfixed, mapping = aes(x = `resource-detection-radius`, y = `foraging-efficiency-time`)) + 
+  geom_jitter(size = 0.5) + 
+  geom_vline(xintercept = 4, color = "blue", size = 2) +
+  stat_summary(fun = "median", color = "red")
+
+ggplot(combinedresultsfixed, mapping = aes(x = `resource-detection-radius`, y = `proportion-attacking`)) + 
+  geom_jitter(size = 0.5) + 
+  geom_vline(xintercept = 4, color = "blue", size = 2) +
+  stat_summary(fun = "median", color = "red")
+
+ggplot(combinedresultsfixed, mapping = aes(x = `resource-detection-radius`, y = `dir-cons-index-wins`)) + 
+  geom_jitter(size = 0.5) + 
+  geom_vline(xintercept = 4, color = "blue", size = 2) +
+  stat_summary(fun = "median", color = "red")
+
+ggplot(combinedresultsfixed, mapping = aes(x = `resource-detection-radius`, y = `dir-cons-index-attacks`)) + 
+  geom_jitter(size = 0.5) + 
+  geom_vline(xintercept = 4, color = "blue", size = 2) +
+  stat_summary(fun = "median", color = "red")
