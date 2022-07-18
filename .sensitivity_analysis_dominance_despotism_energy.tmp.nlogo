@@ -373,11 +373,11 @@ to move  ;; this is something already asked of primates, so don't ask primates a
       ])
 
 
-  (ifelse any? other primates-on patch-ahead step-distance
+  (ifelse any? other primates-on patch-ahead 1
     [decide_to_attack]
     [
       fd step-distance
-      set daily-distance-traveled daily-distance-traveled + step-distance
+      set daily-distance-traveled daily-distance-traveled +
 
   ])
 ;
@@ -609,7 +609,7 @@ end
 
 to decide_to_attack ;; function to inform turtles on how to decide to fight
 
-  let opponent one-of other turtles-on patch-ahead step-distance ;; define i as one of the other primates on the next patch ahead (and not self as opponent)
+  let opponent one-of other turtles-on patch-ahead 1 ;; define i as one of the other primates on the next patch ahead (and not self as opponent)
   ;;show i type "is my opponent \n\n"
 
   ifelse [penergy] of patch-ahead 1 > 0 [

@@ -599,7 +599,7 @@ for (df in analysisrhpuni) {
 
 library(ggrepel)
 
-pdf("Github/dominance/AmNatMEEscatterhistorycl.pdf")
+pdf("Github/dominance/AmNatMEEscatterhistoryclv2.pdf")
 
 metric.levels <- unique(analysishistclmusig$metric)
 
@@ -612,7 +612,7 @@ dev.off()
 
 
 
-pdf("Github/dominance/AmNatMEEscatterhistoryuni.pdf")
+pdf("Github/dominance/AmNatMEEscatterhistoryuniv2.pdf")
 
 metric.levels <- unique(analysishistunimusig$metric)
 
@@ -625,7 +625,7 @@ dev.off()
 
 
 
-pdf("Github/dominance/AmNatMEEscatterrhpcl.pdf")
+pdf("Github/dominance/AmNatMEEscatterrhpclv2.pdf")
 
 metric.levels <- unique(analysishistclmusig$metric)
 
@@ -638,7 +638,7 @@ dev.off()
 
 
 
-pdf("Github/dominance/AmNatMEEscatterrhpuni.pdf")
+pdf("Github/dominance/AmNatMEEscatterrhpuniv2.pdf")
 
 metric.levels <- unique(analysishistclmusig$metric)
 
