@@ -18,7 +18,7 @@ ch2vars <- list(
   "resource-detection-radius" = list(min = 2, max = 10, qfun = "qunif"),
   
   #random primate variables
-  "step-distance" = list(min = 0.5, max = 5, qfun = "qunif"),
+  "step-distance" = list(min = 0.5, max = 2, qfun = "qunif"), # changed after first MEE
   "starting-pop-primates" = list(min = 5, max = 15, qfun = "qunif"),
   
   #contest-related variables
@@ -62,9 +62,9 @@ nlpractice@experiment <- experiment(expname = "ch2amnatMEEpractice",
 
 nlpractice@simdesign <- simdesign_morris(nl = nlpractice,
                                          morristype = "oat",
-                                         morrislevels = 5,
-                                         morrisr = 100,
-                                         morrisgridjump = 4, 
+                                         morrislevels = 6,
+                                         morrisr = 10,
+                                         morrisgridjump = 3, 
                                          nseeds = 1)
 
 
@@ -94,7 +94,7 @@ nlrhpcl@experiment <- experiment(expname = "ch2amnatMEErhpcl",
                             tickmetrics = "false",
                             idsetup = "setup",
                             idgo = "go",
-                            runtime = 10000,
+                            runtime = 5000,
                             stopcond = "(not any? patches with [penergy > 0])",
                             metrics = c("foraging-efficiency-time", 
                                         "n-interactions", 
@@ -112,9 +112,9 @@ nlrhpcl@experiment <- experiment(expname = "ch2amnatMEErhpcl",
 
 nlrhpcl@simdesign <- simdesign_morris(nl = nlrhpcl,
                                  morristype = "oat",
-                                 morrislevels = 13,
-                                 morrisr = 1000,
-                                 morrisgridjump = 7, 
+                                 morrislevels = 6,
+                                 morrisr = 10,
+                                 morrisgridjump = 3, 
                                  nseeds = 1)
 
 
@@ -145,7 +145,7 @@ nlrhpuni@experiment <- experiment(expname = "ch2amnatMEErhpcl",
                             tickmetrics = "false",
                             idsetup = "setup",
                             idgo = "go",
-                            runtime = 10000,
+                            runtime = 5000,
                             stopcond = "(not any? patches with [penergy > 0])",
                             metrics = c("foraging-efficiency-time", 
                                         "n-interactions", 
@@ -163,9 +163,9 @@ nlrhpuni@experiment <- experiment(expname = "ch2amnatMEErhpcl",
 
 nlrhpuni@simdesign <- simdesign_morris(nl = nlrhpuni,
                                  morristype = "oat",
-                                 morrislevels = 13,
-                                 morrisr = 1000,
-                                 morrisgridjump = 7, 
+                                 morrislevels = 6,
+                                 morrisr = 10,
+                                 morrisgridjump = 3, 
                                  nseeds = 1)
 
 
@@ -193,7 +193,7 @@ nlhistcl@experiment <- experiment(expname = "ch2amnatMEErhpcl",
                             tickmetrics = "false",
                             idsetup = "setup",
                             idgo = "go",
-                            runtime = 10000,
+                            runtime = 5000,
                             stopcond = "(not any? patches with [penergy > 0])",
                             metrics = c("foraging-efficiency-time", 
                                         "n-interactions", 
@@ -211,9 +211,9 @@ nlhistcl@experiment <- experiment(expname = "ch2amnatMEErhpcl",
 
 nlhistcl@simdesign <- simdesign_morris(nl = nlhistcl,
                                  morristype = "oat",
-                                 morrislevels = 13,
-                                 morrisr = 1000,
-                                 morrisgridjump = 7, 
+                                 morrislevels = 6,
+                                 morrisr = 10,
+                                 morrisgridjump = 3, 
                                  nseeds = 1)
 
 
@@ -242,7 +242,7 @@ nlhistuni@experiment <- experiment(expname = "ch2amnatMEErhpcl",
                             tickmetrics = "false",
                             idsetup = "setup",
                             idgo = "go",
-                            runtime = 10000,
+                            runtime = 5000,
                             stopcond = "(not any? patches with [penergy > 0])",
                             metrics = c("foraging-efficiency-time", 
                                         "n-interactions", 
@@ -260,9 +260,9 @@ nlhistuni@experiment <- experiment(expname = "ch2amnatMEErhpcl",
 
 nlhistuni@simdesign <- simdesign_morris(nl = nlhistuni,
                                  morristype = "oat",
-                                 morrislevels = 13,
-                                 morrisr = 1000,
-                                 morrisgridjump = 7, 
+                                 morrislevels = 6,
+                                 morrisr = 10,
+                                 morrisgridjump = 3, 
                                  nseeds = 1)
 
 

@@ -111,6 +111,7 @@ to setup
 
   reset-ticks
 
+  set regrow-freq round regrow-freq
   (ifelse resource-dist = "clumped" [
     set quality-max quality-max-clumped
     create_clumped_resources
