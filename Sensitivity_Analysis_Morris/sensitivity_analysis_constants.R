@@ -656,99 +656,108 @@ combinedresults <- rbind(resultsMorrisch2histcl, resultsMorrisch2histuni, result
 
 
 #starting pop primates
-ggplot(combinedresults, mapping = aes(x = `starting-pop-primates`, y = `foraging-efficiency-time`)) + 
+a<-ggplot(combinedresults, mapping = aes(x = `starting-pop-primates`, y = `foraging-efficiency-time`)) + 
   geom_jitter(size = 0.5) + 
   geom_vline(xintercept = 10, color = "blue", size = 2) +
   stat_summary(fun = "median", color = "red")
 
-ggplot(combinedresults, mapping = aes(x = `starting-pop-primates`, y = `n-interactions`)) + 
+b<-ggplot(combinedresults, mapping = aes(x = `starting-pop-primates`, y = `n-interactions`)) + 
   geom_jitter(size = 0.5) + 
   geom_vline(xintercept = 10, color = "blue", size = 2) +
   stat_summary(fun = "median", color = "red")
 
-ggplot(combinedresults, mapping = aes(x = `starting-pop-primates`, y = `proportion-attacking`)) + 
+c<-ggplot(combinedresults, mapping = aes(x = `starting-pop-primates`, y = `proportion-attacking`)) + 
   geom_jitter(size = 0.5) + 
   geom_vline(xintercept = 10, color = "blue", size = 2) +
   stat_summary(fun = "median", color = "red")
 
-ggplot(combinedresults, mapping = aes(x = `starting-pop-primates`, y = `dir-cons-index-wins`)) + 
+d<-ggplot(combinedresults, mapping = aes(x = `starting-pop-primates`, y = `dir-cons-index-wins`)) + 
   geom_jitter(size = 0.5) + 
   geom_vline(xintercept = 10, color = "blue", size = 2) +
   stat_summary(fun = "median", color = "red")
 
-ggplot(combinedresults, mapping = aes(x = `starting-pop-primates`, y = `dir-cons-index-attacks`)) + 
+e<-ggplot(combinedresults, mapping = aes(x = `starting-pop-primates`, y = `dir-cons-index-attacks`)) + 
   geom_jitter(size = 0.5) + 
   geom_vline(xintercept = 10, color = "blue", size = 2) +
   stat_summary(fun = "median", color = "red")
 
-ggplot(combinedresults, mapping = aes(x = `starting-pop-primates`, y = `dir-cons-index-avoids`)) + 
+f<-ggplot(combinedresults, mapping = aes(x = `starting-pop-primates`, y = `dir-cons-index-avoids`)) + 
   geom_jitter(size = 0.5) + 
   geom_vline(xintercept = 10, color = "blue", size = 2) +
   stat_summary(fun = "median", color = "red")
+
+multiplot(a, b, c, d, e, f, cols=2)
+
+
+
+
+
 
 
 
 #regrowth denominator
-ggplot(combinedresults, mapping = aes(x = `regrowth-denominator`, y = `foraging-efficiency-time`)) + 
+a<-ggplot(combinedresults, mapping = aes(x = `regrowth-denominator`, y = `foraging-efficiency-time`)) + 
   geom_jitter(size = 0.5) + 
   geom_vline(xintercept = 3, color = "blue", size = 2) +
   stat_summary(fun = "median", color = "red")
 
-ggplot(combinedresults, mapping = aes(x = `regrowth-denominator`, y = `n-interactions`)) + 
+b<-ggplot(combinedresults, mapping = aes(x = `regrowth-denominator`, y = `n-interactions`)) + 
   geom_jitter(size = 0.5) + 
   geom_vline(xintercept = 3, color = "blue", size = 2) +
   stat_summary(fun = "median", color = "red")
 
-ggplot(combinedresults, mapping = aes(x = `regrowth-denominator`, y = `proportion-attacking`)) + 
+c<-ggplot(combinedresults, mapping = aes(x = `regrowth-denominator`, y = `proportion-attacking`)) + 
   geom_jitter(size = 0.5) + 
   geom_vline(xintercept = 3, color = "blue", size = 2) +
   stat_summary(fun = "median", color = "red")
 
-ggplot(combinedresults, mapping = aes(x = `regrowth-denominator`, y = `dir-cons-index-wins`)) + 
+d<-ggplot(combinedresults, mapping = aes(x = `regrowth-denominator`, y = `dir-cons-index-wins`)) + 
   geom_jitter(size = 0.5) + 
   geom_vline(xintercept = 3, color = "blue", size = 2) +
   stat_summary(fun = "median", color = "red")
 
-ggplot(combinedresults, mapping = aes(x = `regrowth-denominator`, y = `dir-cons-index-attacks`)) + 
+e<-ggplot(combinedresults, mapping = aes(x = `regrowth-denominator`, y = `dir-cons-index-attacks`)) + 
   geom_jitter(size = 0.5) + 
   geom_vline(xintercept = 3, color = "blue", size = 2) +
   stat_summary(fun = "median", color = "red")
 
-ggplot(combinedresults, mapping = aes(x = `regrowth-denominator`, y = `dir-cons-index-avoids`)) + 
+f<-ggplot(combinedresults, mapping = aes(x = `regrowth-denominator`, y = `dir-cons-index-avoids`)) + 
   geom_jitter(size = 0.5) + 
   geom_vline(xintercept = 3, color = "blue", size = 2) +
   stat_summary(fun = "median", color = "red")
+multiplot(a, b, c, d, e, f, cols=2)
 
 
 
 #regrow-freq
-ggplot(combinedresults, mapping = aes(x = `regrow-freq`, y = `foraging-efficiency-time`)) + 
+a<-ggplot(combinedresults, mapping = aes(x = `regrow-freq`, y = `foraging-efficiency-time`)) + 
   geom_jitter(size = 0.5)+ 
   geom_vline(xintercept = 24, color = "blue", size = 2) +
   stat_summary(fun = "median", color = "red")
-ggplot(combinedresults, mapping = aes(x = `regrow-freq`, y = `n-interactions`)) + 
+b<-ggplot(combinedresults, mapping = aes(x = `regrow-freq`, y = `n-interactions`)) + 
   geom_jitter(size = 0.5)+ 
   geom_vline(xintercept = 24, color = "blue", size = 2) +
   stat_summary(fun = "median", color = "red")
-ggplot(combinedresults, mapping = aes(x = `regrow-freq`, y = `proportion-attacking`)) + 
-  geom_jitter(size = 0.5)+ 
-  geom_vline(xintercept = 24, color = "blue", size = 2) +
-  stat_summary(fun = "median", color = "red")
-
-ggplot(combinedresults, mapping = aes(x = `regrow-freq`, y = `dir-cons-index-wins`)) + 
-  geom_jitter(size = 0.5)+ 
-  geom_vline(xintercept = 24, color = "blue", size = 2) +
-  stat_summary(fun = "median", color = "red")
-ggplot(combinedresults, mapping = aes(x = `regrow-freq`, y = `dir-cons-index-attacks`)) + 
+c<-ggplot(combinedresults, mapping = aes(x = `regrow-freq`, y = `proportion-attacking`)) + 
   geom_jitter(size = 0.5)+ 
   geom_vline(xintercept = 24, color = "blue", size = 2) +
   stat_summary(fun = "median", color = "red")
 
-ggplot(combinedresults, mapping = aes(x = `regrow-freq`, y = `dir-cons-index-avoids`)) + 
+d<-ggplot(combinedresults, mapping = aes(x = `regrow-freq`, y = `dir-cons-index-wins`)) + 
+  geom_jitter(size = 0.5)+ 
+  geom_vline(xintercept = 24, color = "blue", size = 2) +
+  stat_summary(fun = "median", color = "red")
+e<-ggplot(combinedresults, mapping = aes(x = `regrow-freq`, y = `dir-cons-index-attacks`)) + 
   geom_jitter(size = 0.5)+ 
   geom_vline(xintercept = 24, color = "blue", size = 2) +
   stat_summary(fun = "median", color = "red")
 
+f<-ggplot(combinedresults, mapping = aes(x = `regrow-freq`, y = `dir-cons-index-avoids`)) + 
+  geom_jitter(size = 0.5)+ 
+  geom_vline(xintercept = 24, color = "blue", size = 2) +
+  stat_summary(fun = "median", color = "red")
+
+multiplot(a, b, c, d, e, f, cols=2)
 
  
 
@@ -756,49 +765,50 @@ ggplot(combinedresults, mapping = aes(x = `regrow-freq`, y = `dir-cons-index-avo
 
 
 #resource-detection-radius
-ggplot(combinedresults, mapping = aes(x = `resource-detection-radius`, y = `foraging-efficiency-time`)) + 
+a<-ggplot(combinedresults, mapping = aes(x = `resource-detection-radius`, y = `foraging-efficiency-time`)) + 
   geom_jitter(size = 0.5)+ 
   geom_vline(xintercept = 4, color = "blue", size = 2) +
   stat_summary(fun = "median", color = "red")
-ggplot(combinedresults, mapping = aes(x = `resource-detection-radius`, y = `n-interactions`)) + 
+b<-ggplot(combinedresults, mapping = aes(x = `resource-detection-radius`, y = `n-interactions`)) + 
   geom_jitter(size = 0.5)+ 
   geom_vline(xintercept = 4, color = "blue", size = 2) +
   stat_summary(fun = "median", color = "red")
-ggplot(combinedresults, mapping = aes(x = `resource-detection-radius`, y = `proportion-attacking`)) + 
-  geom_jitter(size = 0.5)+ 
-  geom_vline(xintercept = 4, color = "blue", size = 2) +
-  stat_summary(fun = "median", color = "red")
-
-ggplot(combinedresults, mapping = aes(x = `resource-detection-radius`, y = `dir-cons-index-wins`)) + 
-  geom_jitter(size = 0.5)+ 
-  geom_vline(xintercept = 4, color = "blue", size = 2) +
-  stat_summary(fun = "median", color = "red")
-ggplot(combinedresults, mapping = aes(x = `resource-detection-radius`, y = `dir-cons-index-attacks`)) + 
+c<-ggplot(combinedresults, mapping = aes(x = `resource-detection-radius`, y = `proportion-attacking`)) + 
   geom_jitter(size = 0.5)+ 
   geom_vline(xintercept = 4, color = "blue", size = 2) +
   stat_summary(fun = "median", color = "red")
 
-ggplot(combinedresults, mapping = aes(x = `resource-detection-radius`, y = `dir-cons-index-avoids`)) + 
+d<-ggplot(combinedresults, mapping = aes(x = `resource-detection-radius`, y = `dir-cons-index-wins`)) + 
+  geom_jitter(size = 0.5)+ 
+  geom_vline(xintercept = 4, color = "blue", size = 2) +
+  stat_summary(fun = "median", color = "red")
+e<-ggplot(combinedresults, mapping = aes(x = `resource-detection-radius`, y = `dir-cons-index-attacks`)) + 
   geom_jitter(size = 0.5)+ 
   geom_vline(xintercept = 4, color = "blue", size = 2) +
   stat_summary(fun = "median", color = "red")
 
+f<-ggplot(combinedresults, mapping = aes(x = `resource-detection-radius`, y = `dir-cons-index-avoids`)) + 
+  geom_jitter(size = 0.5)+ 
+  geom_vline(xintercept = 4, color = "blue", size = 2) +
+  stat_summary(fun = "median", color = "red")
+
+multiplot(a, b, c, d, e, f, cols=2)
 
 
 
 #step-distance
-ggplot(combinedresults, mapping = aes(x = `step-distance`, y = `foraging-efficiency-time`)) + 
+a<-ggplot(combinedresults, mapping = aes(x = `step-distance`, y = `foraging-efficiency-time`)) + 
   geom_jitter(size = 0.5) + 
   geom_vline(xintercept = 1, color = "blue", size = 2) +
   stat_summary(fun = "median", color = "red")
 
-ggplot(combinedresults, mapping = aes(x = `step-distance`, y = `n-interactions`)) + 
+b<-ggplot(combinedresults, mapping = aes(x = `step-distance`, y = `n-interactions`)) + 
   geom_jitter(size = 0.5) + 
   geom_vline(xintercept = 1, color = "blue", size = 2) +
   stat_summary(fun = "median", color = "red")
 
 
-
+multiplot(a, b, cols=1)
 
 ##################################################################################
 ## below are the plots from the first round only
