@@ -444,12 +444,12 @@ end
 to-report am-i-the-winner [opponent]
   let self-winner? one-of list true false
 
-  if asymmetry = "deterministic" [
+  if winning = "deterministic" [
     set self-winner? ([rhp] of opponent < rhp)
     ;show "Deterministic. Opponent: " type [rhp] of opponent type " my own rhp: " type rhp
   ]
 
-  if asymmetry = "probabilistic" [
+  if winning = "probabilistic" [
       let j random-float 1.0 ;; j is a random decimal-number that is used below to determine if an individual wns a fight or not (fight influenced by rhp value)
       let prob_self (rhp / (rhp + [rhp] of opponent)) ;; prob_self denotes the probability that an individual will win a fight (calculated using rhp values of the individuals involved and compared to j)
 
@@ -457,6 +457,10 @@ to-report am-i-the-winner [opponent]
 
     ;show "Probabilistic. the die-roll was " type j
     ;show "opponent: " type [rhp] of opponent type " my own rhp: " type rhp
+  ]
+
+  if winning = "initiator" [
+    set self-winner? true ;; in this scenario, the approaching agent always wins
   ]
   ;show self-winner? type " should be true if self wins and false if opp wins"
   report self-winner?
@@ -759,7 +763,7 @@ to make_avoid_output
   ])
 
   let asym "none"
-  ifelse asymmetry = "deterministic" [set asym "deter"][set asym "prob"]
+  (ifelse (winning = "deterministic") [set asym "deter"] (winning = "probabilistic") [set asym "prob"] [set asym "init"])
 
   let resource-type "none"
   ifelse resource-dist = "clumped" [set resource-type "clump"][set resource-type "uni"]
@@ -806,7 +810,7 @@ to make_attack_output
   ])
 
   let asym "none"
-  ifelse asymmetry = "deterministic" [set asym "deter"][set asym "prob"]
+  (ifelse winning = "deterministic" [set asym "deter"] (winning = "probabilistic") [set asym "prob"] [set asym "init"])
 
   let resource-type "none"
   ifelse resource-dist = "clumped" [set resource-type "clump"][set resource-type "uni"]
@@ -862,7 +866,7 @@ set attacks-saved true
 end
 
 to set_folder_path
-  set folder-path "C:\\Users\\Marcy\\Desktop\\dec 27"
+  set folder-path "C:\\Users\\Marcy\\Desktop\\dec 12 2022"
 
   ;; folders should look like hm.c.d
   let scenario-folder "none"
@@ -875,7 +879,7 @@ to set_folder_path
 
 
   ifelse resource-dist = "clumped" [set scenario-folder (word scenario-folder "c.")][set scenario-folder (word scenario-folder "u.")]
-  ifelse asymmetry = "deterministic" [set scenario-folder (word scenario-folder "d")][set scenario-folder (word scenario-folder "p")]
+  (ifelse winning = "deterministic" [set scenario-folder (word scenario-folder "d")] (winning = "probabilistic") [set scenario-folder (word scenario-folder "p")] [set scenario-folder (word scenario-folder "i")])
 
   set folder-path (word folder-path "\\" scenario-folder)
 
@@ -902,7 +906,7 @@ to make_energy_output
   ])
 
   let asym "none"
-  ifelse asymmetry = "deterministic" [set asym "deter"][set asym "prob"]
+  (ifelse winning = "deterministic" [set asym "deter"] (winning = "probabilistic") [set asym "prob"] [set asym "init"])
 
   let resource-type "none"
   ifelse resource-dist = "clumped" [set resource-type "clump"][set resource-type "uni"]
@@ -1012,10 +1016,10 @@ CHOOSER
 251
 193
 296
-asymmetry
-asymmetry
-"deterministic" "probabilistic"
-1
+winning
+winning
+"deterministic" "probabilistic" "initiator"
+2
 
 CHOOSER
 55

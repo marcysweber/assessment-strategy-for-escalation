@@ -9,7 +9,7 @@ globals [
   regrowth-rate
 
   ;;;;;; THESE ARE HERE FOR THE TESTING ENVIRONMENT, INSTEAD OF SLIDERS
-  ;starting-pop-primates
+  starting-pop-primates
 
   go-tests-on?
   resource-tests-on?
@@ -23,8 +23,8 @@ globals [
 
   ;; vision
 
-  ;other-primate-detection-radius
- ;resource-detection-radius
+  other-primate-detection-radius
+  resource-detection-radius
 
 
 
@@ -109,16 +109,13 @@ to setup
   ca
   file-close-all
 
-  reset-ticks
-
-  set regrow-freq round regrow-freq
   (ifelse resource-dist = "clumped" [
-    set quality-max quality-max-clumped
+    set quality-max 24
     create_clumped_resources
   ]
 
   resource-dist = "uniform" [
-    set quality-max quality-max-uniform
+    set quality-max 3
     create_uniform_resources
   ]
   [error "No resources!"])
@@ -131,10 +128,10 @@ to setup
   ;; note that a resource patch's penergy could be 0, but the QUALITY cannot be
 
   ;; make an initial population of primates
-  ;set starting-pop-primates 10
+  set starting-pop-primates 10
   create_starting_pop
 
-  ;vision_settings
+  vision_settings
 
   ;ask turtles [create-decidenottofight-to other turtles]
   ask primates [ ;; you're on the right track
@@ -144,21 +141,21 @@ to setup
     create-defeats-to other turtles
   ]
 
-  ;show regrowth-denominator
-  set regrowth-rate (quality-max / regrowth-denominator)
+  set regrowth-rate (quality-max / 3)
 
+  reset-ticks
 
   set_folder_path
   set avoids-saved false
   set attacks-saved false
 end
 
-;to vision_settings
-;
-;  set other-primate-detection-radius 3
-;  set resource-detection-radius 4
-;
-;end
+to vision_settings
+
+  set other-primate-detection-radius 3
+  set resource-detection-radius 4
+
+end
 
 to color_patches
   ask resource-patches [
@@ -180,13 +177,9 @@ to create_clumped_resources ;; picks a new center-point and then generates a clu
     ;set empty-patches other empty-patches
   ]
 
-  let quality-range (range (quality-max-clumped / 2) quality-max-clumped)
-  ;show quality-range
-
   ask resource-patches [
 
-    set quality one-of quality-range
-    ;show quality
+    set quality one-of (range 10 quality-max)
     set penergy quality
     set extraction-rate (quality / 3)
   ]
@@ -199,10 +192,10 @@ to create_uniform_resources
 
   ask resource-patches [
 
-    set quality quality-max-uniform ;; all patches set to quality 3 (approximate average calculated across several runs in conflic_dev_2 model [Summed Patch Qualities excel file])
+    set quality quality-max ;; all patches set to quality 3 (approximate average calculated across several runs in conflic_dev_2 model [Summed Patch Qualities excel file])
     set penergy quality
 
-    set extraction-rate (quality / 3)
+    set extraction-rate 1
   ]
 
 
@@ -215,7 +208,7 @@ to create_starting_pop ;; creates a beginning population of primate agents, of v
     set label who
     ;;set label return_rhp ;each turtle displays their return-rhp value
     set size 1 ; size of turtles to 5
-    ;set vision 20
+    set vision 20
     set stored-energy 10
     set dom-score 0.50
     set dom-delta-list (list 0.50)
@@ -229,8 +222,12 @@ to create_starting_pop ;; creates a beginning population of primate agents, of v
     set ageclass "adult"
 
     ;; rhp
-    let rhp-range (range 1 (max-rhp + 1))
-    set rhp one-of rhp-range
+    set rhp one-of [1 2 3 4 5 6 7 8] ;; rhp = 0 --> none
+                     ;; rhp = 1 --> low
+                     ;; rhp = 2 --> mid-low
+                     ;; rhp = 3 --> mid-high
+                     ;; rhp = 4 --> high
+    ;set rhp one-of (range 1 4)
 
     ;; use function return_rhp to set a value for rhp as the outcome here
     if assessment-who = "opponent" [ ;;need to do this as before (when 1 simply added to top and bottom) individuals never fought as prob of fighting was always 0
@@ -268,7 +265,7 @@ to go ;; put main schedule procedures for readability
 
 
 
-  if ticks mod regrow-freq = 0 [
+  if ticks mod 20 = 0 [
   ask patches with [penergy < quality] [;if there are any empty patches let them regrow
     if NOT any? turtles-here [
       regrow
@@ -291,20 +288,20 @@ to go ;; put main schedule procedures for readability
 
 
   if ticks = 5000 [
-    ;ask victories [set victory-counter 0]
-    ;ask defeats [set defeat-counter 0]
-    ;ask fightsavoided [set avoid-counter 0]
-    ;ask attacks [set attack-counter 0]
+    ask victories [set victory-counter 0]
+    ask defeats [set defeat-counter 0]
+    ask fightsavoided [set avoid-counter 0]
+    ask attacks [set attack-counter 0]
   ]
 
 
  if burn-in-complete [
     if attacks-complete and not attacks-saved [
-      ;make_attack_output
+      make_attack_output
     ]
 
     if avoids-complete and not avoids-saved [
-      ;make_avoid_output
+      make_avoid_output
 
     ]
   ]
@@ -315,8 +312,8 @@ end
 
 to find_nearest-primates
       set nearest-primates other primates in-radius other-primate-detection-radius
-  if (count nearest-primates > max-nearest-primates) [
-    set nearest-primates min-n-of max-nearest-primates nearest-primates [distance myself]
+  if (count nearest-primates > 3) [
+    set nearest-primates min-n-of 3 nearest-primates [distance myself]
   ]
 
 end
@@ -359,11 +356,10 @@ to move  ;; this is something already asked of primates, so don't ask primates a
   ;; movement will be a compromise between resources, movement cohesion, avoidance
 
 
-
+  ;; first, change direction via either "wander" or "forage"
   (ifelse
-    stored-energy = 0 [;; this is effectively a placeholder - want to instead look at the trend of energy loss
+    stored-energy = 0 [;; this is effectively a placeholder - agents started with 10 energy and never lost any, so this was never called.
       wander
-
     ]
     (not empty? visible-resources) [
       forage
@@ -372,15 +368,15 @@ to move  ;; this is something already asked of primates, so don't ask primates a
       wander
       ])
 
-
+  ;; then, check that path ahead is clear; if someone is there, decide whether to attack or not
   (ifelse any? other primates-on patch-ahead 1
     [decide_to_attack]
     [
-      fd step-distance
-      set daily-distance-traveled daily-distance-traveled +
-
+      fd 1
+      set daily-distance-traveled daily-distance-traveled + 1
   ])
 ;
+
   if any? other primates-here [
     move-to min-one-of (patches with [not any? primates-here]) [distance myself]
     ;show "I had to jump away because someone was there!"
@@ -392,11 +388,11 @@ to forage ;;
   ;;type "changing heading to " type max-one-of patches in-cone resource-detection-radius visual-angle [penergy] type "\n"
 end
 
-to wander ;; this is mutually exclusive with forage, disperse -
-  ; should it also include align, move-towards, etc?
+to wander ;; this is mutually exclusive with forage -
+
   set heading heading + ((random 30) - 15) ;; totally random turns
-  ;; this needs it's own algorithm to allow for no visible-resources, but can still do
-  ;; proximity behavior if it sees and primates
+
+
 end
 
 
@@ -415,13 +411,16 @@ end
 to-report new_headings
   let change-in-heading 0 ;;; i think this might be causing an issue
 
+  ;;agent responds to either conspecifics or resources
+
   carefully [
-  (ifelse (any? nearest-primates AND (distance min-one-of nearest-primates [distance myself]) > max-dist-nearest-primates) [
-    set change-in-heading heading-towards-nearest-primates
+    (ifelse (any? nearest-primates AND (distance min-one-of nearest-primates [distance myself]) > 7) [
+      ;;agent is too far from other primates, so ignore resources and point towards nearest-primates
+      set change-in-heading heading-towards-nearest-primates
       ;show "heading towards " show nearest-primates
       set patch-picked no-patches
   ]
-  [ ;;; nearest-primates are close enough, so go about your business - or you have no nearest-primates at all
+  [ ;;; nearest-primates are close enough, so pick the best visible patch - or you have no nearest-primates at all
      (ifelse (is-patch? patch-picked) and (member? patch-picked visible-resources) [
           set change-in-heading towards patch-picked
           ;show "still heading towards" show patch-picked
@@ -445,12 +444,12 @@ end
 to-report am-i-the-winner [opponent]
   let self-winner? one-of list true false
 
-  if asymmetry = "deterministic" [
+  if winning = "deterministic" [
     set self-winner? ([rhp] of opponent < rhp)
     ;show "Deterministic. Opponent: " type [rhp] of opponent type " my own rhp: " type rhp
   ]
 
-  if asymmetry = "probabilistic" [
+  if winning = "probabilistic" [
       let j random-float 1.0 ;; j is a random decimal-number that is used below to determine if an individual wns a fight or not (fight influenced by rhp value)
       let prob_self (rhp / (rhp + [rhp] of opponent)) ;; prob_self denotes the probability that an individual will win a fight (calculated using rhp values of the individuals involved and compared to j)
 
@@ -458,6 +457,10 @@ to-report am-i-the-winner [opponent]
 
     ;show "Probabilistic. the die-roll was " type j
     ;show "opponent: " type [rhp] of opponent type " my own rhp: " type rhp
+  ]
+
+  if winning = "initiator" [
+    set self-winner? true ;; in this scenario, the approaching agent always wins
   ]
   ;show self-winner? type " should be true if self wins and false if opp wins"
   report self-winner?
@@ -500,10 +503,10 @@ to update_winner_against [losing]
   set wns wns + 1 ;; opponent recalculates their wns counter to increase it by 1
           ;;show "I win! \n"
 
-          ifelse dom-score > 1 - change-in-dom-score [
+          ifelse dom-score > 0.98 [
             set dom-score 1.0
           ][
-            set dom-score dom-score + change-in-dom-score
+            set dom-score dom-score + 0.01
           ]
 
         ;;show "I win!"
@@ -516,8 +519,8 @@ end
 to update_loser_against [winner]
   set lsses (lsses + 1) ;; opponent recalculates their lsses counter to increase it by 1
    ;;;; also dom-score stuff here!!!!
-          ifelse dom-score > change-in-dom-score [
-             set dom-score dom-score - change-in-dom-score
+          ifelse dom-score > 0.02 [
+             set dom-score dom-score - 0.01
              ][
              set dom-score 0.01
              ]
@@ -579,15 +582,15 @@ to-report cost-estimation [opponent]
     assessment-info = "knowledge" [ ;; linked to knowledge switch; if this on then primates make conflict decisions based on their and their opponent's rhp values
 
       (ifelse assessment-who = "mutual" [  ;; mutual assess switch allows primates to make decisions based on their and their opponent's rhp values
-        set cost-estimate (([rhp] of opponent - rhp) + (max-rhp - 1)) / ((max-rhp - 1) * 2) ;; changed to 14 and 7 becuse starting rhp values at 1 rather than 0 (1-8)
+        set cost-estimate (([rhp] of opponent - rhp) + 7) / 14 ;; changed to 14 and 7 becuse starting rhp values at 1 rather than 0 (1-8)
       ]
 
       assessment-who = "self" [
-        set cost-estimate (1.0 - (( rhp - 1 ) / (max-rhp - 1)))
+        set cost-estimate (1.0 - (( rhp - 1 ) / 7))
       ]
 
       assessment-who = "opponent" [
-          set cost-estimate ((([rhp] of opponent) - 1) / (max-rhp - 1))
+          set cost-estimate ((([rhp] of opponent) - 1) / 7)
       ]
           [error "You need to turn onthe mutual-assess, self-only, or opponent-only switch."])
       ]
@@ -673,10 +676,10 @@ to decay_dom
   ask primates with [dom-score != running-dom-avg] [
     ifelse dom-score > running-dom-avg [
       ;; dom-score is higher than the running average
-      set dom-score dom-score - dom-score-decay-when-high
+      set dom-score dom-score - 0.01
     ][
       ;; dom-score is lower than the running average
-      set dom-score dom-score + (dom-score-decay-when-high / 2)
+      set dom-score dom-score + 0.005
     ]
   ]
 end
@@ -737,126 +740,9 @@ to-report avoids-complete
 end
 
 
-to-report n-interactions
-  report sum [attack-counter] of attacks + sum [avoid-counter] of fightsavoided
-end
-
-
-to-report proportion-attacking
-  let proportion 0
-
-  let n-attacks sum [attack-counter] of attacks
-  let n-avoids sum [avoid-counter] of fightsavoided
-
-  if n-attacks > 0 or n-avoids > 0 [set proportion n-attacks / (n-attacks + n-avoids)]
-
-  report proportion
-end
-
-
-to-report dir-cons-index-wins
-  ;; directional consistency index is the average of the following for all dyads:
-  ;; (high - low) / (high + low)
-  ;; where high is the outcomes of the  behavioral actor of higher occurence and low is the behavioral outcomes of the actor with lower occurence
-
-  let dci 0
-  let dci-list []
-
-  ask primates [
-
-    ask other primates [
-      let a [victory-counter] of in-victory-from myself
-      let b [victory-counter] of out-victory-to myself
-
-      if a > 0 or b > 0 [ ;; check that there is a valid interaction
-        (ifelse (a > b) [ ;;did you win more than me?
-            let index (a - b) / (a + b)
-            set dci-list lput index dci-list
-
-          ][;; or did i win more than you?
-            let index (b - a) / (b + a)
-            set dci-list lput index dci-list
-          ])
-      ]
-
-    ]
-  ]
-
-  if not empty? dci-list [set dci mean dci-list]
-  report dci
-
-end
 
 
 
-to-report dir-cons-index-attacks
-  ;; directional consistency index is the average of the following for all dyads:
-  ;; (high - low) / (high + low)
-  ;; where high is the outcomes of the  behavioral actor of higher occurence and low is the behavioral outcomes of the actor with lower occurence
-
-  let dci 0
-  let dci-list []
-
-  ask primates [
-
-    ask other primates [
-      let a [attack-counter] of in-attack-from myself
-      let b [attack-counter] of out-attack-to myself
-
-      if a > 0 or b > 0 [ ;; check that there is a valid interaction
-        (ifelse (a > b) [ ;;did you win more than me?
-          let index (a - b) / (a + b)
-          set dci-list lput index dci-list
-
-        ][;; or did i win more than you?
-          let index (b - a) / (b + a)
-          set dci-list lput index dci-list
-        ])
-      ]
-
-
-    ]
-  ]
-
-    if not empty? dci-list [set dci mean dci-list]
-  report dci
-
-end
-
-
-to-report dir-cons-index-avoids
-  ;; directional consistency index is the average of the following for all dyads:
-  ;; (high - low) / (high + low)
-  ;; where high is the outcomes of the  behavioral actor of higher occurence and low is the behavioral outcomes of the actor with lower occurence
-
-  let dci 0
-  let dci-list []
-
-  ask primates [
-
-    ask other primates [
-      let a [avoid-counter] of in-fightavoided-from myself
-      let b [avoid-counter] of out-fightavoided-to myself
-
-      if a > 0 or b > 0 [ ;; check that there is a valid interaction
-        (ifelse (a > b) [ ;;did you win more than me?
-          let index (a - b) / (a + b)
-          set dci-list lput index dci-list
-
-        ][;; or did i win more than you?
-          let index (b - a) / (b + a)
-          set dci-list lput index dci-list
-        ])
-      ]
-
-
-    ]
-  ]
-
-    if not empty? dci-list [set dci mean dci-list]
-  report dci
-
-end
 
 
 
@@ -877,7 +763,7 @@ to make_avoid_output
   ])
 
   let asym "none"
-  ifelse asymmetry = "deterministic" [set asym "deter"][set asym "prob"]
+  (ifelse (winning = "deterministic") [set asym "deter"] (winning = "probabilistic") [set asym "prob"] [set asym "init"])
 
   let resource-type "none"
   ifelse resource-dist = "clumped" [set resource-type "clump"][set resource-type "uni"]
@@ -924,7 +810,7 @@ to make_attack_output
   ])
 
   let asym "none"
-  ifelse asymmetry = "deterministic" [set asym "deter"][set asym "prob"]
+  (ifelse winning = "deterministic" [set asym "deter"] (winning = "probabilistic") [set asym "prob"] [set asym "init"])
 
   let resource-type "none"
   ifelse resource-dist = "clumped" [set resource-type "clump"][set resource-type "uni"]
@@ -980,7 +866,7 @@ set attacks-saved true
 end
 
 to set_folder_path
-  set folder-path "C:\\Users\\Marcy\\Desktop\\dec 27"
+  set folder-path "C:\\Users\\Marcy\\Desktop\\dec 12 2022"
 
   ;; folders should look like hm.c.d
   let scenario-folder "none"
@@ -993,7 +879,7 @@ to set_folder_path
 
 
   ifelse resource-dist = "clumped" [set scenario-folder (word scenario-folder "c.")][set scenario-folder (word scenario-folder "u.")]
-  ifelse asymmetry = "deterministic" [set scenario-folder (word scenario-folder "d")][set scenario-folder (word scenario-folder "p")]
+  (ifelse winning = "deterministic" [set scenario-folder (word scenario-folder "d")] (winning = "probabilistic") [set scenario-folder (word scenario-folder "p")] [set scenario-folder (word scenario-folder "i")])
 
   set folder-path (word folder-path "\\" scenario-folder)
 
@@ -1020,7 +906,7 @@ to make_energy_output
   ])
 
   let asym "none"
-  ifelse asymmetry = "deterministic" [set asym "deter"][set asym "prob"]
+  (ifelse winning = "deterministic" [set asym "deter"] (winning = "probabilistic") [set asym "prob"] [set asym "init"])
 
   let resource-type "none"
   ifelse resource-dist = "clumped" [set resource-type "clump"][set resource-type "uni"]
@@ -1130,10 +1016,10 @@ CHOOSER
 251
 193
 296
-asymmetry
-asymmetry
-"deterministic" "probabilistic"
-0
+winning
+winning
+"deterministic" "probabilistic" "initiator"
+2
 
 CHOOSER
 55
@@ -1156,10 +1042,10 @@ assessment-who
 2
 
 PLOT
-15
-335
-215
-485
+891
+112
+1091
+262
 min and mean foraging efficiency
 NIL
 NIL
@@ -1173,201 +1059,6 @@ false
 PENS
 "default" 1.0 0 -16777216 true "" "plot mean [total-energy-gained] of primates / (ticks + 1)"
 "pen-1" 1.0 0 -7500403 true "" "plot min [total-energy-gained] of primates / (ticks + 1)"
-
-SLIDER
-771
-55
-944
-88
-quality-max-clumped
-quality-max-clumped
-0
-100
-42.0
-1
-1
-NIL
-HORIZONTAL
-
-SLIDER
-765
-106
-938
-139
-quality-max-uniform
-quality-max-uniform
-0
-10
-3.0
-1
-1
-NIL
-HORIZONTAL
-
-SLIDER
-1068
-381
-1241
-414
-starting-pop-primates
-starting-pop-primates
-0
-100
-10.0
-1
-1
-NIL
-HORIZONTAL
-
-SLIDER
-766
-205
-941
-238
-regrowth-denominator
-regrowth-denominator
-0
-10
-5.0
-1
-1
-NIL
-HORIZONTAL
-
-SLIDER
-1091
-184
-1312
-217
-other-primate-detection-radius
-other-primate-detection-radius
-0
-10
-5.0
-1
-1
-NIL
-HORIZONTAL
-
-SLIDER
-1100
-237
-1294
-270
-resource-detection-radius
-resource-detection-radius
-0
-10
-5.0
-1
-1
-NIL
-HORIZONTAL
-
-SLIDER
-1401
-69
-1574
-102
-max-rhp
-max-rhp
-0
-10
-5.0
-1
-1
-NIL
-HORIZONTAL
-
-SLIDER
-761
-155
-934
-188
-regrow-freq
-regrow-freq
-0
-100
-20.0
-1
-1
-NIL
-HORIZONTAL
-
-SLIDER
-1110
-102
-1283
-135
-max-nearest-primates
-max-nearest-primates
-0
-10
-3.0
-1
-1
-NIL
-HORIZONTAL
-
-SLIDER
-814
-383
-987
-416
-step-distance
-step-distance
-0
-5
-1.0
-1
-1
-NIL
-HORIZONTAL
-
-SLIDER
-1100
-143
-1297
-176
-max-dist-nearest-primates
-max-dist-nearest-primates
-0
-10
-5.0
-1
-1
-NIL
-HORIZONTAL
-
-SLIDER
-1377
-106
-1550
-139
-change-in-dom-score
-change-in-dom-score
-0.01
-0.1
-0.01
-0.01
-1
-NIL
-HORIZONTAL
-
-SLIDER
-1397
-140
-1606
-173
-dom-score-decay-when-high
-dom-score-decay-when-high
-0.001
-0.1
-0.01
-0.001
-1
-NIL
-HORIZONTAL
 
 @#$#@#$#@
 ## WHAT IS IT?
@@ -2132,6 +1823,30 @@ NetLogo 6.2.2
     <enumeratedValueSet variable="assessment-who">
       <value value="&quot;self&quot;"/>
       <value value="&quot;opponent&quot;"/>
+      <value value="&quot;mutual&quot;"/>
+    </enumeratedValueSet>
+  </experiment>
+  <experiment name="initiator-experiment" repetitions="10" runMetricsEveryStep="false">
+    <setup>setup</setup>
+    <go>go</go>
+    <final>make_energy_output</final>
+    <timeLimit steps="150000"/>
+    <exitCondition>stop-condish</exitCondition>
+    <metric>ticks</metric>
+    <metric>sum [victory-counter] of victories</metric>
+    <metric>sum [avoid-counter] of fightsavoided</metric>
+    <metric>foraging-efficiency-time</metric>
+    <enumeratedValueSet variable="winning">
+      <value value="&quot;initiator&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="resource-dist">
+      <value value="&quot;uniform&quot;"/>
+      <value value="&quot;clumped&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="assessment-info">
+      <value value="&quot;history&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="assessment-who">
       <value value="&quot;mutual&quot;"/>
     </enumeratedValueSet>
   </experiment>
