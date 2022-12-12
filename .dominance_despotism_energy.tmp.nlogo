@@ -1009,7 +1009,7 @@ CHOOSER
 resource-dist
 resource-dist
 "uniform" "clumped"
-1
+0
 
 CHOOSER
 55
@@ -1029,7 +1029,7 @@ CHOOSER
 assessment-info
 assessment-info
 "knowledge" "history"
-0
+1
 
 CHOOSER
 54
@@ -1845,9 +1845,12 @@ NetLogo 6.2.2
     </enumeratedValueSet>
     <enumeratedValueSet variable="assessment-info">
       <value value="&quot;history&quot;"/>
+      <value value="&quot;knowledge&quot;"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="assessment-who">
       <value value="&quot;mutual&quot;"/>
+      <value value="&quot;opponent&quot;"/>
+      <value value="&quot;self&quot;"/>
     </enumeratedValueSet>
   </experiment>
 </experiments>

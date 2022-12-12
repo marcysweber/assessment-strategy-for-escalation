@@ -1009,7 +1009,7 @@ CHOOSER
 resource-dist
 resource-dist
 "uniform" "clumped"
-1
+0
 
 CHOOSER
 55
@@ -1039,7 +1039,7 @@ CHOOSER
 assessment-who
 assessment-who
 "self" "opponent" "mutual"
-2
+0
 
 PLOT
 891
@@ -1824,6 +1824,33 @@ NetLogo 6.2.2
       <value value="&quot;self&quot;"/>
       <value value="&quot;opponent&quot;"/>
       <value value="&quot;mutual&quot;"/>
+    </enumeratedValueSet>
+  </experiment>
+  <experiment name="initiator-experiment" repetitions="10" runMetricsEveryStep="false">
+    <setup>setup</setup>
+    <go>go</go>
+    <final>make_energy_output</final>
+    <timeLimit steps="150000"/>
+    <exitCondition>stop-condish</exitCondition>
+    <metric>ticks</metric>
+    <metric>sum [victory-counter] of victories</metric>
+    <metric>sum [avoid-counter] of fightsavoided</metric>
+    <metric>foraging-efficiency-time</metric>
+    <enumeratedValueSet variable="winning">
+      <value value="&quot;initiator&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="resource-dist">
+      <value value="&quot;uniform&quot;"/>
+      <value value="&quot;clumped&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="assessment-info">
+      <value value="&quot;history&quot;"/>
+      <value value="&quot;knowledge&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="assessment-who">
+      <value value="&quot;mutual&quot;"/>
+      <value value="&quot;opponent&quot;"/>
+      <value value="&quot;self&quot;"/>
     </enumeratedValueSet>
   </experiment>
 </experiments>
