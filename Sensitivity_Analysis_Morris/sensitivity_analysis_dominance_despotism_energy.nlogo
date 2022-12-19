@@ -74,9 +74,9 @@ primates-own[
   wns_r
   lsses_r
 
-  dom-score ;; current value of estimated fighting ability, 0.0-1.0
-  dom-delta-list ;; list recording every time the dom-score was changed by a win or loss
-  running-dom-avg ;; average of the dom-delta-list
+  exp-score ;; current value of estimated fighting ability, 0.0-1.0
+  exp-delta-list ;; list recording every time the exp-score was changed by a win or loss
+  running-exp-avg ;; average of the exp-delta-list
 
   daily-distance-traveled ;; distance traveled, reset every 12 ticks
   distance-traveled ;; TOTAL distance traveled by primate
@@ -217,9 +217,9 @@ to create_starting_pop ;; creates a beginning population of primate agents, of v
     set size 1 ; size of turtles to 5
     ;set vision 20
     set stored-energy 10
-    set dom-score 0.50
-    set dom-delta-list (list 0.50)
-    set running-dom-avg 0.50
+    set exp-score 0.50
+    set exp-delta-list (list 0.50)
+    set running-exp-avg 0.50
 
     ;; sex
     set sex "F"
@@ -264,7 +264,7 @@ to go ;; put main schedule procedures for readability
   ]
 
   color_patches
-  decay_dom
+  decay_exp
 
 
 
@@ -445,12 +445,12 @@ end
 to-report am-i-the-winner [opponent]
   let self-winner? one-of list true false
 
-  if asymmetry = "deterministic" [
+  if winning = "deterministic" [
     set self-winner? ([rhp] of opponent < rhp)
     ;show "Deterministic. Opponent: " type [rhp] of opponent type " my own rhp: " type rhp
   ]
 
-  if asymmetry = "probabilistic" [
+  if winning = "probabilistic" [
       let j random-float 1.0 ;; j is a random decimal-number that is used below to determine if an individual wns a fight or not (fight influenced by rhp value)
       let prob_self (rhp / (rhp + [rhp] of opponent)) ;; prob_self denotes the probability that an individual will win a fight (calculated using rhp values of the individuals involved and compared to j)
 
@@ -459,6 +459,11 @@ to-report am-i-the-winner [opponent]
     ;show "Probabilistic. the die-roll was " type j
     ;show "opponent: " type [rhp] of opponent type " my own rhp: " type rhp
   ]
+
+   if winning = "initiator" [
+    set self-winner? true ;; in this scenario, the approaching agent always wins
+  ]
+
   ;show self-winner? type " should be true if self wins and false if opp wins"
   report self-winner?
 end
@@ -490,8 +495,8 @@ to fight [opponent] ;; function to have individuals (self and opponent) fight ea
         ask opponent [update_winner_against myself]
       ])
 
-    update_dom_list
-    ask opponent [update_dom_list]
+    update_exp_list
+    ask opponent [update_exp_list]
     ]
 end
 
@@ -500,10 +505,10 @@ to update_winner_against [losing]
   set wns wns + 1 ;; opponent recalculates their wns counter to increase it by 1
           ;;show "I win! \n"
 
-          ifelse dom-score > 1 - change-in-dom-score [
-            set dom-score 1.0
+          ifelse exp-score > 1 - change-in-exp-score [
+            set exp-score 1.0
           ][
-            set dom-score dom-score + change-in-dom-score
+            set exp-score exp-score + change-in-exp-score
           ]
 
         ;;show "I win!"
@@ -515,11 +520,11 @@ end
 
 to update_loser_against [winner]
   set lsses (lsses + 1) ;; opponent recalculates their lsses counter to increase it by 1
-   ;;;; also dom-score stuff here!!!!
-          ifelse dom-score > change-in-dom-score [
-             set dom-score dom-score - change-in-dom-score
+   ;;;; also exp-score stuff here!!!!
+          ifelse exp-score > change-in-exp-score [
+             set exp-score exp-score - change-in-exp-score
              ][
-             set dom-score 0.01
+             set exp-score 0.01
              ]
 
 
@@ -539,13 +544,13 @@ to update_loser_against [winner]
 end
 
 
-to update_dom_list
-      set dom-delta-list fput dom-score dom-delta-list
+to update_exp_list
+      set exp-delta-list fput exp-score exp-delta-list
 
-    ifelse length dom-delta-list > 4 [
-      set running-dom-avg mean sublist dom-delta-list 0 5 ;;;;; the running average is only from the 10 most recent wins or losses
+    ifelse length exp-delta-list > 4 [
+      set running-exp-avg mean sublist exp-delta-list 0 5 ;;;;; the running average is only from the 10 most recent wins or losses
     ][
-      set running-dom-avg mean dom-delta-list
+      set running-exp-avg mean exp-delta-list
     ]
 end
 
@@ -556,20 +561,20 @@ to-report cost-estimation [opponent]
 
       ;;;;;;;;;;;;;;;
     ;; ESTIMATE COSTS FOR EACH STRATEGY
-    (ifelse assessment-info = "history" [ ;; linked to history switch; if this on, primates make decision based on dom-score
+    (ifelse assessment-info = "history" [ ;; linked to history switch; if this on, primates make decision based on exp-score
 
-      ;; mutual assess switch allows primates to make decisions based on their and their opponent's dom-score
+      ;; mutual assess switch allows primates to make decisions based on their and their opponent's exp-score
       (ifelse assessment-who = "mutual" [
 
-        set cost-estimate (([dom-score] of opponent - dom-score) + 1) / 2 ;;; this puts the difference in scores back on a 0.0-1.0 scale
+        set cost-estimate (([exp-score] of opponent - exp-score) + 1) / 2 ;;; this puts the difference in scores back on a 0.0-1.0 scale
         ]
 
         assessment-who = "self" [
-          set cost-estimate (1.0 - dom-score) ;; have to do the + 1s to avoid dividing by 0
+          set cost-estimate (1.0 - exp-score) ;; have to do the + 1s to avoid dividing by 0
         ]
 
         assessment-who = "opponent" [
-          set cost-estimate ([dom-score] of opponent);; the opponents ratio of wins to losses, 1 - to make it the same direction as others
+          set cost-estimate ([exp-score] of opponent);; the opponents ratio of wins to losses, 1 - to make it the same direction as others
         ]
         [error "You need to turn on the mutual-assess, self-only, or opponent-only switch."])
       ;;show prob-decision type " probability of deciding to fight \n"
@@ -617,7 +622,7 @@ to decide_to_attack ;; function to inform turtles on how to decide to fight
 
   if opponent != nobody [;; if i (the opponent) is not "nobody", then do the following function (this should be the very first thing checked)
 
-    set running-dom-avg mean dom-delta-list
+    set running-exp-avg mean exp-delta-list
     let bene benefit-estimation
     let cost-est 0.01 ;; estimate costs will be calculated below, depending on current assessment strategy
     let probr 1.0 ;; prob of making the right choice. default to 1, so that agents will make the optimal choice if something goes wrong
@@ -661,22 +666,22 @@ set cost-est cost-estimation opponent
   [move-to one-of neighbors with [not any? primates-here]]
 end
 
-to decay_dom
+to decay_exp
   ask primates [
-    if running-dom-avg < 0 [
-    set running-dom-avg 0
+    if running-exp-avg < 0 [
+    set running-exp-avg 0
   ]
-    if running-dom-avg > 1 [
-      set running-dom-avg 1
+    if running-exp-avg > 1 [
+      set running-exp-avg 1
     ]
   ]
-  ask primates with [dom-score != running-dom-avg] [
-    ifelse dom-score > running-dom-avg [
-      ;; dom-score is higher than the running average
-      set dom-score dom-score - dom-score-decay-when-high
+  ask primates with [exp-score != running-exp-avg] [
+    ifelse exp-score > running-exp-avg [
+      ;; exp-score is higher than the running average
+      set exp-score exp-score - exp-score-decay-when-high
     ][
-      ;; dom-score is lower than the running average
-      set dom-score dom-score + (dom-score-decay-when-high / 2)
+      ;; exp-score is lower than the running average
+      set exp-score exp-score + (exp-score-decay-when-high / 2)
     ]
   ]
 end
@@ -877,7 +882,7 @@ to make_avoid_output
   ])
 
   let asym "none"
-  ifelse asymmetry = "deterministic" [set asym "deter"][set asym "prob"]
+  ifelse winning = "deterministic" [set asym "deter"][set asym "prob"]
 
   let resource-type "none"
   ifelse resource-dist = "clumped" [set resource-type "clump"][set resource-type "uni"]
@@ -924,7 +929,7 @@ to make_attack_output
   ])
 
   let asym "none"
-  ifelse asymmetry = "deterministic" [set asym "deter"][set asym "prob"]
+  ifelse winning = "deterministic" [set asym "deter"][set asym "prob"]
 
   let resource-type "none"
   ifelse resource-dist = "clumped" [set resource-type "clump"][set resource-type "uni"]
@@ -993,7 +998,7 @@ to set_folder_path
 
 
   ifelse resource-dist = "clumped" [set scenario-folder (word scenario-folder "c.")][set scenario-folder (word scenario-folder "u.")]
-  ifelse asymmetry = "deterministic" [set scenario-folder (word scenario-folder "d")][set scenario-folder (word scenario-folder "p")]
+  ifelse winning = "deterministic" [set scenario-folder (word scenario-folder "d")][set scenario-folder (word scenario-folder "p")]
 
   set folder-path (word folder-path "\\" scenario-folder)
 
@@ -1020,7 +1025,7 @@ to make_energy_output
   ])
 
   let asym "none"
-  ifelse asymmetry = "deterministic" [set asym "deter"][set asym "prob"]
+  ifelse winning = "deterministic" [set asym "deter"][set asym "prob"]
 
   let resource-type "none"
   ifelse resource-dist = "clumped" [set resource-type "clump"][set resource-type "uni"]
@@ -1130,9 +1135,9 @@ CHOOSER
 251
 193
 296
-asymmetry
-asymmetry
-"deterministic" "probabilistic"
+winning
+winning
+"deterministic" "probabilistic" "initiator"
 0
 
 CHOOSER
@@ -1342,10 +1347,10 @@ HORIZONTAL
 SLIDER
 1377
 106
-1550
-139
-change-in-dom-score
-change-in-dom-score
+1650
+140
+change-in-exp-score
+change-in-exp-score
 0.01
 0.1
 0.01
@@ -1357,10 +1362,10 @@ HORIZONTAL
 SLIDER
 1397
 140
-1606
-173
-dom-score-decay-when-high
-dom-score-decay-when-high
+1615
+174
+exp-score-decay-when-high
+exp-score-decay-when-high
 0.001
 0.1
 0.01

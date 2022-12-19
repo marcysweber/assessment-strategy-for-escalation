@@ -23,8 +23,8 @@ ch2vars <- list(
   
   #contest-related variables
   "max-rhp" = list(min = 2, max = 10, qfun = "qunif"),
-  "change-in-dom-score" = list(min = 0.001, max = 0.1, qfun = "qunif"),
-  "dom-score-decay-when-high" = list(min = 0.001, max = 0.1, qfun = "qunif")
+  "change-in-exp-score" = list(min = 0.001, max = 0.2, qfun = "qunif"),
+  "exp-score-decay-when-high" = list(min = 0.001, max = 0.1, qfun = "qunif")
 )
 
 ###################################################
@@ -88,13 +88,13 @@ nlrhpcl <- nl(nlversion = "6.2.2",
          modelpath = modelpath2,
          jvmmem = 8000)
 
-nlrhpcl@experiment <- experiment(expname = "ch2amnatMEErhpcl",
+nlrhpcld@experiment <- experiment(expname = "ch2amnatMEErhpcld",
                             outpath = outpath2,
                             repetition = 1,
                             tickmetrics = "false",
                             idsetup = "setup",
                             idgo = "go",
-                            runtime = 5000,
+                            runtime = 15000,
                             stopcond = "(not any? patches with [penergy > 0])",
                             metrics = c("foraging-efficiency-time", 
                                         "n-interactions", 
@@ -103,14 +103,14 @@ nlrhpcl@experiment <- experiment(expname = "ch2amnatMEErhpcl",
                                         "dir-cons-index-attacks",
                                         "dir-cons-index-avoids"),
                             variables = ch2vars,
-                            constants = list("asymmetry" = "\"deterministic\"",
+                            constants = list("winning" = "\"deterministic\"",
                                              "assessment-who" = "\"mutual\"",
                                              "assessment-info" = "\"knowledge\"",
                                              "resource-dist" = "\"clumped\"")
 )           
 
 
-nlrhpcl@simdesign <- simdesign_morris(nl = nlrhpcl,
+nlrhpcld@simdesign <- simdesign_morris(nl = nlrhpcld,
                                  morristype = "oat",
                                  morrislevels = 6,
                                  morrisr = 10,
@@ -123,10 +123,10 @@ progressr::handlers("progress")
 library(future)
 plan(multisession)
 
-resultsMorrisch2rhpcl <- progressr::with_progress(run_nl_all(nlrhpcl))
+resultsMorrisch2rhpcld <- progressr::with_progress(run_nl_all(nlrhpcld))
 
-setsim(nlrhpcl, "simoutput")<-resultsMorrisch2rhpcl
-analysisrhpcl <- analyze_nl(nlrhpcl)
+setsim(nlrhpcld, "simoutput")<-resultsMorrisch2rhpcld
+analysisrhpcld <- analyze_nl(nlrhpcld)
 
 
 
@@ -134,18 +134,18 @@ analysisrhpcl <- analyze_nl(nlrhpcl)
 ######################################################
 ##second set, rhp uniform
 
-nlrhpuni <- nl(nlversion = "6.2.2",
+nlrhpunid <- nl(nlversion = "6.2.2",
          nlpath = netlogopath2,
          modelpath = modelpath2,
          jvmmem = 8000)
 
-nlrhpuni@experiment <- experiment(expname = "ch2amnatMEErhpcl",
+nlrhpunid@experiment <- experiment(expname = "ch2amnatMEErhpcld",
                             outpath = outpath2,
                             repetition = 1,
                             tickmetrics = "false",
                             idsetup = "setup",
                             idgo = "go",
-                            runtime = 5000,
+                            runtime = 15000,
                             stopcond = "(not any? patches with [penergy > 0])",
                             metrics = c("foraging-efficiency-time", 
                                         "n-interactions", 
@@ -154,14 +154,14 @@ nlrhpuni@experiment <- experiment(expname = "ch2amnatMEErhpcl",
                                         "dir-cons-index-attacks",
                                         "dir-cons-index-avoids"),
                             variables = ch2vars,
-                            constants = list("asymmetry" = "\"deterministic\"",
+                            constants = list("winning" = "\"deterministic\"",
                                              "assessment-who" = "\"mutual\"",
                                              "assessment-info" = "\"knowledge\"",
                                              "resource-dist" = "\"uniform\"")
 )           
 
 
-nlrhpuni@simdesign <- simdesign_morris(nl = nlrhpuni,
+nlrhpunid@simdesign <- simdesign_morris(nl = nlrhpunid,
                                  morristype = "oat",
                                  morrislevels = 6,
                                  morrisr = 10,
@@ -174,26 +174,26 @@ progressr::handlers("progress")
 library(future)
 plan(multisession)
 
-resultsMorrisch2rhpuni <- progressr::with_progress(run_nl_all(nlrhpuni))
+resultsMorrisch2rhpunid <- progressr::with_progress(run_nl_all(nlrhpunid))
 
-setsim(nlrhpuni, "simoutput")<-resultsMorrisch2rhpuni
-analysisrhpuni <- analyze_nl(nlrhpuni)
+setsim(nlrhpunid, "simoutput")<-resultsMorrisch2rhpunid
+analysisrhpunid <- analyze_nl(nlrhpunid)
 
 ############################################################
 ## third set, history and clumped
 
-nlhistcl <- nl(nlversion = "6.2.2",
+nlhistcld <- nl(nlversion = "6.2.2",
          nlpath = netlogopath2,
          modelpath = modelpath2,
          jvmmem = 12000)
 
-nlhistcl@experiment <- experiment(expname = "ch2amnatMEErhpcl",
+nlhistcld@experiment <- experiment(expname = "ch2amnatMEErhpcld",
                             outpath = outpath2,
                             repetition = 1,
                             tickmetrics = "false",
                             idsetup = "setup",
                             idgo = "go",
-                            runtime = 5000,
+                            runtime = 15000,
                             stopcond = "(not any? patches with [penergy > 0])",
                             metrics = c("foraging-efficiency-time", 
                                         "n-interactions", 
@@ -202,14 +202,14 @@ nlhistcl@experiment <- experiment(expname = "ch2amnatMEErhpcl",
                                         "dir-cons-index-attacks",
                                         "dir-cons-index-avoids"),
                             variables = ch2vars,
-                            constants = list("asymmetry" = "\"deterministic\"",
+                            constants = list("winning" = "\"deterministic\"",
                                              "assessment-who" = "\"mutual\"",
                                              "assessment-info" = "\"history\"",
                                              "resource-dist" = "\"clumped\"")
 )           
 
 
-nlhistcl@simdesign <- simdesign_morris(nl = nlhistcl,
+nlhistcld@simdesign <- simdesign_morris(nl = nlhistcld,
                                  morristype = "oat",
                                  morrislevels = 6,
                                  morrisr = 10,
@@ -222,27 +222,27 @@ progressr::handlers("progress")
 library(future)
 plan(multisession)
 
-resultsMorrisch2histcl <- progressr::with_progress(run_nl_all(nlhistcl))
+resultsMorrisch2histcld <- progressr::with_progress(run_nl_all(nlhistcld))
 
-setsim(nlhistcl, "simoutput")<-resultsMorrisch2histcl
-analysishistcl <- analyze_nl(nlhistcl)
+setsim(nlhistcld, "simoutput")<-resultsMorrisch2histcld
+analysishistcld <- analyze_nl(nlhistcld)
 
 ###########################################################################
-### final set, history and uniform
+### fourth set, history and uniform
 
 
-nlhistuni <- nl(nlversion = "6.2.2",
+nlhistunid <- nl(nlversion = "6.2.2",
          nlpath = netlogopath2,
          modelpath = modelpath2,
          jvmmem = 12000)
 
-nlhistuni@experiment <- experiment(expname = "ch2amnatMEErhpcl",
+nlhistunid@experiment <- experiment(expname = "ch2amnatMEErhpcld",
                             outpath = outpath2,
                             repetition = 1,
                             tickmetrics = "false",
                             idsetup = "setup",
                             idgo = "go",
-                            runtime = 5000,
+                            runtime = 15000,
                             stopcond = "(not any? patches with [penergy > 0])",
                             metrics = c("foraging-efficiency-time", 
                                         "n-interactions", 
@@ -251,14 +251,14 @@ nlhistuni@experiment <- experiment(expname = "ch2amnatMEErhpcl",
                                         "dir-cons-index-attacks",
                                         "dir-cons-index-avoids"),
                             variables = ch2vars,
-                            constants = list("asymmetry" = "\"deterministic\"",
+                            constants = list("winning" = "\"deterministic\"",
                                              "assessment-who" = "\"mutual\"",
                                              "assessment-info" = "\"history\"",
                                              "resource-dist" = "\"uniform\"")
 )           
 
 
-nlhistuni@simdesign <- simdesign_morris(nl = nlhistuni,
+nlhistunid@simdesign <- simdesign_morris(nl = nlhistunid,
                                  morristype = "oat",
                                  morrislevels = 6,
                                  morrisr = 10,
@@ -271,13 +271,20 @@ progressr::handlers("progress")
 library(future)
 plan(multisession)
 
-resultsMorrisch2histuni <- progressr::with_progress(run_nl_all(nlhistuni))
+resultsMorrisch2histunid <- progressr::with_progress(run_nl_all(nlhistunid))
 
-setsim(nlhistuni, "simoutput")<-resultsMorrisch2histuni
-analysishistuni <- analyze_nl(nlhistuni)
+setsim(nlhistunid, "simoutput")<-resultsMorrisch2histunid
+analysishistunid <- analyze_nl(nlhistunid)
+
+
+#########################################################
+#initiator wins sensitivity analysis here
 
 
 
+
+
+#########################################################
 
 
 
