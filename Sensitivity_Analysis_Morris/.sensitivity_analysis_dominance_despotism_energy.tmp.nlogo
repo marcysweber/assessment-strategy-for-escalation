@@ -264,7 +264,7 @@ to go ;; put main schedule procedures for readability
   ]
 
   color_patches
-  decay_exp
+
 
 
 
@@ -286,7 +286,7 @@ to go ;; put main schedule procedures for readability
       set distance-traveled distance-traveled + daily-distance-traveled
       set daily-distance-traveled 0
     ]
-
+  decay_exp
   ]
 
 
@@ -480,7 +480,7 @@ to fight [opponent] ;; function to have individuals (self and opponent) fight ea
         ;show "self won"
         update_winner_against opponent
         ask opponent [update_loser_against myself]
-        fd 1
+        fd step-distance
 
         ask out-victory-to opponent [set victory-counter victory-counter + 1] ;;increases the counter on the victory link going from self of opponent by 1
         ask in-defeat-from opponent [set defeat-counter defeat-counter + 1] ;; increases the counter on the defeat link going from opponent to self by one
@@ -547,8 +547,8 @@ end
 to update_exp_list
       set exp-delta-list fput exp-score exp-delta-list
 
-    ifelse length exp-delta-list > 4 [
-      set running-exp-avg mean sublist exp-delta-list 0 5 ;;;;; the running average is only from the 10 most recent wins or losses
+    ifelse length exp-delta-list > 9 [
+      set running-exp-avg mean sublist exp-delta-list 0 10 ;;;;; the running average is only from the 10 most recent wins or losses
     ][
       set running-exp-avg mean exp-delta-list
     ]
@@ -597,17 +597,19 @@ to-report cost-estimation [opponent]
           [error "You need to turn onthe mutual-assess, self-only, or opponent-only switch."])
       ]
       [error "Neither history nor knowledge switch was on!"])
+  ;type cost-estimate type " is my cost estimate \n"
   report cost-estimate
 end
 
 
 to-report benefit-estimation
-  let bene 0.01
+  let bene 0.5
 
-  if sum [penergy] of neighbors > 0 [
-    set bene (([penergy] of patch-ahead 1) / sum [penergy] of neighbors) ;; the benefit assessment is the energy of patch in dispute as proportion of highest possible qualit
+;  if sum [penergy] of neighbors > 0 [
+;    set bene (([penergy] of patch-ahead step-distance) / sum [penergy] of patches in-radius step-distance) ;; the benefit assessment is the energy of patch in dispute as proportion of highest possible qualit
   ]
 
+  ;type bene type " is my benefit estimate \n"
   report bene
 end
 
@@ -615,9 +617,9 @@ end
 to decide_to_attack ;; function to inform turtles on how to decide to fight
 
   let opponent one-of other turtles-on patch-ahead step-distance ;; define i as one of the other primates on the next patch ahead (and not self as opponent)
-  ;;show i type "is my opponent \n\n"
+  ;type opponent type " is my opponent \n"
 
-  ifelse [penergy] of patch-ahead 1 > 0 [
+  (ifelse [penergy] of patch-ahead step-distance > 0 [
 
 
   if opponent != nobody [;; if i (the opponent) is not "nobody", then do the following function (this should be the very first thing checked)
@@ -628,9 +630,9 @@ to decide_to_attack ;; function to inform turtles on how to decide to fight
     let probr 1.0 ;; prob of making the right choice. default to 1, so that agents will make the optimal choice if something goes wrong
 
     ;; then we can do a die roll
-    let roll ranexp-float 1.0
+    let roll random-float 1.0
 
-set cost-est cost-estimation opponent
+    set cost-est cost-estimation opponent
 
     ;;;;;;;;;;;;;
     ;; USE COSTS TO DETERMINE BEST DECISION
@@ -639,8 +641,11 @@ set cost-est cost-estimation opponent
 
           (ifelse probr > roll [
               ask out-attack-to opponent [set attack-counter attack-counter + 1]
+          ;show "fight! \n" type "\n"
               fight opponent
           ][
+                   ; show "we decided not to fight \n" ;; if the fight does not occur, then self says, "we decided not to fight"
+          ;type "\n"
               ask out-fightavoided-to opponent [set avoid-counter avoid-counter + 1]
         rt one-of (range 90 270)
         fd 1
@@ -648,22 +653,27 @@ set cost-est cost-estimation opponent
 
         ]
         cost-est >= bene [
-          ;;show "we decided not to fight \n" ;; if the fight does not occur, then self says, "we decided not to fight"
+
           ;let correct-choice avoid
 
           set probr (cost-est / (bene + cost-est))
           (ifelse probr > roll [
+                     ; show "we decided not to fight \n" ;; if the fight does not occur, then self says, "we decided not to fight"
+           ; type "\n"
                ask out-fightavoided-to opponent [set avoid-counter avoid-counter + 1]
           rt one-of (range 90 270)
           fd 1
            ][
+            ;show "fight! \n" type "\n"
                ask out-attack-to opponent [set attack-counter attack-counter + 1]
                fight opponent
            ])
         ])
-  ]
-  ]
-  [move-to one-of neighbors with [not any? primates-here]]
+
+    ]]
+    [
+      ;show "but there was no energy to fight over!" type "\n"
+      move-to min-one-of neighbors [count turtles-here]])
 end
 
 to decay_exp
@@ -762,7 +772,7 @@ end
 to-report dir-cons-index-wins
   ;; directional consistency index is the average of the following for all dyads:
   ;; (high - low) / (high + low)
-  ;; where high is the outcomes of the  behavioral actor of higher occurence and low is the behavioral outcomes of the actor with lower occurence
+  ;; where high is the outcomes of the behavioral actor of higher occurence and low is the behavioral outcomes of the actor with lower occurence
 
   let dci 0
   let dci-list []
@@ -1138,7 +1148,7 @@ CHOOSER
 winning
 winning
 "deterministic" "probabilistic" "initiator"
-0
+2
 
 CHOOSER
 55
@@ -1148,7 +1158,7 @@ CHOOSER
 assessment-info
 assessment-info
 "knowledge" "history"
-0
+1
 
 CHOOSER
 54
@@ -1270,10 +1280,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-1401
-69
-1574
-102
+791
+434
+964
+467
 max-rhp
 max-rhp
 0
@@ -1345,34 +1355,53 @@ NIL
 HORIZONTAL
 
 SLIDER
-1377
-106
-1550
-139
+767
+471
+1040
+505
 change-in-exp-score
 change-in-exp-score
 0.01
+0.4
 0.1
-0.01
 0.01
 1
 NIL
 HORIZONTAL
 
 SLIDER
-1397
-140
-1606
-173
-dom-score-decay-when-high
-dom-score-decay-when-high
+787
+505
+1005
+539
+exp-score-decay-when-high
+exp-score-decay-when-high
 0.001
 0.1
-0.01
+0.001
 0.001
 1
 NIL
 HORIZONTAL
+
+PLOT
+152
+586
+353
+737
+lowest and highest ex-scores
+ticks
+exp-score
+0.0
+1.0
+0.0
+1.0
+true
+false
+"" ""
+PENS
+"default" 1.0 0 -16777216 true "plot [exp-score] of primate 0" "plot [exp-score] of primate 0"
+"pen-1" 1.0 0 -7500403 true "plot [exp-score] of primate 1" "plot [exp-score] of primate 1"
 
 @#$#@#$#@
 ## WHAT IS IT?

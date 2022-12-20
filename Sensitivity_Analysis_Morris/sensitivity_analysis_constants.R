@@ -83,7 +83,7 @@ analysispractice <- analyze_nl(nlpractice)
 ###########################################################################
 ##first SA experiment - rhp clumped
 
-nlrhpcl <- nl(nlversion = "6.2.2",
+nlrhpcld <- nl(nlversion = "6.2.2",
          nlpath = netlogopath2,
          modelpath = modelpath2,
          jvmmem = 8000)
@@ -280,6 +280,200 @@ analysishistunid <- analyze_nl(nlhistunid)
 #########################################################
 #initiator wins sensitivity analysis here
 
+##first SA experiment - rhp clumped
+
+nlrhpcli <- nl(nlversion = "6.2.2",
+              nlpath = netlogopath2,
+              modelpath = modelpath2,
+              jvmmem = 8000)
+
+nlrhpcli@experiment <- experiment(expname = "ch2amnatMEErhpcli",
+                                  outpath = outpath2,
+                                  repetition = 1,
+                                  tickmetrics = "false",
+                                  idsetup = "setup",
+                                  idgo = "go",
+                                  runtime = 15000,
+                                  stopcond = "(not any? patches with [penergy > 0])",
+                                  metrics = c("foraging-efficiency-time", 
+                                              "n-interactions", 
+                                              "proportion-attacking",
+                                              "dir-cons-index-wins",
+                                              "dir-cons-index-attacks",
+                                              "dir-cons-index-avoids"),
+                                  variables = ch2vars,
+                                  constants = list("winning" = "\"initiator\"",
+                                                   "assessment-who" = "\"mutual\"",
+                                                   "assessment-info" = "\"knowledge\"",
+                                                   "resource-dist" = "\"clumped\"")
+)           
+
+
+nlrhpcli@simdesign <- simdesign_morris(nl = nlrhpcli,
+                                       morristype = "oat",
+                                       morrislevels = 6,
+                                       morrisr = 10,
+                                       morrisgridjump = 3, 
+                                       nseeds = 1)
+
+
+progressr::handlers("progress")
+
+library(future)
+plan(multisession)
+
+resultsMorrisch2rhpcli <- progressr::with_progress(run_nl_all(nlrhpcli))
+
+setsim(nlrhpcli, "simoutput")<-resultsMorrisch2rhpcli
+analysisrhpcli <- analyze_nl(nlrhpcli)
+
+
+
+
+######################################################
+##second set, rhp uniform
+
+nlrhpunii <- nl(nlversion = "6.2.2",
+                nlpath = netlogopath2,
+                modelpath = modelpath2,
+                jvmmem = 8000)
+
+nlrhpunii@experiment <- experiment(expname = "ch2amnatMEErhpcli",
+                                   outpath = outpath2,
+                                   repetition = 1,
+                                   tickmetrics = "false",
+                                   idsetup = "setup",
+                                   idgo = "go",
+                                   runtime = 15000,
+                                   stopcond = "(not any? patches with [penergy > 0])",
+                                   metrics = c("foraging-efficiency-time", 
+                                               "n-interactions", 
+                                               "proportion-attacking",
+                                               "dir-cons-index-wins",
+                                               "dir-cons-index-attacks",
+                                               "dir-cons-index-avoids"),
+                                   variables = ch2vars,
+                                   constants = list("winning" = "\"initiator\"",
+                                                    "assessment-who" = "\"mutual\"",
+                                                    "assessment-info" = "\"knowledge\"",
+                                                    "resource-dist" = "\"uniform\"")
+)           
+
+
+nlrhpunii@simdesign <- simdesign_morris(nl = nlrhpunii,
+                                        morristype = "oat",
+                                        morrislevels = 6,
+                                        morrisr = 10,
+                                        morrisgridjump = 3, 
+                                        nseeds = 1)
+
+
+progressr::handlers("progress")
+
+library(future)
+plan(multisession)
+
+resultsMorrisch2rhpunii <- progressr::with_progress(run_nl_all(nlrhpunii))
+
+setsim(nlrhpunii, "simoutput")<-resultsMorrisch2rhpunii
+analysisrhpunii <- analyze_nl(nlrhpunii)
+
+############################################################
+## third set, history and clumped
+
+nlhistcli <- nl(nlversion = "6.2.2",
+                nlpath = netlogopath2,
+                modelpath = modelpath2,
+                jvmmem = 12000)
+
+nlhistcli@experiment <- experiment(expname = "ch2amnatMEErhpcli",
+                                   outpath = outpath2,
+                                   repetition = 1,
+                                   tickmetrics = "false",
+                                   idsetup = "setup",
+                                   idgo = "go",
+                                   runtime = 15000,
+                                   stopcond = "(not any? patches with [penergy > 0])",
+                                   metrics = c("foraging-efficiency-time", 
+                                               "n-interactions", 
+                                               "proportion-attacking",
+                                               "dir-cons-index-wins",
+                                               "dir-cons-index-attacks",
+                                               "dir-cons-index-avoids"),
+                                   variables = ch2vars,
+                                   constants = list("winning" = "\"initiator\"",
+                                                    "assessment-who" = "\"mutual\"",
+                                                    "assessment-info" = "\"history\"",
+                                                    "resource-dist" = "\"clumped\"")
+)           
+
+
+nlhistcli@simdesign <- simdesign_morris(nl = nlhistcli,
+                                        morristype = "oat",
+                                        morrislevels = 6,
+                                        morrisr = 10,
+                                        morrisgridjump = 3, 
+                                        nseeds = 1)
+
+
+progressr::handlers("progress")
+
+library(future)
+plan(multisession)
+
+resultsMorrisch2histcli <- progressr::with_progress(run_nl_all(nlhistcli))
+
+setsim(nlhistcli, "simoutput")<-resultsMorrisch2histcli
+analysishistcli <- analyze_nl(nlhistcli)
+
+###########################################################################
+### fourth set, history and uniform
+
+
+nlhistunii <- nl(nlversion = "6.2.2",
+                 nlpath = netlogopath2,
+                 modelpath = modelpath2,
+                 jvmmem = 12000)
+
+nlhistunii@experiment <- experiment(expname = "ch2amnatMEErhpcli",
+                                    outpath = outpath2,
+                                    repetition = 1,
+                                    tickmetrics = "false",
+                                    idsetup = "setup",
+                                    idgo = "go",
+                                    runtime = 15000,
+                                    stopcond = "(not any? patches with [penergy > 0])",
+                                    metrics = c("foraging-efficiency-time", 
+                                                "n-interactions", 
+                                                "proportion-attacking",
+                                                "dir-cons-index-wins",
+                                                "dir-cons-index-attacks",
+                                                "dir-cons-index-avoids"),
+                                    variables = ch2vars,
+                                    constants = list("winning" = "\"initiator\"",
+                                                     "assessment-who" = "\"mutual\"",
+                                                     "assessment-info" = "\"history\"",
+                                                     "resource-dist" = "\"uniform\"")
+)           
+
+
+nlhistunii@simdesign <- simdesign_morris(nl = nlhistunii,
+                                         morristype = "oat",
+                                         morrislevels = 6,
+                                         morrisr = 10,
+                                         morrisgridjump = 3, 
+                                         nseeds = 1)
+
+
+progressr::handlers("progress")
+
+library(future)
+plan(multisession)
+
+resultsMorrisch2histunii <- progressr::with_progress(run_nl_all(nlhistunii))
+
+setsim(nlhistunii, "simoutput")<-resultsMorrisch2histunii
+analysishistunii <- analyze_nl(nlhistunii)
 
 
 
@@ -290,11 +484,17 @@ analysishistunid <- analyze_nl(nlhistunid)
 
 library(ggplot2)
 
-analysishistcl <- split(analysishistcl, analysishistcl$metric)
-analysishistuni <- split(analysishistuni, analysishistuni$metric)
-analysisrhpcl <- split(analysisrhpcl, analysisrhpcl$metric)
-analysisrhpuni <- split(analysisrhpuni, analysisrhpuni$metric)
+analysishistcld <- split(analysishistcld, analysishistcld$metric)
+analysishistunid <- split(analysishistunid, analysishistunid$metric)
+analysisrhpcld <- split(analysisrhpcld, analysisrhpcld$metric)
+analysisrhpunid <- split(analysisrhpunid, analysisrhpunid$metric)
+analysishistcli <- split(analysishistcli, analysishistcli$metric)
+analysishistunii <- split(analysishistunii, analysishistunii$metric)
+analysisrhpcli <- split(analysisrhpcli, analysisrhpcli$metric)
+analysisrhpunii <- split(analysisrhpunii, analysisrhpunii$metric)
 
+new.MEE.data <- c(analysishistcld, analysishistunid, analysisrhpcld, analysisrhpunid, 
+                  analysishistcli, analysishistunii, analysisrhpcli, analysisrhpunii)
 
 pdf("Github/dominance/AmNatMEEhistoryclumped.pdf")
 
@@ -577,85 +777,162 @@ musigma_processing <- function(data) {
   return(dcast(data, metric + parameter ~ index))
 }
 
+
 musigma_processing(analysishistcl$`dir-cons-index-attacks_mean`)
 
-analysishistclmusig <- data.frame()
+#############
+#code below processes all MEE output so that it can be plotted
 
-for (df in analysishistcl) {
-  analysishistclmusig <- rbind(analysishistclmusig, (musigma_processing(as.data.frame(df))))
+analysishistcldmusig <- data.frame()
+
+for (df in analysishistcld) {
+  analysishistcldmusig <- rbind(analysishistcldmusig, (musigma_processing(as.data.frame(df))))
 }
 
-analysishistunimusig <- data.frame()
+analysishistunidmusig <- data.frame()
 
-for (df in analysishistcl) {
-  analysishistunimusig <- rbind(analysishistunimusig, (musigma_processing(as.data.frame(df))))
+for (df in analysishistcld) {
+  analysishistunidmusig <- rbind(analysishistunidmusig, (musigma_processing(as.data.frame(df))))
 }
 
-analysisrhpclmusig <- data.frame()
+analysisrhpcldmusig <- data.frame()
 
-for (df in analysishistcl) {
-  analysisrhpclmusig <- rbind(analysisrhpclmusig, (musigma_processing(as.data.frame(df))))
+for (df in analysishistcld) {
+  analysisrhpcldmusig <- rbind(analysisrhpcldmusig, (musigma_processing(as.data.frame(df))))
 }
 
-analysisrhpunimusig <- data.frame()
+analysisrhpunidmusig <- data.frame()
 
-for (df in analysisrhpuni) {
-  analysisrhpunimusig <- rbind(analysisrhpunimusig, (musigma_processing(as.data.frame(df))))
+for (df in analysisrhpunid) {
+  analysisrhpunidmusig <- rbind(analysisrhpunidmusig, (musigma_processing(as.data.frame(df))))
 }
+analysishistclimusig <- data.frame()
+
+for (df in analysishistcli) {
+  analysishistclimusig <- rbind(analysishistclimusig, (musigma_processing(as.data.frame(df))))
+}
+
+analysishistuniimusig <- data.frame()
+
+for (df in analysishistcli) {
+  analysishistuniimusig <- rbind(analysishistuniimusig, (musigma_processing(as.data.frame(df))))
+}
+
+analysisrhpclimusig <- data.frame()
+
+for (df in analysishistcli) {
+  analysisrhpclimusig <- rbind(analysisrhpclimusig, (musigma_processing(as.data.frame(df))))
+}
+
+analysisrhpuniimusig <- data.frame()
+
+for (df in analysisrhpunii) {
+  analysisrhpuniimusig <- rbind(analysisrhpuniimusig, (musigma_processing(as.data.frame(df))))
+}
+
 
 
 library(ggrepel)
 
-pdf("Github/dominance/AmNatMEEscatterhistoryclv2.pdf")
+pdf("Github/dominance/AmNatMEEscatterexpcldv3.pdf")
 
-metric.levels <- unique(analysishistclmusig$metric)
+metric.levels <- unique(analysishistcldmusig$metric)
 
 for (metric in metric.levels) {
-print(ggplot(analysishistclmusig[analysishistclmusig$metric == metric,], aes(x = mustar, y = sigma, label = parameter)) +
+print(ggplot(analysishistcldmusig[analysishistcldmusig$metric == metric,], aes(x = mustar, y = sigma, label = parameter)) +
   geom_point() + geom_label_repel(size = 3) +
-  labs(title = paste0("Morris Elementary Effects, History Clumped ", metric)))
+  labs(title = paste0("MEE, Exp Clumped Deter. ", metric)))
 }
 dev.off()
 
 
 
-pdf("Github/dominance/AmNatMEEscatterhistoryuniv2.pdf")
+pdf("Github/dominance/AmNatMEEscatterexpunidv3.pdf")
 
-metric.levels <- unique(analysishistunimusig$metric)
+metric.levels <- unique(analysishistunidmusig$metric)
 
 for (metric in metric.levels) {
-  print(ggplot(analysishistunimusig[analysishistclmusig$metric == metric,], aes(x = mustar, y = sigma, label = parameter)) +
+  print(ggplot(analysishistunidmusig[analysishistcldmusig$metric == metric,], aes(x = mustar, y = sigma, label = parameter)) +
           geom_point() + geom_label_repel(size = 3) +
-          labs(title = paste0("Morris Elementary Effects, History Uniform ", metric)))
+          labs(title = paste0("MEE, Exp Uniform Deter ", metric)))
 }
 dev.off()
 
 
 
-pdf("Github/dominance/AmNatMEEscatterrhpclv2.pdf")
+pdf("Github/dominance/AmNatMEEscatterrhpcldv3.pdf")
 
-metric.levels <- unique(analysishistclmusig$metric)
+metric.levels <- unique(analysisrhpcldmusig$metric)
 
 for (metric in metric.levels) {
-  print(ggplot(analysisrhpclmusig[analysisrhpclmusig$metric == metric,], aes(x = mustar, y = sigma, label = parameter)) +
+  print(ggplot(analysisrhpcldmusig[analysisrhpcldmusig$metric == metric,], aes(x = mustar, y = sigma, label = parameter)) +
           geom_point() + geom_label_repel(size = 3) +
-          labs(title = paste0("Morris Elementary Effects, RHP Clumped ", metric)))
+          labs(title = paste0("MEE, RHP Clumped Deter ", metric)))
 }
 dev.off()
 
 
 
-pdf("Github/dominance/AmNatMEEscatterrhpuniv2.pdf")
+pdf("Github/dominance/AmNatMEEscatterrhpunidv3.pdf")
 
-metric.levels <- unique(analysishistclmusig$metric)
+metric.levels <- unique(analysisrhpunidmusig$metric)
 
 for (metric in metric.levels) {
-  print(ggplot(analysisrhpunimusig[analysisrhpunimusig$metric == metric,], aes(x = mustar, y = sigma, label = parameter)) +
+  print(ggplot(analysisrhpunidmusig[analysisrhpunidmusig$metric == metric,], aes(x = mustar, y = sigma, label = parameter)) +
           geom_point() + geom_label_repel(size = 3) +
-          labs(title = paste0("Morris Elementary Effects, RHP Uniform ", metric)))
+          labs(title = paste0("MEE, RHP Uniform Deter ", metric)))
 }
 dev.off()
 
+pdf("Github/dominance/AmNatMEEscatterexpcliv3.pdf")
+
+metric.levels <- unique(analysishistclidmusig$metric)
+
+for (metric in metric.levels) {
+  print(ggplot(analysishistclimusig[analysishistclimusig$metric == metric,], aes(x = mustar, y = sigma, label = parameter)) +
+          geom_point() + geom_label_repel(size = 3) +
+          labs(title = paste0("MEE, Exp Clumped Init. ", metric)))
+}
+dev.off()
+
+
+
+pdf("Github/dominance/AmNatMEEscatterexpuniiv3.pdf")
+
+metric.levels <- unique(analysishistuniimusig$metric)
+
+for (metric in metric.levels) {
+  print(ggplot(analysishistuniimusig[analysishistuniimusig$metric == metric,], aes(x = mustar, y = sigma, label = parameter)) +
+          geom_point() + geom_label_repel(size = 3) +
+          labs(title = paste0("MEE, Exp Uniform Init. ", metric)))
+}
+dev.off()
+
+
+
+pdf("Github/dominance/AmNatMEEscatterrhpcliv3.pdf")
+
+metric.levels <- unique(analysisrhpclimusig$metric)
+
+for (metric in metric.levels) {
+  print(ggplot(analysisrhpclimusig[analysisrhpclimusig$metric == metric,], aes(x = mustar, y = sigma, label = parameter)) +
+          geom_point() + geom_label_repel(size = 3) +
+          labs(title = paste0("MEE, RHP Clumped Init ", metric)))
+}
+dev.off()
+
+
+
+pdf("Github/dominance/AmNatMEEscatterrhpuniiv3.pdf")
+
+metric.levels <- unique(analysishistclimusig$metric)
+
+for (metric in metric.levels) {
+  print(ggplot(analysisrhpuniimusig[analysisrhpuniimusig$metric == metric,], aes(x = mustar, y = sigma, label = parameter)) +
+          geom_point() + geom_label_repel(size = 3) +
+          labs(title = paste0("MEE, RHP Uniform Init. ", metric)))
+}
+dev.off()
 
 
 
