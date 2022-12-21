@@ -287,7 +287,7 @@ to go ;; put main schedule procedures for readability
   ]
 
 
-  if ticks = 5000 [
+  if ticks = 5000 and burnin-test? = false [
     ask victories [set victory-counter 0]
     ask defeats [set defeat-counter 0]
     ask fightsavoided [set avoid-counter 0]
@@ -950,6 +950,112 @@ end
 to-report foraging-efficiency-time
   report mean [total-energy-gained / ticks] of primates
 end
+
+
+to-report dir-cons-index-wins
+  ;; directional consistency index is the average of the following for all dyads:
+  ;; (high - low) / (high + low)
+  ;; where high is the outcomes of the  behavioral actor of higher occurence and low is the behavioral outcomes of the actor with lower occurence
+
+  let dci 0
+  let dci-list []
+
+  ask primates [
+
+    ask other primates [
+      let a [victory-counter] of in-victory-from myself
+      let b [victory-counter] of out-victory-to myself
+
+      if a > 0 or b > 0 [ ;; check that there is a valid interaction
+        (ifelse (a > b) [ ;;did you win more than me?
+            let index (a - b) / (a + b)
+            set dci-list lput index dci-list
+
+          ][;; or did i win more than you?
+            let index (b - a) / (b + a)
+            set dci-list lput index dci-list
+          ])
+      ]
+
+    ]
+  ]
+
+  if not empty? dci-list [set dci mean dci-list]
+  report dci
+
+end
+
+
+
+to-report dir-cons-index-attacks
+  ;; directional consistency index is the average of the following for all dyads:
+  ;; (high - low) / (high + low)
+  ;; where high is the outcomes of the  behavioral actor of higher occurence and low is the behavioral outcomes of the actor with lower occurence
+
+  let dci 0
+  let dci-list []
+
+  ask primates [
+
+    ask other primates [
+      let a [attack-counter] of in-attack-from myself
+      let b [attack-counter] of out-attack-to myself
+
+      if a > 0 or b > 0 [ ;; check that there is a valid interaction
+        (ifelse (a > b) [ ;;did you win more than me?
+          let index (a - b) / (a + b)
+          set dci-list lput index dci-list
+
+        ][;; or did i win more than you?
+          let index (b - a) / (b + a)
+          set dci-list lput index dci-list
+        ])
+      ]
+
+
+    ]
+  ]
+
+    if not empty? dci-list [set dci mean dci-list]
+  report dci
+
+end
+
+
+to-report dir-cons-index-avoids
+  ;; directional consistency index is the average of the following for all dyads:
+  ;; (high - low) / (high + low)
+  ;; where high is the outcomes of the  behavioral actor of higher occurence and low is the behavioral outcomes of the actor with lower occurence
+
+  let dci 0
+  let dci-list []
+
+  ask primates [
+
+    ask other primates [
+      let a [avoid-counter] of in-fightavoided-from myself
+      let b [avoid-counter] of out-fightavoided-to myself
+
+      if a > 0 or b > 0 [ ;; check that there is a valid interaction
+        (ifelse (a > b) [ ;;did you win more than me?
+          let index (a - b) / (a + b)
+          set dci-list lput index dci-list
+
+        ][;; or did i win more than you?
+          let index (b - a) / (b + a)
+          set dci-list lput index dci-list
+        ])
+      ]
+
+
+    ]
+  ]
+
+    if not empty? dci-list [set dci mean dci-list]
+  report dci
+
+end
+
 @#$#@#$#@
 GRAPHICS-WINDOW
 239
@@ -1020,7 +1126,7 @@ CHOOSER
 resource-dist
 resource-dist
 "uniform" "clumped"
-0
+1
 
 CHOOSER
 55
@@ -1050,7 +1156,7 @@ CHOOSER
 assessment-who
 assessment-who
 "self" "opponent" "mutual"
-0
+2
 
 PLOT
 891
@@ -1080,11 +1186,22 @@ burnin-test-dur
 burnin-test-dur
 1000
 10000
-5000.0
+42000.0
 1000
 1
 NIL
 HORIZONTAL
+
+SWITCH
+72
+436
+195
+469
+burnin-test?
+burnin-test?
+0
+1
+-1000
 
 @#$#@#$#@
 ## WHAT IS IT?
@@ -1882,13 +1999,15 @@ NetLogo 6.2.2
   <experiment name="burnin-test" repetitions="10" runMetricsEveryStep="false">
     <setup>setup</setup>
     <go>go</go>
-    <final>make_energy_output</final>
     <timeLimit steps="10001"/>
-    <exitCondition>step-burnin-test</exitCondition>
+    <exitCondition>stop-burnin-test</exitCondition>
     <metric>ticks</metric>
     <metric>sum [victory-counter] of victories</metric>
     <metric>sum [avoid-counter] of fightsavoided</metric>
     <metric>foraging-efficiency-time</metric>
+    <metric>dir-cons-index-wins</metric>
+    <metric>dir-cons-index-attacks</metric>
+    <metric>dir-cons-index-avoids</metric>
     <enumeratedValueSet variable="winning">
       <value value="&quot;deterministic&quot;"/>
       <value value="&quot;probabilistic&quot;"/>
@@ -1917,6 +2036,66 @@ NetLogo 6.2.2
       <value value="9000"/>
       <value value="10000"/>
     </enumeratedValueSet>
+  </experiment>
+  <experiment name="burnin-testv3" repetitions="5" runMetricsEveryStep="false">
+    <setup>setup</setup>
+    <go>go</go>
+    <timeLimit steps="20001"/>
+    <exitCondition>stop-burnin-test</exitCondition>
+    <metric>ticks</metric>
+    <metric>sum [victory-counter] of victories</metric>
+    <metric>sum [avoid-counter] of fightsavoided</metric>
+    <metric>foraging-efficiency-time</metric>
+    <metric>dir-cons-index-wins</metric>
+    <metric>dir-cons-index-attacks</metric>
+    <metric>dir-cons-index-avoids</metric>
+    <enumeratedValueSet variable="winning">
+      <value value="&quot;deterministic&quot;"/>
+      <value value="&quot;probabilistic&quot;"/>
+      <value value="&quot;initiator&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="resource-dist">
+      <value value="&quot;uniform&quot;"/>
+      <value value="&quot;clumped&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="assessment-info">
+      <value value="&quot;history&quot;"/>
+      <value value="&quot;knowledge&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="assessment-who">
+      <value value="&quot;mutual&quot;"/>
+    </enumeratedValueSet>
+    <steppedValueSet variable="burnin-test-dur" first="1000" step="1000" last="20000"/>
+  </experiment>
+  <experiment name="burnin-testv4" repetitions="1" runMetricsEveryStep="false">
+    <setup>setup</setup>
+    <go>go</go>
+    <timeLimit steps="50001"/>
+    <exitCondition>stop-burnin-test</exitCondition>
+    <metric>ticks</metric>
+    <metric>sum [victory-counter] of victories</metric>
+    <metric>sum [avoid-counter] of fightsavoided</metric>
+    <metric>foraging-efficiency-time</metric>
+    <metric>dir-cons-index-wins</metric>
+    <metric>dir-cons-index-attacks</metric>
+    <metric>dir-cons-index-avoids</metric>
+    <enumeratedValueSet variable="winning">
+      <value value="&quot;deterministic&quot;"/>
+      <value value="&quot;probabilistic&quot;"/>
+      <value value="&quot;initiator&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="resource-dist">
+      <value value="&quot;uniform&quot;"/>
+      <value value="&quot;clumped&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="assessment-info">
+      <value value="&quot;history&quot;"/>
+      <value value="&quot;knowledge&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="assessment-who">
+      <value value="&quot;mutual&quot;"/>
+    </enumeratedValueSet>
+    <steppedValueSet variable="burnin-test-dur" first="1000" step="1000" last="50000"/>
   </experiment>
 </experiments>
 @#$#@#$#@
