@@ -1,9 +1,14 @@
+#packages, paths
+#####
 library(nlrx)
 library(sensitivity)
 netlogopath2 <- file.path("/Program Files/NetLogo 6.2.2")
 modelpath2 <- file.path("C:\\Users\\Marcy\\Documents\\GitHub\\dominance\\Sensitivity_Analysis_Morris\\sensitivity_analysis_dominance_despotism_energy.nlogo")
 outpath2 <- file.path("/Users/Marcy/Desktop/")
+#####
 
+#params
+#####
 ch2vars <- list(
   #resource variables
   "quality-max-clumped" = list(min = 15, max = 50, qfun = "qunif"),
@@ -26,6 +31,7 @@ ch2vars <- list(
   "change-in-exp-score" = list(min = 0.001, max = 0.2, qfun = "qunif"),
   "exp-score-decay-when-high" = list(min = 0.001, max = 0.1, qfun = "qunif")
 )
+#####
 
 ###################################################
 ## practice
@@ -80,6 +86,8 @@ analysispractice <- analyze_nl(nlpractice)
 
 
 
+
+#MEE experiments for scenarios
 ###########################################################################
 ##first SA experiment - rhp clumped
 
@@ -95,7 +103,7 @@ nlrhpcld@experiment <- experiment(expname = "ch2amnatMEErhpcld",
                             idsetup = "setup",
                             idgo = "go",
                             runtime = 15000,
-                            stopcond = "(not any? patches with [penergy > 0])",
+                            #stopcond = "(not any? patches with [penergy > 0])",
                             metrics = c("foraging-efficiency-time", 
                                         "n-interactions", 
                                         "proportion-attacking",
@@ -146,7 +154,7 @@ nlrhpunid@experiment <- experiment(expname = "ch2amnatMEErhpcld",
                             idsetup = "setup",
                             idgo = "go",
                             runtime = 15000,
-                            stopcond = "(not any? patches with [penergy > 0])",
+                            #stopcond = "(not any? patches with [penergy > 0])",
                             metrics = c("foraging-efficiency-time", 
                                         "n-interactions", 
                                         "proportion-attacking",
@@ -194,7 +202,7 @@ nlhistcld@experiment <- experiment(expname = "ch2amnatMEErhpcld",
                             idsetup = "setup",
                             idgo = "go",
                             runtime = 15000,
-                            stopcond = "(not any? patches with [penergy > 0])",
+                            #stopcond = "(not any? patches with [penergy > 0])",
                             metrics = c("foraging-efficiency-time", 
                                         "n-interactions", 
                                         "proportion-attacking",
@@ -243,7 +251,7 @@ nlhistunid@experiment <- experiment(expname = "ch2amnatMEErhpcld",
                             idsetup = "setup",
                             idgo = "go",
                             runtime = 15000,
-                            stopcond = "(not any? patches with [penergy > 0])",
+                            #stopcond = "(not any? patches with [penergy > 0])",
                             metrics = c("foraging-efficiency-time", 
                                         "n-interactions", 
                                         "proportion-attacking",
@@ -294,7 +302,7 @@ nlrhpcli@experiment <- experiment(expname = "ch2amnatMEErhpcli",
                                   idsetup = "setup",
                                   idgo = "go",
                                   runtime = 15000,
-                                  stopcond = "(not any? patches with [penergy > 0])",
+                                  #stopcond = "(not any? patches with [penergy > 0])",
                                   metrics = c("foraging-efficiency-time", 
                                               "n-interactions", 
                                               "proportion-attacking",
@@ -345,7 +353,7 @@ nlrhpunii@experiment <- experiment(expname = "ch2amnatMEErhpcli",
                                    idsetup = "setup",
                                    idgo = "go",
                                    runtime = 15000,
-                                   stopcond = "(not any? patches with [penergy > 0])",
+                                   #stopcond = "(not any? patches with [penergy > 0])",
                                    metrics = c("foraging-efficiency-time", 
                                                "n-interactions", 
                                                "proportion-attacking",
@@ -393,7 +401,7 @@ nlhistcli@experiment <- experiment(expname = "ch2amnatMEErhpcli",
                                    idsetup = "setup",
                                    idgo = "go",
                                    runtime = 15000,
-                                   stopcond = "(not any? patches with [penergy > 0])",
+                                   #stopcond = "(not any? patches with [penergy > 0])",
                                    metrics = c("foraging-efficiency-time", 
                                                "n-interactions", 
                                                "proportion-attacking",
@@ -442,7 +450,7 @@ nlhistunii@experiment <- experiment(expname = "ch2amnatMEErhpcli",
                                     idsetup = "setup",
                                     idgo = "go",
                                     runtime = 15000,
-                                    stopcond = "(not any? patches with [penergy > 0])",
+                                    #stopcond = "(not any? patches with [penergy > 0])",
                                     metrics = c("foraging-efficiency-time", 
                                                 "n-interactions", 
                                                 "proportion-attacking",
@@ -480,8 +488,6 @@ analysishistunii <- analyze_nl(nlhistunii)
 
 #########################################################
 
-
-
 library(ggplot2)
 
 analysishistcld <- split(analysishistcld, analysishistcld$metric)
@@ -495,7 +501,10 @@ analysisrhpunii <- split(analysisrhpunii, analysisrhpunii$metric)
 
 new.MEE.data <- c(analysishistcld, analysishistunid, analysisrhpcld, analysisrhpunid, 
                   analysishistcli, analysishistunii, analysisrhpcli, analysisrhpunii)
+#####
 
+#bar plots below - do not use anymore
+######################
 pdf("Github/dominance/AmNatMEEhistoryclumped.pdf")
 
 ggplot(analysishistcl$`n-interactions_mean`, aes(x=reorder(parameter, -value), y=value, fill = index)) +
@@ -757,31 +766,19 @@ ggplot(analysisrhpuni$`foraging-efficiency-time_mean`, aes(x=reorder(parameter, 
 
 dev.off()
 
-
-
-
-
-
-
+#####
 
 
 library(reshape2)
-
-
-
-
-
-
 
 musigma_processing <- function(data) {
   return(dcast(data, metric + parameter ~ index))
 }
 
-
 musigma_processing(analysishistcl$`dir-cons-index-attacks_mean`)
-
-#############
 #code below processes all MEE output so that it can be plotted
+#############
+
 
 analysishistcldmusig <- data.frame()
 
@@ -791,13 +788,13 @@ for (df in analysishistcld) {
 
 analysishistunidmusig <- data.frame()
 
-for (df in analysishistcld) {
+for (df in analysishistunid) {
   analysishistunidmusig <- rbind(analysishistunidmusig, (musigma_processing(as.data.frame(df))))
 }
 
 analysisrhpcldmusig <- data.frame()
 
-for (df in analysishistcld) {
+for (df in analysisrhpcld) {
   analysisrhpcldmusig <- rbind(analysisrhpcldmusig, (musigma_processing(as.data.frame(df))))
 }
 
@@ -814,13 +811,13 @@ for (df in analysishistcli) {
 
 analysishistuniimusig <- data.frame()
 
-for (df in analysishistcli) {
+for (df in analysishistunii) {
   analysishistuniimusig <- rbind(analysishistuniimusig, (musigma_processing(as.data.frame(df))))
 }
 
 analysisrhpclimusig <- data.frame()
 
-for (df in analysishistcli) {
+for (df in analysisrhpcli) {
   analysisrhpclimusig <- rbind(analysisrhpclimusig, (musigma_processing(as.data.frame(df))))
 }
 
@@ -829,9 +826,10 @@ analysisrhpuniimusig <- data.frame()
 for (df in analysisrhpunii) {
   analysisrhpuniimusig <- rbind(analysisrhpuniimusig, (musigma_processing(as.data.frame(df))))
 }
+#####
 
-
-
+#mu-sigma plots
+#####
 library(ggrepel)
 
 pdf("Github/dominance/AmNatMEEscatterexpcldv3.pdf")
@@ -886,7 +884,7 @@ dev.off()
 
 pdf("Github/dominance/AmNatMEEscatterexpcliv3.pdf")
 
-metric.levels <- unique(analysishistclidmusig$metric)
+metric.levels <- unique(analysishistclimusig$metric)
 
 for (metric in metric.levels) {
   print(ggplot(analysishistclimusig[analysishistclimusig$metric == metric,], aes(x = mustar, y = sigma, label = parameter)) +
@@ -894,6 +892,8 @@ for (metric in metric.levels) {
           labs(title = paste0("MEE, Exp Clumped Init. ", metric)))
 }
 dev.off()
+
+
 
 
 
@@ -907,6 +907,9 @@ for (metric in metric.levels) {
           labs(title = paste0("MEE, Exp Uniform Init. ", metric)))
 }
 dev.off()
+
+
+
 
 
 
@@ -933,6 +936,58 @@ for (metric in metric.levels) {
           labs(title = paste0("MEE, RHP Uniform Init. ", metric)))
 }
 dev.off()
+
+
+
+#####
+
+ggplot(resultsMorrisch2histcli, mapping = aes(x = `change-in-exp-score`, y = `dir-cons-index-wins`)) + 
+  geom_jitter(size = 0.5) + 
+  #geom_vline(xintercept = 10, color = "blue", size = 2) +
+  stat_summary(fun = "median", color = "red")
+
+ggplot(resultsMorrisch2histcli, aes(x = `change-in-exp-score`, y = `regrowth-denominator`, fill = `dir-cons-index-wins`)) +
+  geom_tile()+
+  scale_fill_gradient(low = "lightblue", high = "navy", guide = "colorbar")
+
+ggplot(resultsMorrisch2histcli, mapping = aes(x = `change-in-exp-score`, y = `dir-cons-index-avoids`)) + 
+  geom_jitter(size = 0.5) + 
+  #geom_vline(xintercept = 10, color = "blue", size = 2) +
+  stat_summary(fun = "median", color = "red")
+
+ggplot(resultsMorrisch2histcli, aes(x = `change-in-exp-score`, y = `regrowth-denominator`, fill = `dir-cons-index-avoids`)) +
+  geom_tile()+
+  scale_fill_gradient(low = "lightblue", high = "navy", guide = "colorbar")
+
+
+
+ggplot(resultsMorrisch2histunii, mapping = aes(x = `change-in-exp-score`, y = `dir-cons-index-wins`)) + 
+  geom_jitter(size = 0.5) + 
+  #geom_vline(xintercept = 10, color = "blue", size = 2) +
+  stat_summary(fun = "median", color = "red")
+
+ggplot(resultsMorrisch2histunii, mapping = aes(x = `change-in-exp-score`, y = `dir-cons-index-avoids`)) + 
+  geom_jitter(size = 0.5) + 
+  #geom_vline(xintercept = 10, color = "blue", size = 2) +
+  stat_summary(fun = "median", color = "red")
+
+ggplot(resultsMorrisch2histunii, aes(x = `change-in-exp-score`, y = `regrowth-denominator`, fill = `dir-cons-index-wins`)) +
+  geom_tile()+
+  scale_fill_gradient(low = "lightblue", high = "navy", guide = "colorbar")
+
+ggplot(resultsMorrisch2histunii, aes(x = `change-in-exp-score`, y = `regrowth-denominator`, fill = `dir-cons-index-avoids`)) +
+  geom_tile()+
+  scale_fill_gradient(low = "lightblue", high = "navy", guide = "colorbar")
+
+
+
+
+
+
+
+
+
+
 
 
 

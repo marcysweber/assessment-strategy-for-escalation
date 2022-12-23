@@ -287,7 +287,7 @@ to go ;; put main schedule procedures for readability
   ]
 
 
-  if ticks = 5000 and burnin-test? = false [
+  if ticks = 15000 and burnin-test? = false [
     ask victories [set victory-counter 0]
     ask defeats [set defeat-counter 0]
     ask fightsavoided [set avoid-counter 0]
@@ -503,10 +503,10 @@ to update_winner_against [losing]
   set wns wns + 1 ;; opponent recalculates their wns counter to increase it by 1
           ;;show "I win! \n"
 
-          ifelse dom-score > 0.98 [
+          ifelse dom-score > 0.84 [
             set dom-score 1.0
           ][
-            set dom-score dom-score + 0.01
+            set dom-score dom-score + 0.16
           ]
 
         ;;show "I win!"
@@ -519,8 +519,8 @@ end
 to update_loser_against [winner]
   set lsses (lsses + 1) ;; opponent recalculates their lsses counter to increase it by 1
    ;;;; also dom-score stuff here!!!!
-          ifelse dom-score > 0.02 [
-             set dom-score dom-score - 0.01
+          ifelse dom-score > 0.16 [
+             set dom-score dom-score - 0.16
              ][
              set dom-score 0.01
              ]
@@ -722,7 +722,7 @@ end
 
 
 to-report burn-in-complete
-    ifelse ticks > 5000 [
+    ifelse ticks > 15000 [
     report true
   ][
     report false
@@ -877,7 +877,7 @@ set attacks-saved true
 end
 
 to set_folder_path
-  set folder-path "C:\\Users\\Marcy\\Desktop\\burnintestdec162022"
+  set folder-path "C:\\Users\\Marcy\\Desktop\\despotism full results 12.23.22"
 
   ;; folders should look like hm.c.d
   let scenario-folder "none"
@@ -1055,7 +1055,6 @@ to-report dir-cons-index-avoids
   report dci
 
 end
-
 @#$#@#$#@
 GRAPHICS-WINDOW
 239
@@ -1126,7 +1125,7 @@ CHOOSER
 resource-dist
 resource-dist
 "uniform" "clumped"
-1
+0
 
 CHOOSER
 55
@@ -1156,7 +1155,7 @@ CHOOSER
 assessment-who
 assessment-who
 "self" "opponent" "mutual"
-2
+1
 
 PLOT
 891
@@ -1199,7 +1198,7 @@ SWITCH
 469
 burnin-test?
 burnin-test?
-0
+1
 1
 -1000
 
@@ -2096,6 +2095,34 @@ NetLogo 6.2.2
       <value value="&quot;mutual&quot;"/>
     </enumeratedValueSet>
     <steppedValueSet variable="burnin-test-dur" first="1000" step="1000" last="50000"/>
+  </experiment>
+  <experiment name="new results dec 22" repetitions="10" runMetricsEveryStep="false">
+    <setup>setup</setup>
+    <go>go</go>
+    <final>make_energy_output</final>
+    <exitCondition>stop-condish</exitCondition>
+    <metric>ticks</metric>
+    <metric>sum [victory-counter] of victories</metric>
+    <metric>sum [avoid-counter] of fightsavoided</metric>
+    <metric>foraging-efficiency-time</metric>
+    <enumeratedValueSet variable="winning">
+      <value value="&quot;deterministic&quot;"/>
+      <value value="&quot;probabilistic&quot;"/>
+      <value value="&quot;initiator&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="resource-dist">
+      <value value="&quot;uniform&quot;"/>
+      <value value="&quot;clumped&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="assessment-info">
+      <value value="&quot;history&quot;"/>
+      <value value="&quot;knowledge&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="assessment-who">
+      <value value="&quot;mutual&quot;"/>
+      <value value="&quot;self&quot;"/>
+      <value value="&quot;opponent&quot;"/>
+    </enumeratedValueSet>
   </experiment>
 </experiments>
 @#$#@#$#@
