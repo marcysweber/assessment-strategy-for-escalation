@@ -1,0 +1,558 @@
+---
+title: "Contest-Interaction ABM Figures -- Deterministic"
+author: "C.J. O'Connor-Coates"
+date: "2022-12-15"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# figures only of mutual interactions now
+#Figure 2
+library(tidyverse)
+library(ggplot2)
+library(hrbrthemes)
+library(viridis)
+library(Rmisc)
+
+setwd("~/Desktop")
+attack.prop.3<-attack.prop.2[attack.prop.2$assessment.who=="mutual",]
+
+p9<-attack.prop.3 %>%
+  ggplot( aes(x=combo2, y=prop.attacks.all.interactions,color=resource.dist)) +
+    geom_boxplot(outlier.shape=NA) +
+    geom_point(aes(shape=resource.dist),size=2.5,position=position_dodge(width=0.75))+
+    scale_shape_manual(values=c(1, 2))+
+    xlab("")+
+    ylab("Proportion of Attack") +
+    theme_bw() +
+    theme(panel.grid.major.x = element_line(color = "grey",size = 0.3,linetype = 2),legend.position="none",panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text.x=element_text(size=13, colour="black"),axis.text.y=element_text(size=12, colour="black"), panel.border=element_rect(colour="black", size=1, fill=NA), axis.title.y=element_text(size=14))+    
+    scale_color_manual(values = c("blue","#CC5500")) +
+    scale_x_discrete(limit=c("mutual rhp", "mutual history"), labels=c("RHP", "History"))  + 
+    annotate(geom="text", x=c(1.5), y=0.05, label=c("Mutual"), size=5)+
+    coord_cartesian(expand=F, clip="off", xlim=c(0.25, 2.75), ylim=c(0.1,0.65))
+jpeg("contest.comp_figure_2.jpeg", 336, 336)
+p9
+dev.off()
+
+p9
+  #p10<-overall.ss.prob %>%
+  #  ggplot( aes(x=combo, y=escalation,color=distribution)) +
+  #    geom_boxplot(color="black", outlier.shape=NA) +
+  #    geom_point(aes(shape=distribution),size=2)+
+  #    xlab("")+
+  #    ylab("Proportional Escalation") +
+  #    theme(axis.text.x = element_blank(),axis.text.x=element_text(size=10),axis.text.y=element_text(size=10),panel.border=element_rect(colour="black", size=3, fill=NA))+
+  #    scale_color_manual(values = c("blue","#CC5500"))
+    
+
+#Figure 3
+setwd("~/Desktop")
+addline_format <- function(x,...){
+    gsub('\\s','\n',x)
+}
+x.lab<-c("Mutual History","Mutual History","Mutual RHP","Mutual RHP","Opponent History","Opponent History","Opponent RHP","Opponent RHP","Self History","Self History","Self RHP","Self RHP")
+
+overall.ss.deter.mut<-overall.ss.deter[overall.ss.deter$strategy=="mutual",]
+
+p1 <- overall.ss.deter.mut %>%
+  ggplot( aes(x=combo2, y=triangle.transitivity,color=distribution)) +
+  geom_boxplot(outlier.shape=NA) +
+    geom_point(aes(shape=distribution),size=2.5,position=position_dodge(width=0.75))+
+    scale_shape_manual(values=c(1, 2))+
+    xlab("")+
+    ylab("Triangle Transitivity") +
+    theme_bw() +
+    theme(panel.grid.major.x = element_line(color = "grey",size = 0.3,linetype = 2),legend.position="none",panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text.x=element_text(size=13, colour="black"),axis.text.y=element_text(size=12, colour="black"), panel.border=element_rect(colour="black", size=1, fill=NA), axis.title.y=element_text(size=14))+    scale_color_manual(values = c("blue","#CC5500")) +
+    scale_x_discrete(limit=c("mutual rhp", "mutual history"), labels=c("RHP", "History"))  + 
+    annotate(geom="text", x=c(1.5), y=-0.15, label=c("Mutual"), size=5)+
+    coord_cartesian(expand=F, clip="off", xlim=c(0.25, 2.75), ylim=c(-0.05, 1.05))
+jpeg("contest.comp_figure_3a.jpeg", 336, 336)
+p1
+dev.off()
+
+p2 <- overall.ss.deter.mut %>%
+  ggplot( aes(x=combo2, y=dci,color=distribution)) +
+geom_boxplot(outlier.shape=NA) +
+    geom_point(aes(shape=distribution),size=2.5,position=position_dodge(width=0.75))+
+    scale_shape_manual(values=c(1, 2))+
+    xlab("")+
+    ylab("Directional Consistency Index") +
+    theme_bw() +
+    theme(panel.grid.major.x = element_line(color = "grey",size = 0.3,linetype = 2),legend.position="none",panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text.x=element_text(size=13, colour="black"),axis.text.y=element_text(size=12, colour="black"), panel.border=element_rect(colour="black", size=1, fill=NA), axis.title.y=element_text(size=14))+    scale_color_manual(values = c("blue","#CC5500")) +
+    scale_x_discrete(limit=c("mutual rhp", "mutual history"), labels=c("RHP", "History"))  + 
+    annotate(geom="text", x=c(1.5, 3.5, 5.5), y=-0.15, label=c("Mutual"), size=5)+
+    coord_cartesian(expand=F, clip="off", xlim=c(0.25, 2.75), ylim=c(-0.05,1.05))
+jpeg("contest.comp_figure_3b.jpeg", 336, 336)
+p2
+dev.off()
+    
+p3 <- overall.ss.deter.mut %>%
+  ggplot( aes(x=combo2, y=abs(steepness),color=distribution)) +
+  geom_boxplot(outlier.shape=NA) +
+    geom_point(aes(shape=distribution),size=2.5,position=position_dodge(width=0.75))+
+    scale_shape_manual(values=c(1, 2))+
+    xlab("")+
+    ylab("Steepness") +
+    theme_bw() +
+    theme(panel.grid.major.x = element_line(color = "grey",size = 0.3,linetype = 2),legend.position="none",panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text.x=element_text(size=13, colour="black"),axis.text.y=element_text(size=12, colour="black"), panel.border=element_rect(colour="black", size=1, fill=NA), axis.title.y=element_text(size=14))+    scale_color_manual(values = c("blue","#CC5500")) +
+    scale_x_discrete(limit=c("mutual rhp", "mutual history"), labels=c("RHP", "History"))  + 
+    annotate(geom="text", x=c(1.5, 3.5, 5.5), y=-0.15, label=c("Mutual"), size=5)+
+    coord_cartesian(expand=F, clip="off", xlim=c(0.25, 2.75), ylim=c(-0.05,1.05))
+jpeg("contest.comp_figure_3c.jpeg", 336, 336)
+p3
+dev.off()
+
+p2
+p1
+p3
+
+ #p5 <- overall.ss.prob %>%
+ # ggplot( aes(x=combo, y=triangle.transitivity,color=distribution)) +
+  #  geom_boxplot(color="black", outlier.shape=NA) +
+   # geom_point(aes(shape=distribution),size=3)+
+    #scale_shape_manual(values=c(1, 17))+
+  #  xlab("")+
+   # ylab("Triangle Transitivity") +
+  #  theme_bw() +
+  #  theme(legend.position="none",axis.text=element_blank(),axis.line = element_line(colour = "black"),panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text.x=element_text(size=10),axis.text.y=element_text(size=10))+   #  scale_color_manual(values = c("blue","#CC5500")) 
+ #p6 <- overall.ss.prob %>%
+ #  ggplot( aes(x=combo, y=dci,color=distribution)) +
+ #    geom_boxplot(color="black", outlier.shape=NA) +
+ #    geom_point(aes(shape=distribution),size=3)+
+ #    scale_shape_manual(values=c(1, 17))+
+ #    xlab("")+
+ #    ylab("DCI") +
+ #    theme_bw() +
+ #    theme(legend.position="none",axis.text=element_blank(),axis.line = element_line(colour = "black"),panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text.x=element_text(size=10),axis.text.y=element_text(size=10))+   #  scale_color_manual(values = c("blue","#CC5500"))
+ #p7 <- overall.ss.prob %>%
+  #  ggplot( aes(x=combo, y=abs(steepness),color= distribution)) +
+ #    geom_boxplot(aes(shape=distribution),color="black", outlier.shape=NA) +
+ #    geom_point(aes(shape=distribution),size=3)+
+ #    scale_shape_manual(values=c(1, 17))+
+ #    xlab("")+
+ #    ylab("Steepness") +
+ #    theme_bw() +
+ #    theme(legend.position="none",axis.text=element_blank(),axis.line = element_line(colour = "black"),panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text.x=element_text(size=10),axis.text.y=element_text(size=10))+  #  scale_color_manual(values = c("blue","#CC5500"))
+
+#Figure 4
+
+setwd("~/Desktop")
+jpeg("contest.comp_figure_4.jpeg", 672, 336)
+par(cex.axis=1, cex.lab=1.3, mar=c(2.65,2.75,0.4,0.4),family="sans")
+p12<-plot(total.energy.dc$energy_over_time~total.energy.dc$normDS,pch=1,cex=1.4,xaxt="n",yaxt="n",col="blue",xlab="",ylab="",main="",ylim=c(0.4,0.8),xlim=c(0.85,8.25),las=1); points(total.energy.du$energy_over_time~total.energy.du$normDS,pch=2,cex=1.4,col="#CC5500"); abline(km.lm.dc, lwd=3);abline(hm.lm.dc, lwd=3);abline(km.lm.du, col="black", lty=4, lwd=3);abline(hm.lm.du, col="black", lty=4, lwd=3);title(xlab="Normalized David's Scores",line=1.25);title(ylab="Energy per unit Time", line=1.5); axis(1, at = c(0, 1, 2, 3, 4, 5, 6, 7, 8), label=rep("",9), tck=-0.015, line=0);axis(2, at = c(0.4,0.5,0.6,0.7,0.8), label=rep("",5),tck=-0.015);axis(1, at = 1:10, line = -0.8, lwd = 0, cex.axis = 1);axis(2, at = c(0.4,0.5,0.6,0.7,0.8), line = -0.7, lwd = 0, cex.axis = 1, las=1);box(col="black",lwd=3)
+dev.off()
+
+
+plot(total.energy.dc$energy_over_time~total.energy.dc$normDS,pch=1,cex=1.4,xaxt="n",yaxt="n",col="blue",xlab="",ylab="",main="",ylim=c(0.4,0.8),xlim=c(0.85,8.25),las=1); points(total.energy.du$energy_over_time~total.energy.du$normDS,pch=2,cex=1.4,col="#CC5500"); abline(km.lm.dc, lwd=3);abline(ks.lm.dc, lwd=3);abline(ko.lm.dc, lwd=3);abline(hm.lm.dc, lwd=3);abline(hs.lm.dc, lwd=3);abline(ho.lm.dc, lwd=3);abline(km.lm.du, col="black", lty=4, lwd=3);abline(ks.lm.du, col="black", lty=4, lwd=3);abline(ko.lm.du, col="black", lty=4, lwd=3);abline(hm.lm.du, col="black", lty=4, lwd=3);abline(hs.lm.du, col="black", lty=4, lwd=3);abline(ho.lm.du, col="black", lty=4, lwd=3);title(xlab="Normalized David's Scores",line=1.25);title(ylab="Energy per unit Time", line=1.5); axis(1, at = c(0, 1, 2, 3, 4, 5, 6, 7, 8), label=rep("",9), tck=-0.015, line=0);axis(2, at = c(0.4,0.5,0.6,0.7,0.8), label=rep("",5),tck=-0.015);axis(1, at = 1:10, line = -0.8, lwd = 0, cex.axis = 1);axis(2, at = c(0.4,0.5,0.6,0.7,0.8), line = -0.7, lwd = 0, cex.axis = 1, las=1);box(col="black",lwd=3)
+
+
+
+#Figure 13 (avoid)
+library(tidyverse)
+library(ggplot2)
+library(hrbrthemes)
+library(viridis)
+library(Rmisc)
+
+attack.prop.3<-attack.prop.2[attack.prop.2$assessment.who=="mutual",]
+
+setwd("~/Desktop")
+p13<-attack.prop.3 %>%
+  ggplot( aes(x=combo2, y=rate.avoids,color=resource.dist)) +
+    geom_boxplot(outlier.shape=NA) +
+    geom_point(aes(shape=resource.dist),size=2.5,position=position_dodge(width=0.75))+
+    scale_shape_manual(values=c(1, 2))+
+    xlab("")+
+    ylab("Rate of Avoids") +
+    theme_bw() +
+    theme(panel.grid.major.x = element_line(color = "grey",size = 0.3,linetype = 2),legend.position="none",panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text.x=element_text(size=13, colour="black"),axis.text.y=element_text(size=12, colour="black"), panel.border=element_rect(colour="black", size=1, fill=NA), axis.title.y=element_text(size=14))+    
+    scale_color_manual(values = c("blue","#CC5500")) +
+    scale_x_discrete(limit=c("mutual rhp", "mutual history"), labels=c("RHP", "History"))  + 
+    annotate(geom="text", x=c(1.5, 3.5, 5.5), y=-0.16, label=c("Mutual"), size=5)+
+    coord_cartesian(expand=F, clip="off", xlim=c(0.25, 2.75), ylim=c(-0.1,0.65))
+jpeg("contest.comp_figure_13.jpeg", 336, 336)
+p13
+dev.off()
+
+p13
+    
+
+#Figure 14 (avoid)
+setwd("~/Desktop")
+addline_format <- function(x,...){
+    gsub('\\s','\n',x)
+}
+x.lab<-c("Mutual History","Mutual History","Mutual RHP","Mutual RHP","Opponent History","Opponent History","Opponent RHP","Opponent RHP","Self History","Self History","Self RHP","Self RHP")
+
+overall.ss.deter.avoid.mut<-overall.ss.deter.uniform.avoid[overall.ss.deter.uniform.avoid$strategy=="mutual",]
+
+p14 <- overall.ss.deter.avoid.mut %>%
+  ggplot( aes(x=combo2, y=triangle.transitivity,color=distribution)) +
+  geom_boxplot(outlier.shape=NA) +
+    geom_point(aes(shape=distribution),size=2.5,position=position_dodge(width=0.75))+
+    scale_shape_manual(values=c(1, 2))+
+    xlab("")+
+    ylab("Triangle Transitivity") +
+    theme_bw() +
+    theme(panel.grid.major.x = element_line(color = "grey",size = 0.3,linetype = 2),legend.position="none",panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text.x=element_text(size=13, colour="black"),axis.text.y=element_text(size=12, colour="black"), panel.border=element_rect(colour="black", size=1, fill=NA), axis.title.y=element_text(size=14))+    scale_color_manual(values = c("blue","#CC5500")) +
+    scale_x_discrete(limit=c("mutual rhp", "mutual history"), labels=c("RHP", "History"))  + 
+    annotate(geom="text", x=c(1.5, 3.5, 5.5), y=-0.63, label=c("Mutual"), size=5)+
+    coord_cartesian(expand=F, clip="off", xlim=c(0.25, 2.75), ylim=c(-0.5, 1.05))
+jpeg("contest.comp_figure_14a.jpeg", 369.6, 336)
+p14
+dev.off()
+
+p19 <- overall.ss.deter.avoid.mut %>%
+  ggplot( aes(x=combo2, y=dci,color=distribution)) +
+geom_boxplot(outlier.shape=NA) +
+    geom_point(aes(shape=distribution),size=2.5,position=position_dodge(width=0.75))+
+    scale_shape_manual(values=c(1, 2))+
+    xlab("")+
+    ylab("Directional Consistency Index") +
+    theme_bw() +
+    theme(panel.grid.major.x = element_line(color = "grey",size = 0.3,linetype = 2),legend.position="none",panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text.x=element_text(size=13, colour="black"),axis.text.y=element_text(size=12, colour="black"), panel.border=element_rect(colour="black", size=1, fill=NA), axis.title.y=element_text(size=14))+    scale_color_manual(values = c("blue","#CC5500")) +
+    scale_x_discrete(limit=c("mutual rhp", "mutual history"), labels=c("RHP", "History"))  + 
+    annotate(geom="text", x=c(1.5, 3.5, 5.5), y=-0.14, label=c("Mutual"), size=5)+
+    coord_cartesian(expand=F, clip="off", xlim=c(0.25, 2.75), ylim=c(-0.05,1.05))
+jpeg("contest.comp_figure_14b.jpeg", 369.6, 336)
+p19
+dev.off()
+
+
+
+overall.ss.deter.avoid.mut<-overall.ss.deter.uniform.avoid[overall.ss.deter.uniform.avoid$strategy=="mutual",]
+setwd("~/Desktop")
+addline_format <- function(x,...){
+    gsub('\\s','\n',x)
+}    
+p20 <- overall.ss.deter.avoid.mut %>%
+  ggplot( aes(x=combo2, y=abs(steepness),color=distribution)) +
+  geom_boxplot(outlier.shape=NA) +
+    geom_point(aes(shape=distribution),size=2.5,position=position_dodge(width=0.75))+
+    scale_shape_manual(values=c(1, 2))+
+    xlab("")+
+    ylab("Steepness") +
+    theme_bw() +
+    theme(panel.grid.major.x = element_line(color = "grey",size = 0.3,linetype = 2),legend.position="none",panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text.x=element_text(size=13, colour="black"),axis.text.y=element_text(size=12, colour="black"), panel.border=element_rect(colour="black", size=1, fill=NA), axis.title.y=element_text(size=14))+    scale_color_manual(values = c("blue","#CC5500")) +
+    scale_x_discrete(limit=c("mutual rhp", "mutual history"), labels=c("RHP", "History"))  + 
+    annotate(geom="text", x=c(1.5), y=-0.14, label=c("Mutual"), size=5)+
+    coord_cartesian(expand=F, clip="off", xlim=c(0.25, 2.75), ylim=c(-0.05,1.05))
+jpeg("contest.comp_figure_14c_avoids.jpeg", 369.6, 336)
+p20
+dev.off()
+
+p14
+p19
+p20
+
+#Figure 17 (attacks)
+library(tidyverse)
+library(ggplot2)
+library(hrbrthemes)
+library(viridis)
+library(Rmisc)
+
+
+setwd("~/Desktop")
+p17<-attack.prop.3 %>%
+  ggplot( aes(x=combo2, y=rate.attacks,color=resource.dist)) +
+    geom_boxplot(outlier.shape=NA) +
+    geom_point(aes(shape=resource.dist),size=2.5,position=position_dodge(width=0.75))+
+    scale_shape_manual(values=c(1, 2))+
+    xlab("")+
+    ylab("Rate of Attacks") +
+    theme_bw() +
+    theme(panel.grid.major.x = element_line(color = "grey",size = 0.3,linetype = 2),legend.position="none",panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text.x=element_text(size=13, colour="black"),axis.text.y=element_text(size=12, colour="black"), panel.border=element_rect(colour="black", size=1, fill=NA), axis.title.y=element_text(size=14))+    
+    scale_color_manual(values = c("blue","#CC5500")) +
+    scale_x_discrete(limit=c("mutual rhp", "mutual history"), labels=c("RHP", "History"))  + 
+    annotate(geom="text", x=c(1.5, 3.5, 5.5), y=-0.16, label=c("Mutual"), size=5)+
+    coord_cartesian(expand=F, clip="off", xlim=c(0.25, 2.75), ylim=c(-0.1,0.65))
+jpeg("contest.comp_figure_17.jpeg", 336, 336)
+p17
+dev.off()
+
+p17
+    
+
+#Figure 18 (attacks)
+setwd("~/Desktop")
+addline_format <- function(x,...){
+    gsub('\\s','\n',x)
+}
+x.lab<-c("Mutual History","Mutual History","Mutual RHP","Mutual RHP","Opponent History","Opponent History","Opponent RHP","Opponent RHP","Self History","Self History","Self RHP","Self RHP")
+
+overall.ss.deter.attacks.mut<-overall.ss.deter.uniform.attacks[overall.ss.deter.uniform.attacks$strategy=="mutual",]
+
+p18 <- overall.ss.deter.attacks.mut %>%
+  ggplot( aes(x=combo2, y=triangle.transitivity,color=distribution)) +
+  geom_boxplot(outlier.shape=NA) +
+    geom_point(aes(shape=distribution),size=2.5,position=position_dodge(width=0.75))+
+    scale_shape_manual(values=c(1, 2))+
+    xlab("")+
+    ylab("Triangle Transitivity") +
+    theme_bw() +
+    theme(panel.grid.major.x = element_line(color = "grey",size = 0.3,linetype = 2),legend.position="none",panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text.x=element_text(size=13, colour="black"),axis.text.y=element_text(size=12, colour="black"), panel.border=element_rect(colour="black", size=1, fill=NA), axis.title.y=element_text(size=14))+    scale_color_manual(values = c("blue","#CC5500")) +
+    scale_x_discrete(limit=c("mutual rhp", "mutual history"), labels=c("RHP", "History"))  + 
+    annotate(geom="text", x=c(1.5, 3.5, 5.5), y=-0.63, label=c("Mutual"), size=5)+
+    coord_cartesian(expand=F, clip="off", xlim=c(0.25, 2.75), ylim=c(-0.5, 1.05))
+jpeg("contest.comp_figure_18a.jpeg", 369.6, 336)
+p18
+dev.off()
+
+p19 <- overall.ss.deter.attacks.mut %>%
+  ggplot( aes(x=combo2, y=dci,color=distribution)) +
+geom_boxplot(outlier.shape=NA) +
+    geom_point(aes(shape=distribution),size=2.5,position=position_dodge(width=0.75))+
+    scale_shape_manual(values=c(1, 2))+
+    xlab("")+
+    ylab("Directional Consistency Index") +
+    theme_bw() +
+    theme(panel.grid.major.x = element_line(color = "grey",size = 0.3,linetype = 2),legend.position="none",panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text.x=element_text(size=13, colour="black"),axis.text.y=element_text(size=12, colour="black"), panel.border=element_rect(colour="black", size=1, fill=NA), axis.title.y=element_text(size=14))+    scale_color_manual(values = c("blue","#CC5500")) +
+    scale_x_discrete(limit=c("mutual rhp", "mutual history"), labels=c("RHP", "History"))  + 
+    annotate(geom="text", x=c(1.5, 3.5, 5.5), y=-0.14, label=c("Mutual"), size=5)+
+    coord_cartesian(expand=F, clip="off", xlim=c(0.25, 2.75), ylim=c(-0.05,1.05))
+jpeg("contest.comp_figure_18b.jpeg", 369.6, 336)
+p19
+dev.off()
+
+
+overall.ss.deter.attacks.mut<-overall.ss.deter.uniform.attacks[overall.ss.deter.uniform.attacks$strategy=="mutual",]
+setwd("~/Desktop")
+addline_format <- function(x,...){
+    gsub('\\s','\n',x)
+}
+p20 <- overall.ss.deter.attacks.mut %>%
+  ggplot( aes(x=combo2, y=abs(steepness),color=distribution)) +
+  geom_boxplot(outlier.shape=NA) +
+    geom_point(aes(shape=distribution),size=2.5,position=position_dodge(width=0.75))+
+    scale_shape_manual(values=c(1, 2))+
+    xlab("")+
+    ylab("Steepness") +
+    theme_bw() +
+    theme(panel.grid.major.x = element_line(color = "grey",size = 0.3,linetype = 2),legend.position="none",panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text.x=element_text(size=13, colour="black"),axis.text.y=element_text(size=12, colour="black"), panel.border=element_rect(colour="black", size=1, fill=NA), axis.title.y=element_text(size=14))+    scale_color_manual(values = c("blue","#CC5500")) +
+    scale_x_discrete(limit=c("mutual rhp", "mutual history"), labels=c("RHP", "History"))  + 
+    annotate(geom="text", x=c(1.5), y=-0.14, label=c("Mutual"), size=5)+
+    coord_cartesian(expand=F, clip="off", xlim=c(0.25, 2.75), ylim=c(-0.05,1.05))
+jpeg("contest.comp_figure_18c_attacks.jpeg", 369.6, 336)
+p20
+dev.off()
+
+p18
+p19
+p20
+
+
+#Figure 21 (Initiator Wins)
+setwd("~/Desktop")
+addline_format <- function(x,...){
+    gsub('\\s','\n',x)
+}
+x.lab<-c("Mutual History","Mutual History","Mutual RHP","Mutual RHP","Opponent History","Opponent History","Opponent RHP","Opponent RHP","Self History","Self History","Self RHP","Self RHP")
+
+overall.ss.deter.initiator.2<-overall.ss.deter.initiator[overall.ss.deter.initiator$strategy=="mutual",]
+
+##some negative values in triangle transitivity threw off the plot, decided to use absolute values for now.
+
+p21 <- overall.ss.deter.initiator.2 %>%
+  ggplot( aes(x=combo2, y=abs(triangle.transitivity),color=distribution)) + 
+  geom_boxplot(outlier.shape=NA) +
+    geom_point(aes(shape=distribution),size=2.5,position=position_dodge(width=0.75))+
+    scale_shape_manual(values=c(1, 2))+
+    xlab("")+
+    ylab("Triangle Transitivity") +
+    theme_bw() +
+    theme(panel.grid.major.x = element_line(color = "grey",size = 0.3,linetype = 2),legend.position="none",panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text.x=element_text(size=13, colour="black"),axis.text.y=element_text(size=12, colour="black"), panel.border=element_rect(colour="black", size=1, fill=NA), axis.title.y=element_text(size=14))+    scale_color_manual(values = c("blue","#CC5500")) +
+    scale_x_discrete(limit=c("mutual rhp", "mutual history"), labels=c("RHP", "History"))  + 
+    annotate(geom="text", x=c(1.5), y=-0.15, label=c("Mutual"), size=5)+
+    coord_cartesian(expand=F, clip="off", xlim=c(0.25, 2.75), ylim=c(-0.05, 1.05))
+jpeg("contest.comp_figure_21a.jpeg", 336, 336)
+p21
+dev.off()
+
+p22 <- overall.ss.deter.initiator.2 %>%
+  ggplot( aes(x=combo2, y=dci,color=distribution)) +
+geom_boxplot(outlier.shape=NA) +
+    geom_point(aes(shape=distribution),size=2.5,position=position_dodge(width=0.75))+
+    scale_shape_manual(values=c(1, 2))+
+    xlab("")+
+    ylab("Directional Consistency Index") +
+    theme_bw() +
+    theme(panel.grid.major.x = element_line(color = "grey",size = 0.3,linetype = 2),legend.position="none",panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text.x=element_text(size=13, colour="black"),axis.text.y=element_text(size=12, colour="black"), panel.border=element_rect(colour="black", size=1, fill=NA), axis.title.y=element_text(size=14))+    scale_color_manual(values = c("blue","#CC5500")) +
+    scale_x_discrete(limit=c("mutual rhp", "mutual history"), labels=c("RHP", "History"))  + 
+    annotate(geom="text", x=c(1.5, 3.5, 5.5), y=-0.15, label=c("Mutual"), size=5)+
+    coord_cartesian(expand=F, clip="off", xlim=c(0.25, 2.75), ylim=c(-0.05,1.05))
+jpeg("contest.comp_figure_21b.jpeg", 336, 336)
+p22
+dev.off()
+    
+p23 <- overall.ss.deter.initiator.2 %>%
+  ggplot( aes(x=combo2, y=abs(steepness),color=distribution)) +
+  geom_boxplot(outlier.shape=NA) +
+    geom_point(aes(shape=distribution),size=2.5,position=position_dodge(width=0.75))+
+    scale_shape_manual(values=c(1, 2))+
+    xlab("")+
+    ylab("Steepness") +
+    theme_bw() +
+    theme(panel.grid.major.x = element_line(color = "grey",size = 0.3,linetype = 2),legend.position="none",panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text.x=element_text(size=13, colour="black"),axis.text.y=element_text(size=12, colour="black"), panel.border=element_rect(colour="black", size=1, fill=NA), axis.title.y=element_text(size=14))+    scale_color_manual(values = c("blue","#CC5500")) +
+    scale_x_discrete(limit=c("mutual rhp", "mutual history"), labels=c("RHP", "History"))  + 
+    annotate(geom="text", x=c(1.5, 3.5, 5.5), y=-0.15, label=c("Mutual"), size=5)+
+    coord_cartesian(expand=F, clip="off", xlim=c(0.25, 2.75), ylim=c(-0.05,1.05))
+jpeg("contest.comp_figure_21c.jpeg", 336, 336)
+p23
+dev.off()
+
+p21
+p22
+p23
+
+#Figure 22 (Initiator Wins avoid)
+setwd("~/Desktop")
+addline_format <- function(x,...){
+    gsub('\\s','\n',x)
+}
+x.lab<-c("Mutual History","Mutual History","Mutual RHP","Mutual RHP","Opponent History","Opponent History","Opponent RHP","Opponent RHP","Self History","Self History","Self RHP","Self RHP")
+
+overall.ss.initiator.avoid.mut<-overall.ss.initiator.avoid[overall.ss.initiator.avoid$strategy=="mutual",]
+
+p24 <- overall.ss.initiator.avoid.mut %>%
+  ggplot( aes(x=combo2, y=triangle.transitivity,color=distribution)) +
+  geom_boxplot(outlier.shape=NA) +
+    geom_point(aes(shape=distribution),size=2.5,position=position_dodge(width=0.75))+
+    scale_shape_manual(values=c(1, 2))+
+    xlab("")+
+    ylab("Triangle Transitivity") +
+    theme_bw() +
+    theme(panel.grid.major.x = element_line(color = "grey",size = 0.3,linetype = 2),legend.position="none",panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text.x=element_text(size=13, colour="black"),axis.text.y=element_text(size=12, colour="black"), panel.border=element_rect(colour="black", size=1, fill=NA), axis.title.y=element_text(size=14))+    scale_color_manual(values = c("blue","#CC5500")) +
+    scale_x_discrete(limit=c("mutual rhp", "mutual history"), labels=c("RHP", "History"))  + 
+    annotate(geom="text", x=c(1.5, 3.5, 5.5), y=-0.63, label=c("Mutual"), size=5)+
+    coord_cartesian(expand=F, clip="off", xlim=c(0.25, 2.75), ylim=c(-0.5, 1.05))
+jpeg("contest.comp_figure_22a.jpeg", 369.6, 336)
+p24
+dev.off()
+
+p25 <- overall.ss.initiator.avoid.mut %>%
+  ggplot( aes(x=combo2, y=dci,color=distribution)) +
+geom_boxplot(outlier.shape=NA) +
+    geom_point(aes(shape=distribution),size=2.5,position=position_dodge(width=0.75))+
+    scale_shape_manual(values=c(1, 2))+
+    xlab("")+
+    ylab("Directional Consistency Index") +
+    theme_bw() +
+    theme(panel.grid.major.x = element_line(color = "grey",size = 0.3,linetype = 2),legend.position="none",panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text.x=element_text(size=13, colour="black"),axis.text.y=element_text(size=12, colour="black"), panel.border=element_rect(colour="black", size=1, fill=NA), axis.title.y=element_text(size=14))+    scale_color_manual(values = c("blue","#CC5500")) +
+    scale_x_discrete(limit=c("mutual rhp", "mutual history"), labels=c("RHP", "History"))  + 
+    annotate(geom="text", x=c(1.5, 3.5, 5.5), y=-0.14, label=c("Mutual"), size=5)+
+    coord_cartesian(expand=F, clip="off", xlim=c(0.25, 2.75), ylim=c(-0.05,1.05))
+jpeg("contest.comp_figure_22b.jpeg", 369.6, 336)
+p25
+dev.off()
+
+
+
+overall.ss.initiator.avoid.mut<-overall.ss.initiator.avoid[overall.ss.initiator.avoid$strategy=="mutual",]
+setwd("~/Desktop")
+addline_format <- function(x,...){
+    gsub('\\s','\n',x)
+}    
+p26 <- overall.ss.initiator.avoid.mut %>%
+  ggplot( aes(x=combo2, y=abs(steepness),color=distribution)) +
+  geom_boxplot(outlier.shape=NA) +
+    geom_point(aes(shape=distribution),size=2.5,position=position_dodge(width=0.75))+
+    scale_shape_manual(values=c(1, 2))+
+    xlab("")+
+    ylab("Steepness") +
+    theme_bw() +
+    theme(panel.grid.major.x = element_line(color = "grey",size = 0.3,linetype = 2),legend.position="none",panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text.x=element_text(size=13, colour="black"),axis.text.y=element_text(size=12, colour="black"), panel.border=element_rect(colour="black", size=1, fill=NA), axis.title.y=element_text(size=14))+    scale_color_manual(values = c("blue","#CC5500")) +
+    scale_x_discrete(limit=c("mutual rhp", "mutual history"), labels=c("RHP", "History"))  + 
+    annotate(geom="text", x=c(1.5), y=-0.14, label=c("Mutual"), size=5)+
+    coord_cartesian(expand=F, clip="off", xlim=c(0.25, 2.75), ylim=c(-0.05,1.05))
+jpeg("contest.comp_figure_22c_avoids.jpeg", 369.6, 336)
+p26
+dev.off()
+
+p24
+p25
+p26
+
+#Figure 23 (Initiator Wins attacks)
+setwd("~/Desktop")
+addline_format <- function(x,...){
+    gsub('\\s','\n',x)
+}
+x.lab<-c("Mutual History","Mutual History","Mutual RHP","Mutual RHP","Opponent History","Opponent History","Opponent RHP","Opponent RHP","Self History","Self History","Self RHP","Self RHP")
+
+overall.ss.initiator.attacks.mut<-overall.ss.initiator.attacks[overall.ss.initiator.attacks$strategy=="mutual",]
+
+p27 <- overall.ss.initiator.attacks.mut %>%
+  ggplot( aes(x=combo2, y=triangle.transitivity,color=distribution)) +
+  geom_boxplot(outlier.shape=NA) +
+    geom_point(aes(shape=distribution),size=2.5,position=position_dodge(width=0.75))+
+    scale_shape_manual(values=c(1, 2))+
+    xlab("")+
+    ylab("Triangle Transitivity") +
+    theme_bw() +
+    theme(panel.grid.major.x = element_line(color = "grey",size = 0.3,linetype = 2),legend.position="none",panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text.x=element_text(size=13, colour="black"),axis.text.y=element_text(size=12, colour="black"), panel.border=element_rect(colour="black", size=1, fill=NA), axis.title.y=element_text(size=14))+    scale_color_manual(values = c("blue","#CC5500")) +
+    scale_x_discrete(limit=c("mutual rhp", "mutual history"), labels=c("RHP", "History"))  + 
+    annotate(geom="text", x=c(1.5, 3.5, 5.5), y=-0.63, label=c("Mutual"), size=5)+
+    coord_cartesian(expand=F, clip="off", xlim=c(0.25, 2.75), ylim=c(-0.5, 1.05))
+jpeg("contest.comp_figure_23a.jpeg", 369.6, 336)
+p27
+dev.off()
+
+p28 <- overall.ss.initiator.attacks.mut %>%
+  ggplot( aes(x=combo2, y=dci,color=distribution)) +
+geom_boxplot(outlier.shape=NA) +
+    geom_point(aes(shape=distribution),size=2.5,position=position_dodge(width=0.75))+
+    scale_shape_manual(values=c(1, 2))+
+    xlab("")+
+    ylab("Directional Consistency Index") +
+    theme_bw() +
+    theme(panel.grid.major.x = element_line(color = "grey",size = 0.3,linetype = 2),legend.position="none",panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text.x=element_text(size=13, colour="black"),axis.text.y=element_text(size=12, colour="black"), panel.border=element_rect(colour="black", size=1, fill=NA), axis.title.y=element_text(size=14))+    scale_color_manual(values = c("blue","#CC5500")) +
+    scale_x_discrete(limit=c("mutual rhp", "mutual history"), labels=c("RHP", "History"))  + 
+    annotate(geom="text", x=c(1.5, 3.5, 5.5), y=-0.14, label=c("Mutual"), size=5)+
+    coord_cartesian(expand=F, clip="off", xlim=c(0.25, 2.75), ylim=c(-0.05,1.05))
+jpeg("contest.comp_figure_23b.jpeg", 369.6, 336)
+p28
+dev.off()
+
+
+overall.ss.initiator.attacks.mut<-overall.ss.initiator.attacks[overall.ss.initiator.attacks$strategy=="mutual",]
+setwd("~/Desktop")
+addline_format <- function(x,...){
+    gsub('\\s','\n',x)
+}
+p29 <- overall.ss.initiator.attacks.mut %>%
+  ggplot( aes(x=combo2, y=abs(steepness),color=distribution)) +
+  geom_boxplot(outlier.shape=NA) +
+    geom_point(aes(shape=distribution),size=2.5,position=position_dodge(width=0.75))+
+    scale_shape_manual(values=c(1, 2))+
+    xlab("")+
+    ylab("Steepness") +
+    theme_bw() +
+    theme(panel.grid.major.x = element_line(color = "grey",size = 0.3,linetype = 2),legend.position="none",panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text.x=element_text(size=13, colour="black"),axis.text.y=element_text(size=12, colour="black"), panel.border=element_rect(colour="black", size=1, fill=NA), axis.title.y=element_text(size=14))+    scale_color_manual(values = c("blue","#CC5500")) +
+    scale_x_discrete(limit=c("mutual rhp", "mutual history"), labels=c("RHP", "History"))  + 
+    annotate(geom="text", x=c(1.5), y=-0.14, label=c("Mutual"), size=5)+
+    coord_cartesian(expand=F, clip="off", xlim=c(0.25, 2.75), ylim=c(-0.05,1.05))
+jpeg("contest.comp_figure_23c_attacks.jpeg", 369.6, 336)
+p29
+dev.off()
+
+p27
+p28
+p29
+
+#Figure 24 (Initiator Wins Energy)
+
+setwd("~/Desktop")
+jpeg("contest.comp_figure_24.jpeg", 672, 336)
+par(cex.axis=1, cex.lab=1.3, mar=c(2.65,2.75,0.4,0.4),family="sans")
+p30<-plot(total.energy.ic$energy_over_time~total.energy.ic$normDS,pch=1,cex=1.4,xaxt="n",yaxt="n",col="blue",xlab="",ylab="",main="",ylim=c(0.4,0.8),xlim=c(0.85,8.25),las=1); points(total.energy.iu$energy_over_time~total.energy.iu$normDS,pch=2,cex=1.4,col="#CC5500"); abline(km.lm.ic, lwd=3);abline(hm.lm.ic, lwd=3);abline(km.lm.iu, col="black", lty=4, lwd=3);abline(hm.lm.iu, col="black", lty=4, lwd=3);title(xlab="Normalized David's Scores",line=1.25);title(ylab="Energy per unit Time", line=1.5); axis(1, at = c(0, 1, 2, 3, 4, 5, 6, 7, 8), label=rep("",9), tck=-0.015, line=0);axis(2, at = c(0.4,0.5,0.6,0.7,0.8), label=rep("",5),tck=-0.015);axis(1, at = 1:10, line = -0.8, lwd = 0, cex.axis = 1);axis(2, at = c(0.4,0.5,0.6,0.7,0.8), line = -0.7, lwd = 0, cex.axis = 1, las=1);box(col="black",lwd=3)
+dev.off()
+
+
+#plot(total.energy.ic$energy_over_time~total.energy.ic$normDS,pch=1,cex=1.4,xaxt="n",yaxt="n",col="blue",xlab="",ylab="",main="",ylim=c(0.4,0.8),xlim=c(0.85,8.25),las=1); points(total.energy.iu$energy_over_time~total.energy.du$normDS,pch=2,cex=1.4,col="#CC5500"); abline(km.lm.ic, lwd=3);abline(ks.lm.ic, lwd=3);abline(ko.lm.ic, lwd=3);abline(hm.lm.ic, lwd=3);abline(hs.lm.ic, lwd=3);abline(ho.lm.ic, lwd=3);abline(km.lm.iu, col="black", lty=4, lwd=3);abline(ks.lm.iu, col="black", lty=4, lwd=3);abline(ko.lm.iu, col="black", lty=4, lwd=3);abline(hm.lm.iu, col="black", lty=4, lwd=3);abline(hs.lm.iu, col="black", lty=4, lwd=3);abline(ho.lm.iu, col="black", lty=4, lwd=3);title(xlab="Normalized David's Scores",line=1.25);title(ylab="Energy per unit Time", line=1.5); axis(1, at = c(0, 1, 2, 3, 4, 5, 6, 7, 8), label=rep("",9), tck=-0.015, line=0);axis(2, at = c(0.4,0.5,0.6,0.7,0.8), label=rep("",5),tck=-0.015);axis(1, at = 1:10, line = -0.8, lwd = 0, cex.axis = 1);axis(2, at = c(0.4,0.5,0.6,0.7,0.8), line = -0.7, lwd = 0, cex.axis = 1, las=1);box(col="black",lwd=3)
+
+
+
