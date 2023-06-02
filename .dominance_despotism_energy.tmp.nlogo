@@ -457,7 +457,7 @@ to-report am-i-the-winner [opponent]
            set prob_self (rhp / (rhp + [rhp] of opponent))
            ] ;; prob_self denotes the probability that an individual will win a fight (calculated using rhp values of the individuals involved and compared to j)
          function = "sigmoid" [
-           set prob_self (rhp ^ 2) / (rhp ^ 2 + ([rhp] of opponent) ^ 2)
+        set prob_self (rhp^2) / (rhp^2 + ([rhp] of o^2)
            ])
 
 
