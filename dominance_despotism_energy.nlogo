@@ -58,6 +58,8 @@ directed-link-breed [defeats defeat] ;; this is a link from the loser to the win
 undirected-link-breed [contests contest]
 
 primates-own[
+  xp
+  running-xp-avg
   sex
   age ;; in years
   ageclass
@@ -74,9 +76,9 @@ primates-own[
   wns_r
   lsses_r
 
-  dom-score ;; current value of estimated fighting ability, 0.0-1.0
-  dom-delta-list ;; list recording every time the dom-score was changed by a win or loss
-  running-dom-avg ;; average of the dom-delta-list
+   ;; current value of estimated fighting ability, 0.0-1.0
+  xp-delta-list ;; list recording every time the  was changed by a win or loss
+   ;; average of the dom-delta-list
 
   daily-distance-traveled ;; distance traveled, reset every 12 ticks
   distance-traveled ;; TOTAL distance traveled by primate
@@ -203,16 +205,16 @@ end
 
 
 
-to create_starting_pop ;; creates a beginning population of primate agents, of varialbe age and sex, and places them randomly on the landscape
+to create_starting_pop ;; creates a beginning population of primate agents, of varialbe age and sex, and places them randomly on the landscapeexprunning-exp-avg
   create-primates starting-pop-primates [
     set label who
     ;;set label return_rhp ;each turtle displays their return-rhp value
     set size 1 ; size of turtles to 5
     set vision 20
     set stored-energy 10
-    set dom-score 0.50
-    set dom-delta-list (list 0.50)
-    set running-dom-avg 0.50
+    set xp 0.50
+    set xp-delta-list (list 0.50)
+    set running-xp-avg 0.50
 
     ;; sex
     set sex "F"
@@ -243,7 +245,7 @@ to create_starting_pop ;; creates a beginning population of primate agents, of v
 end
 
 
-to go ;; put main schedule procedures for readability
+to go ;; put main schedule procedures for readabilitydecay_exp
 
   tick
   if not any? primates [stop]
@@ -261,7 +263,7 @@ to go ;; put main schedule procedures for readability
   ]
 
   color_patches
-  decay_dom
+
 
 
 
@@ -511,10 +513,10 @@ to update_winner_against [losing]
   set wns wns + 1 ;; opponent recalculates their wns counter to increase it by 1
           ;;show "I win! \n"
 
-          ifelse dom-score > 0.84 [
-            set dom-score 1.0
+          ifelse xp > 0.84 [
+            set xp 1.0
           ][
-            set dom-score dom-score + 0.16
+            set xp xp + 0.16
           ]
 
         ;;show "I win!"
@@ -526,11 +528,11 @@ end
 
 to update_loser_against [winner]
   set lsses (lsses + 1) ;; opponent recalculates their lsses counter to increase it by 1
-   ;;;; also dom-score stuff here!!!!
-          ifelse dom-score > 0.16 [
-             set dom-score dom-score - 0.16
+   ;;;; also exp stuff here!!!!
+          ifelse xp > 0.16 [
+             set xp xp - 0.16
              ][
-             set dom-score 0.01
+             set xp 0.01
              ]
 
 
@@ -551,12 +553,12 @@ end
 
 
 to update_dom_list
-      set dom-delta-list fput dom-score dom-delta-list
+      set xp-delta-list fput xp xp-delta-list
 
-    ifelse length dom-delta-list > 4 [
-      set running-dom-avg mean sublist dom-delta-list 0 5 ;;;;; the running average is only from the 10 most recent wins or losses
+    ifelse length xp-delta-list > 4 [
+      set running-xp-avg mean sublist xp-delta-list 0 5 ;;;;; the running average is only from the 10 most recent wins or losses
     ][
-      set running-dom-avg mean dom-delta-list
+      set running-xp-avg mean xp-delta-list
     ]
 end
 
@@ -567,30 +569,38 @@ to-report cost-estimation [opponent]
 
       ;;;;;;;;;;;;;;;
     ;; ESTIMATE COSTS FOR EACH STRATEGY
-    (ifelse assessment-info = "history" [ ;; linked to history switch; if this on, primates make decision based on dom-score
+    (ifelse assessment-info = "history" [ ;; linked to history switch; if this on, primates make decision based on exp
 
-      ;; mutual assess switch allows primates to make decisions based on their and their opponent's dom-score
+      ;; mutual assess switch allows primates to make decisions based on their and their opponent's exp
       (ifelse assessment-who = "mutual" [
 
-        set cost-estimate (([dom-score] of opponent - dom-score) + 1) / 2 ;;; this puts the difference in scores back on a 0.0-1.0 scale
-        ]
+        (ifelse function = "linear" [
+          set cost-estimate (([xp] of opponent - xp) + 1) / 2 ;;; this puts the difference in scores back on a 0.0-1.0 scale
+          ]
+          function = "sigmoid" [
+          set cost-estimate (([xp] of opponent) ^ 2) / (xp ^ 2 + ([xp] of opponent) ^ 2)
+         ]
+      )]
 
         assessment-who = "self" [
-          set cost-estimate (1.0 - dom-score) ;; have to do the + 1s to avoid dividing by 0
+          set cost-estimate (1.0 - xp) ;; have to do the + 1s to avoid dividing by 0
         ]
 
         assessment-who = "opponent" [
-          set cost-estimate ([dom-score] of opponent);; the opponents ratio of wins to losses, 1 - to make it the same direction as others
+          set cost-estimate ([xp] of opponent);; the opponents ratio of wins to losses, 1 - to make it the same direction as others
         ]
         [error "You need to turn on the mutual-assess, self-only, or opponent-only switch."])
       ;;show prob-decision type " probability of deciding to fight \n"
-      ]
+    ]
 
 
     assessment-info = "knowledge" [ ;; linked to knowledge switch; if this on then primates make conflict decisions based on their and their opponent's rhp values
 
       (ifelse assessment-who = "mutual" [  ;; mutual assess switch allows primates to make decisions based on their and their opponent's rhp values
-        set cost-estimate (([rhp] of opponent - rhp) + 7) / 14 ;; changed to 14 and 7 becuse starting rhp values at 1 rather than 0 (1-8)
+
+        (ifelse function = "linear" [set cost-estimate (([rhp] of opponent - rhp) + 7) / 14] ;; changed to 14 and 7 becuse starting rhp values at 1 rather than 0 (1-8)]
+        function = "sigmoid" [set cost-estimate (([rhp] of opponent) ^ 2) / (rhp ^ 2 + ([rhp] of opponent) ^ 2) ])
+
       ]
 
       assessment-who = "self" [
@@ -628,7 +638,7 @@ to decide_to_attack ;; function to inform turtles on how to decide to fight
 
   if opponent != nobody [;; if i (the opponent) is not "nobody", then do the following function (this should be the very first thing checked)
 
-    set running-dom-avg mean dom-delta-list
+    set running-xp-avg mean xp-delta-list
     let bene benefit-estimation
     let cost-est 0.01 ;; estimate costs will be calculated below, depending on current assessment strategy
     let probr 1.0 ;; prob of making the right choice. default to 1, so that agents will make the optimal choice if something goes wrong
@@ -641,7 +651,10 @@ set cost-est cost-estimation opponent
     ;;;;;;;;;;;;;
     ;; USE COSTS TO DETERMINE BEST DECISION
   (ifelse bene > cost-est [
-          set probr (bene / (bene + cost-est))
+
+        (ifelse function = "linear" [set probr (bene / (bene + cost-est))]
+          function = "sigmoid" [set probr ((bene ^ 2) / (bene ^ 2 + (cost-est ^ 2)))])
+
 
           (ifelse probr > roll [
               ask out-attack-to opponent [set attack-counter attack-counter + 1]
@@ -657,7 +670,10 @@ set cost-est cost-estimation opponent
           ;;show "we decided not to fight \n" ;; if the fight does not occur, then self says, "we decided not to fight"
           ;let correct-choice avoid
 
-          set probr (cost-est / (bene + cost-est))
+          (ifelse function = "linear" [set probr (cost-est / (bene + cost-est))]
+            function = "sigmoid" [set probr ((cost-est ^ 2) / (bene ^ 2 + (cost-est ^ 2)))])
+
+
           (ifelse probr > roll [
                ask out-fightavoided-to opponent [set avoid-counter avoid-counter + 1]
           rt one-of (range 90 270)
@@ -672,22 +688,22 @@ set cost-est cost-estimation opponent
   [move-to one-of neighbors with [not any? primates-here]]
 end
 
-to decay_dom
+to decay_xp
   ask primates [
-    if running-dom-avg < 0 [
-    set running-dom-avg 0
+    if running-xp-avg < 0 [
+    set running-xp-avg 0
   ]
-    if running-dom-avg > 1 [
-      set running-dom-avg 1
+    if running-xp-avg > 1 [
+      set running-xp-avg 1
     ]
   ]
-  ask primates with [dom-score != running-dom-avg] [
-    ifelse dom-score > running-dom-avg [
-      ;; dom-score is higher than the running average
-      set dom-score dom-score - 0.01
+  ask primates with [xp != running-xp-avg] [
+    ifelse xp > running-xp-avg [
+      ;; exp is higher than the running average
+      set xp xp - 0.01
     ][
-      ;; dom-score is lower than the running average
-      set dom-score dom-score + 0.005
+      ;; exp is lower than the running average
+      set xp xp + 0.005
     ]
   ]
 end
@@ -1133,7 +1149,7 @@ CHOOSER
 resource-dist
 resource-dist
 "uniform" "clumped"
-0
+1
 
 CHOOSER
 55
@@ -1143,7 +1159,7 @@ CHOOSER
 winning
 winning
 "deterministic" "probabilistic" "initiator"
-2
+1
 
 CHOOSER
 55
@@ -1218,7 +1234,7 @@ CHOOSER
 function
 function
 "linear" "sigmoid"
-0
+1
 
 @#$#@#$#@
 ## WHAT IS IT?
