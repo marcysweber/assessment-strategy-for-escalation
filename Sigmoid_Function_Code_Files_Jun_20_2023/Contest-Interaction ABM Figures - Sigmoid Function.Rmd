@@ -1,0 +1,838 @@
+---
+title: "Untitled"
+author: "C.J. O'Connor-Coates"
+date: "2023-06-19"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+#X-LABELS FOR FIGURES
+x.lab<-c("Mutual History","Mutual History","Mutual RHP","Mutual RHP","Opponent History","Opponent History","Opponent RHP","Opponent RHP","Self History","Self History","Self RHP","Self RHP")
+
+
+#PROPORTION OF ATTACK
+library(tidyverse)
+library(ggplot2)
+library(hrbrthemes)
+library(viridis)
+library(Rmisc)
+
+setwd("~/Desktop")
+
+sf.deter.prop_attack.fig<-attack.prop.sf.2 %>%
+  ggplot( aes(x=combo2, y=as.numeric(proportion.attacking),color=resource.dist)) +
+    geom_boxplot(outlier.shape=NA) +
+    geom_point(aes(shape=resource.dist),size=2.5,position=position_dodge(width=0.75))+
+    scale_shape_manual(values=c(1, 2))+
+    xlab("")+
+    ylab("Proportion of Attack") +
+    theme_bw() +
+    theme(panel.grid.major.x = element_line(color = "grey",size = 0.3,linetype = 2),legend.position="none",panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text.x=element_text(size=13, colour="black"),axis.text.y=element_text(size=12, colour="black"), panel.border=element_rect(colour="black", size=1, fill=NA), axis.title.y=element_text(size=14))+    
+    scale_color_manual(values = c("blue","#CC5500")) +
+    scale_x_discrete(limit=c("mutual rhp", "mutual history"), labels=c("RHP", "Experience"))  + 
+    annotate(geom="text", x=c(1.5), y=0.05, label=c("Mutual"), size=5)+
+    coord_cartesian(expand=F, clip="off", xlim=c(0.25, 2.75), ylim=c(0.1,0.65))
+jpeg("sf.deter.prop_attack.fig.jpeg", 336, 336)
+sf.deter.prop_attack.fig
+dev.off()
+
+sf.deter.prop_attack.fig
+
+
+
+#RATE OF AVOIDS
+library(tidyverse)
+library(ggplot2)
+library(hrbrthemes)
+library(viridis)
+library(Rmisc)
+
+
+setwd("~/Desktop")
+rate.avoids.fig<-attack.prop.sf.2 %>%
+  ggplot( aes(x=combo2, y=rate.avoids,color=resource.dist)) +
+    geom_boxplot(outlier.shape=NA) +
+    geom_point(aes(shape=resource.dist),size=2.5,position=position_dodge(width=0.75))+
+    scale_shape_manual(values=c(1, 2))+
+    xlab("")+
+    ylab("Rate of Avoids") +
+    theme_bw() +
+    theme(panel.grid.major.x = element_line(color = "grey",size = 0.3,linetype = 2),legend.position="none",panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text.x=element_text(size=13, colour="black"),axis.text.y=element_text(size=12, colour="black"), panel.border=element_rect(colour="black", size=1, fill=NA), axis.title.y=element_text(size=14))+    
+    scale_color_manual(values = c("blue","#CC5500")) +
+    scale_x_discrete(limit=c("mutual rhp", "mutual history"), labels=c("RHP", "Experience"))  + 
+    annotate(geom="text", x=c(1.5, 3.5, 5.5), y=-0.16, label=c("Mutual"), size=5)+
+    coord_cartesian(expand=F, clip="off", xlim=c(0.25, 2.75), ylim=c(-0.1,0.65))
+jpeg("rate.avoids.fig.jpeg", 336, 336)
+rate.avoids.fig
+dev.off()
+
+rate.avoids.fig
+
+
+#RATE OF ATTACKS
+library(tidyverse)
+library(ggplot2)
+library(hrbrthemes)
+library(viridis)
+library(Rmisc)
+
+
+setwd("~/Desktop")
+sf.rate.attacks.fig<-attack.prop.sf.2 %>%
+  ggplot( aes(x=combo2, y=rate.attacks,color=resource.dist)) +
+    geom_boxplot(outlier.shape=NA) +
+    geom_point(aes(shape=resource.dist),size=2.5,position=position_dodge(width=0.75))+
+    scale_shape_manual(values=c(1, 2))+
+    xlab("")+
+    ylab("Rate of Attacks") +
+    theme_bw() +
+    theme(panel.grid.major.x = element_line(color = "grey",size = 0.3,linetype = 2),legend.position="none",panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text.x=element_text(size=13, colour="black"),axis.text.y=element_text(size=12, colour="black"), panel.border=element_rect(colour="black", size=1, fill=NA), axis.title.y=element_text(size=14))+    
+    scale_color_manual(values = c("blue","#CC5500")) +
+    scale_x_discrete(limit=c("mutual rhp", "mutual history"), labels=c("RHP", "Experience"))  + 
+    annotate(geom="text", x=c(1.5, 3.5, 5.5), y=-0.16, label=c("Mutual"), size=5)+
+    coord_cartesian(expand=F, clip="off", xlim=c(0.25, 2.75), ylim=c(-0.1,0.65))
+jpeg("sf.rate.attacks.fig.jpeg", 336, 336)
+sf.rate.attacks.fig
+dev.off()
+
+sf.rate.attacks.fig
+    
+
+
+
+#TRIANGLE TRANSITIVIY
+setwd("~/Desktop")
+addline_format <- function(x,...){
+    gsub('\\s','\n',x)
+}
+
+sf.deter.TTri.fig <- overall.deter.sf %>%
+  ggplot( aes(x=combo2, y=triangle.transitivity,color=distribution)) +
+  geom_boxplot(outlier.shape=NA) +
+    geom_point(aes(shape=distribution),size=2.5,position=position_dodge(width=0.75))+
+    scale_shape_manual(values=c(1, 2))+
+    xlab("")+
+    ylab("Triangle Transitivity") +
+    theme_bw() +
+    theme(panel.grid.major.x = element_line(color = "grey",size = 0.3,linetype = 2),legend.position="none",panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text.x=element_text(size=13, colour="black"),axis.text.y=element_text(size=12, colour="black"), panel.border=element_rect(colour="black", size=1, fill=NA), axis.title.y=element_text(size=14))+    scale_color_manual(values = c("blue","#CC5500")) +
+    scale_x_discrete(limit=c("mutual rhp", "mutual history"), labels=c("RHP", "Experience"))  + 
+    annotate(geom="text", x=c(1.5), y=-0.15, label=c("Mutual"), size=5)+
+    coord_cartesian(expand=F, clip="off", xlim=c(0.25, 2.75), ylim=c(-0.05, 1.05))
+jpeg("sf.deter.TTri.fig.jpeg", 336, 336)
+sf.deter.TTri.fig
+dev.off()
+
+
+#DIRECTIONAL CONSISTENCY INDEX
+sf.deter.DCI.fig <- overall.deter.sf %>%
+  ggplot( aes(x=combo2, y=dci,color=distribution)) +
+geom_boxplot(outlier.shape=NA) +
+    geom_point(aes(shape=distribution),size=2.5,position=position_dodge(width=0.75))+
+    scale_shape_manual(values=c(1, 2))+
+    xlab("")+
+    ylab("Directional Consistency Index") +
+    theme_bw() +
+    theme(panel.grid.major.x = element_line(color = "grey",size = 0.3,linetype = 2),legend.position="none",panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text.x=element_text(size=13, colour="black"),axis.text.y=element_text(size=12, colour="black"), panel.border=element_rect(colour="black", size=1, fill=NA), axis.title.y=element_text(size=14))+    scale_color_manual(values = c("blue","#CC5500")) +
+    scale_x_discrete(limit=c("mutual rhp", "mutual history"), labels=c("RHP", "Experience"))  + 
+    annotate(geom="text", x=c(1.5, 3.5, 5.5), y=-0.15, label=c("Mutual"), size=5)+
+    coord_cartesian(expand=F, clip="off", xlim=c(0.25, 2.75), ylim=c(-0.05,1.05))
+jpeg("sf.deter.DCI.fig.jpeg", 336, 336)
+sf.deter.DCI.fig
+dev.off()
+  
+  
+#STEEPNESS    
+sf.deter.Steep.fig <- overall.deter.sf %>%
+  ggplot( aes(x=combo2, y=abs(steepness),color=distribution)) +
+  geom_boxplot(outlier.shape=NA) +
+    geom_point(aes(shape=distribution),size=2.5,position=position_dodge(width=0.75))+
+    scale_shape_manual(values=c(1, 2))+
+    xlab("")+
+    ylab("Steepness") +
+    theme_bw() +
+    theme(panel.grid.major.x = element_line(color = "grey",size = 0.3,linetype = 2),legend.position="none",panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text.x=element_text(size=13, colour="black"),axis.text.y=element_text(size=12, colour="black"), panel.border=element_rect(colour="black", size=1, fill=NA), axis.title.y=element_text(size=14))+    scale_color_manual(values = c("blue","#CC5500")) +
+    scale_x_discrete(limit=c("mutual rhp", "mutual history"), labels=c("RHP", "Experience"))  + 
+    annotate(geom="text", x=c(1.5, 3.5, 5.5), y=-0.15, label=c("Mutual"), size=5)+
+    coord_cartesian(expand=F, clip="off", xlim=c(0.25, 2.75), ylim=c(-0.05,1.05))
+jpeg("sf.deter.Steep.fig.jpeg", 336, 336)
+sf.deter.Steep.fig
+dev.off()
+
+sf.deter.TTri.fig
+sf.deter.DCI.fig
+sf.deter.Steep.fig
+
+
+
+#ENERGY EFFICIENCY
+setwd("~/Desktop")
+jpeg("sf.deter.energy_efficiency.fig.jpeg", 672, 336)
+par(cex.axis=1, cex.lab=1.3, mar=c(2.65,2.75,0.4,0.4),family="sans")
+sf.deter.energy_efficiency.fig<-plot(total.energy.cp.sf$energy_over_time~total.energy.cp.sf$normDS,pch=1,cex=1.4,xaxt="n",yaxt="n",col="blue",xlab="",ylab="",main="",ylim=c(0.4,0.8),xlim=c(0.85,8.25),las=1); points(total.energy.pu.sf$energy_over_time~total.energy.pu.sf$normDS,pch=2,cex=1.4,col="#CC5500"); abline(km.lm.dc.sf, lwd=3);abline(hm.lm.dc.sf, lwd=3);abline(km.lm.du.sf, col="black", lty=4, lwd=3);abline(hm.lm.du.sf, col="black", lty=4, lwd=3);title(xlab="Normalized David's Scores",line=1.25);title(ylab="Energy per unit Time", line=1.5); axis(1, at = c(0, 1, 2, 3, 4, 5, 6, 7, 8), label=rep("",9), tck=-0.015, line=0);axis(2, at = c(0.4,0.5,0.6,0.7,0.8), label=rep("",5),tck=-0.015);axis(1, at = 1:10, line = -0.8, lwd = 0, cex.axis = 1);axis(2, at = c(0.4,0.5,0.6,0.7,0.8), line = -0.7, lwd = 0, cex.axis = 1, las=1);box(col="black",lwd=3)
+dev.off()
+
+
+plot(total.energy.cp.sf$energy_over_time~total.energy.cp.sf$normDS,pch=1,cex=1.4,xaxt="n",yaxt="n",col="blue",xlab="",ylab="",main="",ylim=c(0.4,0.8),xlim=c(0.85,8.25),las=1); points(total.energy.pu.sf$energy_over_time~total.energy.pu.sf$normDS,pch=2,cex=1.4,col="#CC5500"); abline(km.lm.dc.sf, lwd=3);abline(hm.lm.dc.sf, lwd=3);abline(km.lm.du.sf, col="black", lty=4, lwd=3);abline(hm.lm.du.sf, col="black", lty=4, lwd=3);title(xlab="Normalized David's Scores",line=1.25);title(ylab="Energy per unit Time", line=1.5); axis(1, at = c(0, 1, 2, 3, 4, 5, 6, 7, 8), label=rep("",9), tck=-0.015, line=0);axis(2, at = c(0.4,0.5,0.6,0.7,0.8), label=rep("",5),tck=-0.015);axis(1, at = 1:10, line = -0.8, lwd = 0, cex.axis = 1);axis(2, at = c(0.4,0.5,0.6,0.7,0.8), line = -0.7, lwd = 0, cex.axis = 1, las=1);box(col="black",lwd=3)
+
+
+
+
+
+#AVOID TRIANGLE TRANSITIVITY
+setwd("~/Desktop")
+addline_format <- function(x,...){
+    gsub('\\s','\n',x)
+}
+
+
+sf.avoid.triangle.transitivity.fig <- overall.deter.sf.avoids %>%
+  ggplot( aes(x=combo2, y=triangle.transitivity,color=distribution)) +
+  geom_boxplot(outlier.shape=NA) +
+    geom_point(aes(shape=distribution),size=2.5,position=position_dodge(width=0.75))+
+    scale_shape_manual(values=c(1, 2))+
+    xlab("")+
+    ylab("Triangle Transitivity") +
+    theme_bw() +
+    theme(panel.grid.major.x = element_line(color = "grey",size = 0.3,linetype = 2),legend.position="none",panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text.x=element_text(size=13, colour="black"),axis.text.y=element_text(size=12, colour="black"), panel.border=element_rect(colour="black", size=1, fill=NA), axis.title.y=element_text(size=14))+    scale_color_manual(values = c("blue","#CC5500")) +
+    scale_x_discrete(limit=c("mutual rhp", "mutual history"), labels=c("RHP", "Experience"))  + 
+    annotate(geom="text", x=c(1.5, 3.5, 5.5), y=-0.63, label=c("Mutual"), size=5)+
+    coord_cartesian(expand=F, clip="off", xlim=c(0.25, 2.75), ylim=c(-0.5, 1.05))
+jpeg("sf.avoid.triangle.transitivity.fig.jpeg", 369.6, 336)
+sf.avoid.triangle.transitivity.fig
+dev.off()
+
+
+#AVOID DCI
+avoid.sf.dci.fig <- overall.deter.sf.avoids %>%
+  ggplot( aes(x=combo2, y=dci,color=distribution)) +
+geom_boxplot(outlier.shape=NA) +
+    geom_point(aes(shape=distribution),size=2.5,position=position_dodge(width=0.75))+
+    scale_shape_manual(values=c(1, 2))+
+    xlab("")+
+    ylab("Directional Consistency Index") +
+    theme_bw() +
+    theme(panel.grid.major.x = element_line(color = "grey",size = 0.3,linetype = 2),legend.position="none",panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text.x=element_text(size=13, colour="black"),axis.text.y=element_text(size=12, colour="black"), panel.border=element_rect(colour="black", size=1, fill=NA), axis.title.y=element_text(size=14))+    scale_color_manual(values = c("blue","#CC5500")) +
+    scale_x_discrete(limit=c("mutual rhp", "mutual history"), labels=c("RHP", "Experience"))  + 
+    annotate(geom="text", x=c(1.5, 3.5, 5.5), y=-0.14, label=c("Mutual"), size=5)+
+    coord_cartesian(expand=F, clip="off", xlim=c(0.25, 2.75), ylim=c(-0.05,1.05))
+jpeg("avoid.sf.dci.fig.jpeg", 369.6, 336)
+avoid.sf.dci.fig
+dev.off()
+
+
+#AVOID STEEPNESS
+setwd("~/Desktop")
+addline_format <- function(x,...){
+    gsub('\\s','\n',x)
+}    
+avoid.sf.steep.fig <- overall.deter.sf.avoids %>%
+  ggplot( aes(x=combo2, y=abs(steepness),color=distribution)) +
+  geom_boxplot(outlier.shape=NA) +
+    geom_point(aes(shape=distribution),size=2.5,position=position_dodge(width=0.75))+
+    scale_shape_manual(values=c(1, 2))+
+    xlab("")+
+    ylab("Steepness") +
+    theme_bw() +
+    theme(panel.grid.major.x = element_line(color = "grey",size = 0.3,linetype = 2),legend.position="none",panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text.x=element_text(size=13, colour="black"),axis.text.y=element_text(size=12, colour="black"), panel.border=element_rect(colour="black", size=1, fill=NA), axis.title.y=element_text(size=14))+    scale_color_manual(values = c("blue","#CC5500")) +
+    scale_x_discrete(limit=c("mutual rhp", "mutual history"), labels=c("RHP", "Experience"))  + 
+    annotate(geom="text", x=c(1.5), y=-0.14, label=c("Mutual"), size=5)+
+    coord_cartesian(expand=F, clip="off", xlim=c(0.25, 2.75), ylim=c(-0.05,1.05))
+jpeg("avoid.sf.steep.fig.jpeg", 369.6, 336)
+avoid.sf.steep.fig
+dev.off()
+
+sf.avoid.triangle.transitivity.fig
+avoid.sf.dci.fig
+avoid.sf.steep.fig
+
+
+
+#ATTACK TRIANGLE TRANSITIVITY
+setwd("~/Desktop")
+addline_format <- function(x,...){
+    gsub('\\s','\n',x)
+}
+
+sf.attack.ttri.fig <- overall.deter.sf.attacks %>%
+  ggplot( aes(x=combo2, y=triangle.transitivity,color=distribution)) +
+  geom_boxplot(outlier.shape=NA) +
+    geom_point(aes(shape=distribution),size=2.5,position=position_dodge(width=0.75))+
+    scale_shape_manual(values=c(1, 2))+
+    xlab("")+
+    ylab("Triangle Transitivity") +
+    theme_bw() +
+    theme(panel.grid.major.x = element_line(color = "grey",size = 0.3,linetype = 2),legend.position="none",panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text.x=element_text(size=13, colour="black"),axis.text.y=element_text(size=12, colour="black"), panel.border=element_rect(colour="black", size=1, fill=NA), axis.title.y=element_text(size=14))+    scale_color_manual(values = c("blue","#CC5500")) +
+    scale_x_discrete(limit=c("mutual rhp", "mutual history"), labels=c("RHP", "Experience"))  + 
+    annotate(geom="text", x=c(1.5, 3.5, 5.5), y=-0.63, label=c("Mutual"), size=5)+
+    coord_cartesian(expand=F, clip="off", xlim=c(0.25, 2.75), ylim=c(-0.5, 1.05))
+jpeg("sf.attack.ttri.fig.jpeg", 369.6, 336)
+sf.attack.ttri.fig
+dev.off()
+
+
+#ATTACK DCI
+sf.attack.dci.fig <- overall.deter.sf.attacks %>%
+  ggplot( aes(x=combo2, y=dci,color=distribution)) +
+geom_boxplot(outlier.shape=NA) +
+    geom_point(aes(shape=distribution),size=2.5,position=position_dodge(width=0.75))+
+    scale_shape_manual(values=c(1, 2))+
+    xlab("")+
+    ylab("Directional Consistency Index") +
+    theme_bw() +
+    theme(panel.grid.major.x = element_line(color = "grey",size = 0.3,linetype = 2),legend.position="none",panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text.x=element_text(size=13, colour="black"),axis.text.y=element_text(size=12, colour="black"), panel.border=element_rect(colour="black", size=1, fill=NA), axis.title.y=element_text(size=14))+    scale_color_manual(values = c("blue","#CC5500")) +
+    scale_x_discrete(limit=c("mutual rhp", "mutual history"), labels=c("RHP", "Experience"))  + 
+    annotate(geom="text", x=c(1.5, 3.5, 5.5), y=-0.14, label=c("Mutual"), size=5)+
+    coord_cartesian(expand=F, clip="off", xlim=c(0.25, 2.75), ylim=c(-0.05,1.05))
+jpeg("sf.attack.dci.fig.jpeg", 369.6, 336)
+sf.attack.dci.fig
+dev.off()
+
+
+#ATTACK STEEPNESS
+setwd("~/Desktop")
+addline_format <- function(x,...){
+    gsub('\\s','\n',x)
+}
+
+sf.attack.steep.fig <- overall.deter.sf.attacks %>%
+  ggplot( aes(x=combo2, y=abs(steepness),color=distribution)) +
+  geom_boxplot(outlier.shape=NA) +
+    geom_point(aes(shape=distribution),size=2.5,position=position_dodge(width=0.75))+
+    scale_shape_manual(values=c(1, 2))+
+    xlab("")+
+    ylab("Steepness") +
+    theme_bw() +
+    theme(panel.grid.major.x = element_line(color = "grey",size = 0.3,linetype = 2),legend.position="none",panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text.x=element_text(size=13, colour="black"),axis.text.y=element_text(size=12, colour="black"), panel.border=element_rect(colour="black", size=1, fill=NA), axis.title.y=element_text(size=14))+    scale_color_manual(values = c("blue","#CC5500")) +
+    scale_x_discrete(limit=c("mutual rhp", "mutual history"), labels=c("RHP", "Experience"))  + 
+    annotate(geom="text", x=c(1.5), y=-0.14, label=c("Mutual"), size=5)+
+    coord_cartesian(expand=F, clip="off", xlim=c(0.25, 2.75), ylim=c(-0.05,1.05))
+jpeg("sf.attack.steep.fig.jpeg", 369.6, 336)
+sf.attack.steep.fig
+dev.off()
+
+sf.attack.ttri.fig
+sf.attack.dci.fig
+sf.attack.steep.fig
+
+
+
+
+
+#PROBABILITY PROPORTION OF ATTACK
+
+library(tidyverse)
+library(ggplot2)
+library(hrbrthemes)
+library(viridis)
+library(Rmisc)
+
+setwd("~/Desktop")
+
+sf.prob.prop_attack.fig<-attack.prop.sf.p.2 %>%
+  ggplot( aes(x=combo2, y=as.numeric(proportion.attacking),color=resource.dist)) +
+    geom_boxplot(outlier.shape=NA) +
+    geom_point(aes(shape=resource.dist),size=2.5,position=position_dodge(width=0.75))+
+    scale_shape_manual(values=c(1, 2))+
+    xlab("")+
+    ylab("Proportion of Attack") +
+    theme_bw() +
+    theme(panel.grid.major.x = element_line(color = "grey",size = 0.3,linetype = 2),legend.position="none",panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text.x=element_text(size=13, colour="black"),axis.text.y=element_text(size=12, colour="black"), panel.border=element_rect(colour="black", size=1, fill=NA), axis.title.y=element_text(size=14))+    
+    scale_color_manual(values = c("blue","#CC5500")) +
+    scale_x_discrete(limit=c("mutual rhp", "mutual history"), labels=c("RHP", "Experience"))  + 
+    annotate(geom="text", x=c(1.5), y=0.05, label=c("Mutual"), size=5)+
+    coord_cartesian(expand=F, clip="off", xlim=c(0.25, 2.75), ylim=c(0.1,0.65))
+jpeg("sf.prob.prop_attack.fig.jpeg", 336, 336)
+sf.prob.prop_attack.fig
+dev.off()
+
+sf.prob.prop_attack.fig
+
+
+
+#PROBABILITY RATE OF AVOIDS
+library(tidyverse)
+library(ggplot2)
+library(hrbrthemes)
+library(viridis)
+library(Rmisc)
+
+
+setwd("~/Desktop")
+rate.avoids.fig<-attack.prop.sf.p.2 %>%
+  ggplot( aes(x=combo2, y=rate.avoids,color=resource.dist)) +
+    geom_boxplot(outlier.shape=NA) +
+    geom_point(aes(shape=resource.dist),size=2.5,position=position_dodge(width=0.75))+
+    scale_shape_manual(values=c(1, 2))+
+    xlab("")+
+    ylab("Rate of Avoids") +
+    theme_bw() +
+    theme(panel.grid.major.x = element_line(color = "grey",size = 0.3,linetype = 2),legend.position="none",panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text.x=element_text(size=13, colour="black"),axis.text.y=element_text(size=12, colour="black"), panel.border=element_rect(colour="black", size=1, fill=NA), axis.title.y=element_text(size=14))+    
+    scale_color_manual(values = c("blue","#CC5500")) +
+    scale_x_discrete(limit=c("mutual rhp", "mutual history"), labels=c("RHP", "Experience"))  + 
+    annotate(geom="text", x=c(1.5, 3.5, 5.5), y=-0.16, label=c("Mutual"), size=5)+
+    coord_cartesian(expand=F, clip="off", xlim=c(0.25, 2.75), ylim=c(-0.1,0.65))
+jpeg("rate.avoids.fig.jpeg", 336, 336)
+rate.avoids.fig
+dev.off()
+
+rate.avoids.fig
+
+
+#PROBABILITY RATE OF ATTACKS
+library(tidyverse)
+library(ggplot2)
+library(hrbrthemes)
+library(viridis)
+library(Rmisc)
+
+
+setwd("~/Desktop")
+sf.rate.attacks.fig<-attack.prop.sf.p.2 %>%
+  ggplot( aes(x=combo2, y=rate.attacks,color=resource.dist)) +
+    geom_boxplot(outlier.shape=NA) +
+    geom_point(aes(shape=resource.dist),size=2.5,position=position_dodge(width=0.75))+
+    scale_shape_manual(values=c(1, 2))+
+    xlab("")+
+    ylab("Rate of Attacks") +
+    theme_bw() +
+    theme(panel.grid.major.x = element_line(color = "grey",size = 0.3,linetype = 2),legend.position="none",panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text.x=element_text(size=13, colour="black"),axis.text.y=element_text(size=12, colour="black"), panel.border=element_rect(colour="black", size=1, fill=NA), axis.title.y=element_text(size=14))+    
+    scale_color_manual(values = c("blue","#CC5500")) +
+    scale_x_discrete(limit=c("mutual rhp", "mutual history"), labels=c("RHP", "Experience"))  + 
+    annotate(geom="text", x=c(1.5, 3.5, 5.5), y=-0.16, label=c("Mutual"), size=5)+
+    coord_cartesian(expand=F, clip="off", xlim=c(0.25, 2.75), ylim=c(-0.1,0.65))
+jpeg("sf.rate.attacks.fig.jpeg", 336, 336)
+sf.rate.attacks.fig
+dev.off()
+
+sf.rate.attacks.fig
+    
+
+
+
+#PROBABILITY TRIANGLE TRANSITIVIY
+setwd("~/Desktop")
+addline_format <- function(x,...){
+    gsub('\\s','\n',x)
+}
+
+sf.prob.TTri.fig <- overall.prob.sf %>%
+  ggplot( aes(x=combo2, y=triangle.transitivity,color=distribution)) +
+  geom_boxplot(outlier.shape=NA) +
+    geom_point(aes(shape=distribution),size=2.5,position=position_dodge(width=0.75))+
+    scale_shape_manual(values=c(1, 2))+
+    xlab("")+
+    ylab("Triangle Transitivity") +
+    theme_bw() +
+    theme(panel.grid.major.x = element_line(color = "grey",size = 0.3,linetype = 2),legend.position="none",panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text.x=element_text(size=13, colour="black"),axis.text.y=element_text(size=12, colour="black"), panel.border=element_rect(colour="black", size=1, fill=NA), axis.title.y=element_text(size=14))+    scale_color_manual(values = c("blue","#CC5500")) +
+    scale_x_discrete(limit=c("mutual rhp", "mutual history"), labels=c("RHP", "Experience"))  + 
+    annotate(geom="text", x=c(1.5), y=-0.15, label=c("Mutual"), size=5)+
+    coord_cartesian(expand=F, clip="off", xlim=c(0.25, 2.75), ylim=c(-0.05, 1.05))
+jpeg("sf.prob.TTri.fig.jpeg", 336, 336)
+sf.prob.TTri.fig
+dev.off()
+
+
+#PROBABILITY DIRECTIONAL CONSISTENCY INDEX
+sf.prob.DCI.fig <- overall.prob.sf %>%
+  ggplot( aes(x=combo2, y=dci,color=distribution)) +
+geom_boxplot(outlier.shape=NA) +
+    geom_point(aes(shape=distribution),size=2.5,position=position_dodge(width=0.75))+
+    scale_shape_manual(values=c(1, 2))+
+    xlab("")+
+    ylab("Directional Consistency Index") +
+    theme_bw() +
+    theme(panel.grid.major.x = element_line(color = "grey",size = 0.3,linetype = 2),legend.position="none",panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text.x=element_text(size=13, colour="black"),axis.text.y=element_text(size=12, colour="black"), panel.border=element_rect(colour="black", size=1, fill=NA), axis.title.y=element_text(size=14))+    scale_color_manual(values = c("blue","#CC5500")) +
+    scale_x_discrete(limit=c("mutual rhp", "mutual history"), labels=c("RHP", "Experience"))  + 
+    annotate(geom="text", x=c(1.5, 3.5, 5.5), y=-0.15, label=c("Mutual"), size=5)+
+    coord_cartesian(expand=F, clip="off", xlim=c(0.25, 2.75), ylim=c(-0.05,1.05))
+jpeg("sf.prob.DCI.fig.jpeg", 336, 336)
+sf.prob.DCI.fig
+dev.off()
+  
+  
+#PROBABILITY STEEPNESS    
+sf.prob.Steep.fig <- overall.prob.sf %>%
+  ggplot( aes(x=combo2, y=abs(steepness),color=distribution)) +
+  geom_boxplot(outlier.shape=NA) +
+    geom_point(aes(shape=distribution),size=2.5,position=position_dodge(width=0.75))+
+    scale_shape_manual(values=c(1, 2))+
+    xlab("")+
+    ylab("Steepness") +
+    theme_bw() +
+    theme(panel.grid.major.x = element_line(color = "grey",size = 0.3,linetype = 2),legend.position="none",panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text.x=element_text(size=13, colour="black"),axis.text.y=element_text(size=12, colour="black"), panel.border=element_rect(colour="black", size=1, fill=NA), axis.title.y=element_text(size=14))+    scale_color_manual(values = c("blue","#CC5500")) +
+    scale_x_discrete(limit=c("mutual rhp", "mutual history"), labels=c("RHP", "Experience"))  + 
+    annotate(geom="text", x=c(1.5, 3.5, 5.5), y=-0.15, label=c("Mutual"), size=5)+
+    coord_cartesian(expand=F, clip="off", xlim=c(0.25, 2.75), ylim=c(-0.05,1.05))
+jpeg("sf.prob.Steep.fig.jpeg", 336, 336)
+sf.prob.Steep.fig
+dev.off()
+
+sf.prob.TTri.fig
+sf.prob.DCI.fig
+sf.prob.Steep.fig
+
+
+
+#PROBABILITY ENERGY EFFICIENCY
+setwd("~/Desktop")
+jpeg("sf.prob.energy_efficiency.fig.jpeg", 672, 336)
+par(cex.axis=1, cex.lab=1.3, mar=c(2.65,2.75,0.4,0.4),family="sans")
+sf.prob.energy_efficiency.fig<-plot(total.energy.cp.sf$energy_over_time~total.energy.cp.sf$normDS,pch=1,cex=1.4,xaxt="n",yaxt="n",col="blue",xlab="",ylab="",main="",ylim=c(0.4,0.8),xlim=c(0.85,8.25),las=1); points(total.energy.pu.sf$energy_over_time~total.energy.pu.sf$normDS,pch=2,cex=1.4,col="#CC5500"); abline(km.lm.dc.sf, lwd=3);abline(hm.lm.dc.sf, lwd=3);abline(km.lm.du.sf, col="black", lty=4, lwd=3);abline(hm.lm.du.sf, col="black", lty=4, lwd=3);title(xlab="Normalized David's Scores",line=1.25);title(ylab="Energy per unit Time", line=1.5); axis(1, at = c(0, 1, 2, 3, 4, 5, 6, 7, 8), label=rep("",9), tck=-0.015, line=0);axis(2, at = c(0.4,0.5,0.6,0.7,0.8), label=rep("",5),tck=-0.015);axis(1, at = 1:10, line = -0.8, lwd = 0, cex.axis = 1);axis(2, at = c(0.4,0.5,0.6,0.7,0.8), line = -0.7, lwd = 0, cex.axis = 1, las=1);box(col="black",lwd=3)
+dev.off()
+
+
+plot(total.energy.cp.sf$energy_over_time~total.energy.cp.sf$normDS,pch=1,cex=1.4,xaxt="n",yaxt="n",col="blue",xlab="",ylab="",main="",ylim=c(0.4,0.8),xlim=c(0.85,8.25),las=1); points(total.energy.pu.sf$energy_over_time~total.energy.pu.sf$normDS,pch=2,cex=1.4,col="#CC5500"); abline(km.lm.dc.sf, lwd=3);abline(hm.lm.dc.sf, lwd=3);abline(km.lm.du.sf, col="black", lty=4, lwd=3);abline(hm.lm.du.sf, col="black", lty=4, lwd=3);title(xlab="Normalized David's Scores",line=1.25);title(ylab="Energy per unit Time", line=1.5); axis(1, at = c(0, 1, 2, 3, 4, 5, 6, 7, 8), label=rep("",9), tck=-0.015, line=0);axis(2, at = c(0.4,0.5,0.6,0.7,0.8), label=rep("",5),tck=-0.015);axis(1, at = 1:10, line = -0.8, lwd = 0, cex.axis = 1);axis(2, at = c(0.4,0.5,0.6,0.7,0.8), line = -0.7, lwd = 0, cex.axis = 1, las=1);box(col="black",lwd=3)
+
+
+
+
+
+#PROBABILITY AVOID TRIANGLE TRANSITIVITY
+setwd("~/Desktop")
+addline_format <- function(x,...){
+    gsub('\\s','\n',x)
+}
+
+
+sf.avoid.triangle.transitivity.fig <- overall.prob.sf.avoids %>%
+  ggplot( aes(x=combo2, y=triangle.transitivity,color=distribution)) +
+  geom_boxplot(outlier.shape=NA) +
+    geom_point(aes(shape=distribution),size=2.5,position=position_dodge(width=0.75))+
+    scale_shape_manual(values=c(1, 2))+
+    xlab("")+
+    ylab("Triangle Transitivity") +
+    theme_bw() +
+    theme(panel.grid.major.x = element_line(color = "grey",size = 0.3,linetype = 2),legend.position="none",panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text.x=element_text(size=13, colour="black"),axis.text.y=element_text(size=12, colour="black"), panel.border=element_rect(colour="black", size=1, fill=NA), axis.title.y=element_text(size=14))+    scale_color_manual(values = c("blue","#CC5500")) +
+    scale_x_discrete(limit=c("mutual rhp", "mutual history"), labels=c("RHP", "Experience"))  + 
+    annotate(geom="text", x=c(1.5, 3.5, 5.5), y=-0.63, label=c("Mutual"), size=5)+
+    coord_cartesian(expand=F, clip="off", xlim=c(0.25, 2.75), ylim=c(-0.5, 1.05))
+jpeg("sf.avoid.triangle.transitivity.fig.jpeg", 369.6, 336)
+sf.avoid.triangle.transitivity.fig
+dev.off()
+
+
+#PROBABILITY AVOID DCI
+avoid.sf.dci.fig <- overall.prob.sf.avoids %>%
+  ggplot( aes(x=combo2, y=dci,color=distribution)) +
+geom_boxplot(outlier.shape=NA) +
+    geom_point(aes(shape=distribution),size=2.5,position=position_dodge(width=0.75))+
+    scale_shape_manual(values=c(1, 2))+
+    xlab("")+
+    ylab("Directional Consistency Index") +
+    theme_bw() +
+    theme(panel.grid.major.x = element_line(color = "grey",size = 0.3,linetype = 2),legend.position="none",panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text.x=element_text(size=13, colour="black"),axis.text.y=element_text(size=12, colour="black"), panel.border=element_rect(colour="black", size=1, fill=NA), axis.title.y=element_text(size=14))+    scale_color_manual(values = c("blue","#CC5500")) +
+    scale_x_discrete(limit=c("mutual rhp", "mutual history"), labels=c("RHP", "Experience"))  + 
+    annotate(geom="text", x=c(1.5, 3.5, 5.5), y=-0.14, label=c("Mutual"), size=5)+
+    coord_cartesian(expand=F, clip="off", xlim=c(0.25, 2.75), ylim=c(-0.05,1.05))
+jpeg("avoid.sf.dci.fig.jpeg", 369.6, 336)
+avoid.sf.dci.fig
+dev.off()
+
+
+#PROBABILITY AVOID STEEPNESS
+setwd("~/Desktop")
+addline_format <- function(x,...){
+    gsub('\\s','\n',x)
+}    
+avoid.sf.steep.fig <- overall.prob.sf.avoids %>%
+  ggplot( aes(x=combo2, y=abs(steepness),color=distribution)) +
+  geom_boxplot(outlier.shape=NA) +
+    geom_point(aes(shape=distribution),size=2.5,position=position_dodge(width=0.75))+
+    scale_shape_manual(values=c(1, 2))+
+    xlab("")+
+    ylab("Steepness") +
+    theme_bw() +
+    theme(panel.grid.major.x = element_line(color = "grey",size = 0.3,linetype = 2),legend.position="none",panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text.x=element_text(size=13, colour="black"),axis.text.y=element_text(size=12, colour="black"), panel.border=element_rect(colour="black", size=1, fill=NA), axis.title.y=element_text(size=14))+    scale_color_manual(values = c("blue","#CC5500")) +
+    scale_x_discrete(limit=c("mutual rhp", "mutual history"), labels=c("RHP", "Experience"))  + 
+    annotate(geom="text", x=c(1.5), y=-0.14, label=c("Mutual"), size=5)+
+    coord_cartesian(expand=F, clip="off", xlim=c(0.25, 2.75), ylim=c(-0.05,1.05))
+jpeg("avoid.sf.steep.fig.jpeg", 369.6, 336)
+avoid.sf.steep.fig
+dev.off()
+
+sf.avoid.triangle.transitivity.fig
+avoid.sf.dci.fig
+avoid.sf.steep.fig
+
+
+
+#PROBABILITY ATTACK TRIANGLE TRANSITIVITY
+setwd("~/Desktop")
+addline_format <- function(x,...){
+    gsub('\\s','\n',x)
+}
+
+sf.attack.ttri.fig <- overall.prob.sf.attacks %>%
+  ggplot( aes(x=combo2, y=triangle.transitivity,color=distribution)) +
+  geom_boxplot(outlier.shape=NA) +
+    geom_point(aes(shape=distribution),size=2.5,position=position_dodge(width=0.75))+
+    scale_shape_manual(values=c(1, 2))+
+    xlab("")+
+    ylab("Triangle Transitivity") +
+    theme_bw() +
+    theme(panel.grid.major.x = element_line(color = "grey",size = 0.3,linetype = 2),legend.position="none",panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text.x=element_text(size=13, colour="black"),axis.text.y=element_text(size=12, colour="black"), panel.border=element_rect(colour="black", size=1, fill=NA), axis.title.y=element_text(size=14))+    scale_color_manual(values = c("blue","#CC5500")) +
+    scale_x_discrete(limit=c("mutual rhp", "mutual history"), labels=c("RHP", "Experience"))  + 
+    annotate(geom="text", x=c(1.5, 3.5, 5.5), y=-0.63, label=c("Mutual"), size=5)+
+    coord_cartesian(expand=F, clip="off", xlim=c(0.25, 2.75), ylim=c(-0.5, 1.05))
+jpeg("sf.attack.ttri.fig.jpeg", 369.6, 336)
+sf.attack.ttri.fig
+dev.off()
+
+
+#PROBABILITY ATTACK DCI
+sf.attack.dci.fig <- overall.prob.sf.attacks %>%
+  ggplot( aes(x=combo2, y=dci,color=distribution)) +
+geom_boxplot(outlier.shape=NA) +
+    geom_point(aes(shape=distribution),size=2.5,position=position_dodge(width=0.75))+
+    scale_shape_manual(values=c(1, 2))+
+    xlab("")+
+    ylab("Directional Consistency Index") +
+    theme_bw() +
+    theme(panel.grid.major.x = element_line(color = "grey",size = 0.3,linetype = 2),legend.position="none",panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text.x=element_text(size=13, colour="black"),axis.text.y=element_text(size=12, colour="black"), panel.border=element_rect(colour="black", size=1, fill=NA), axis.title.y=element_text(size=14))+    scale_color_manual(values = c("blue","#CC5500")) +
+    scale_x_discrete(limit=c("mutual rhp", "mutual history"), labels=c("RHP", "Experience"))  + 
+    annotate(geom="text", x=c(1.5, 3.5, 5.5), y=-0.14, label=c("Mutual"), size=5)+
+    coord_cartesian(expand=F, clip="off", xlim=c(0.25, 2.75), ylim=c(-0.05,1.05))
+jpeg("sf.attack.dci.fig.jpeg", 369.6, 336)
+sf.attack.dci.fig
+dev.off()
+
+
+#PROBABILITY ATTACK STEEPNESS
+setwd("~/Desktop")
+addline_format <- function(x,...){
+    gsub('\\s','\n',x)
+}
+
+sf.attack.steep.fig <- overall.prob.sf.attacks %>%
+  ggplot( aes(x=combo2, y=abs(steepness),color=distribution)) +
+  geom_boxplot(outlier.shape=NA) +
+    geom_point(aes(shape=distribution),size=2.5,position=position_dodge(width=0.75))+
+    scale_shape_manual(values=c(1, 2))+
+    xlab("")+
+    ylab("Steepness") +
+    theme_bw() +
+    theme(panel.grid.major.x = element_line(color = "grey",size = 0.3,linetype = 2),legend.position="none",panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text.x=element_text(size=13, colour="black"),axis.text.y=element_text(size=12, colour="black"), panel.border=element_rect(colour="black", size=1, fill=NA), axis.title.y=element_text(size=14))+    scale_color_manual(values = c("blue","#CC5500")) +
+    scale_x_discrete(limit=c("mutual rhp", "mutual history"), labels=c("RHP", "Experience"))  + 
+    annotate(geom="text", x=c(1.5), y=-0.14, label=c("Mutual"), size=5)+
+    coord_cartesian(expand=F, clip="off", xlim=c(0.25, 2.75), ylim=c(-0.05,1.05))
+jpeg("sf.attack.steep.fig.jpeg", 369.6, 336)
+sf.attack.steep.fig
+dev.off()
+
+sf.attack.ttri.fig
+sf.attack.dci.fig
+sf.attack.steep.fig
+
+
+
+#INITIATOR WINS TRIANGLE TRANSITIVITY
+setwd("~/Desktop")
+addline_format <- function(x,...){
+    gsub('\\s','\n',x)
+}
+
+
+sf.initiator.ttri.fig <- overall.initiator.sf %>%
+  ggplot( aes(x=combo2, y=abs(triangle.transitivity),color=distribution)) + 
+  geom_boxplot(outlier.shape=NA) +
+    geom_point(aes(shape=distribution),size=2.5,position=position_dodge(width=0.75))+
+    scale_shape_manual(values=c(1, 2))+
+    xlab("")+
+    ylab("Triangle Transitivity") +
+    theme_bw() +
+    theme(panel.grid.major.x = element_line(color = "grey",size = 0.3,linetype = 2),legend.position="none",panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text.x=element_text(size=13, colour="black"),axis.text.y=element_text(size=12, colour="black"), panel.border=element_rect(colour="black", size=1, fill=NA), axis.title.y=element_text(size=14))+    scale_color_manual(values = c("blue","#CC5500")) +
+    scale_x_discrete(limit=c("mutual rhp", "mutual history"), labels=c("RHP", "Experience"))  + 
+    annotate(geom="text", x=c(1.5), y=-0.15, label=c("Mutual"), size=5)+
+    coord_cartesian(expand=F, clip="off", xlim=c(0.25, 2.75), ylim=c(-0.05, 1.05))
+jpeg("sf.initiator.ttri.fig.jpeg", 336, 336)
+sf.initiator.ttri.fig
+dev.off()
+
+#INITIATOR WINS DCI
+sf.initiator.dci.fig <- overall.initiator.sf %>%
+  ggplot( aes(x=combo2, y=dci,color=distribution)) +
+geom_boxplot(outlier.shape=NA) +
+    geom_point(aes(shape=distribution),size=2.5,position=position_dodge(width=0.75))+
+    scale_shape_manual(values=c(1, 2))+
+    xlab("")+
+    ylab("Directional Consistency Index") +
+    theme_bw() +
+    theme(panel.grid.major.x = element_line(color = "grey",size = 0.3,linetype = 2),legend.position="none",panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text.x=element_text(size=13, colour="black"),axis.text.y=element_text(size=12, colour="black"), panel.border=element_rect(colour="black", size=1, fill=NA), axis.title.y=element_text(size=14))+    scale_color_manual(values = c("blue","#CC5500")) +
+    scale_x_discrete(limit=c("mutual rhp", "mutual history"), labels=c("RHP", "Experience"))  + 
+    annotate(geom="text", x=c(1.5, 3.5, 5.5), y=-0.15, label=c("Mutual"), size=5)+
+    coord_cartesian(expand=F, clip="off", xlim=c(0.25, 2.75), ylim=c(-0.05,1.05))
+jpeg("sf.initiator.dci.fig.jpeg", 336, 336)
+sf.initiator.dci.fig
+dev.off()
+    
+#INITIATOR WINS STEEPNESS
+sf.initiator.steep.fig <- overall.initiator.sf %>%
+  ggplot( aes(x=combo2, y=abs(steepness),color=distribution)) +
+  geom_boxplot(outlier.shape=NA) +
+    geom_point(aes(shape=distribution),size=2.5,position=position_dodge(width=0.75))+
+    scale_shape_manual(values=c(1, 2))+
+    xlab("")+
+    ylab("Steepness") +
+    theme_bw() +
+    theme(panel.grid.major.x = element_line(color = "grey",size = 0.3,linetype = 2),legend.position="none",panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text.x=element_text(size=13, colour="black"),axis.text.y=element_text(size=12, colour="black"), panel.border=element_rect(colour="black", size=1, fill=NA), axis.title.y=element_text(size=14))+    scale_color_manual(values = c("blue","#CC5500")) +
+    scale_x_discrete(limit=c("mutual rhp", "mutual history"), labels=c("RHP", "Experience"))  + 
+    annotate(geom="text", x=c(1.5, 3.5, 5.5), y=-0.15, label=c("Mutual"), size=5)+
+    coord_cartesian(expand=F, clip="off", xlim=c(0.25, 2.75), ylim=c(-0.05,1.05))
+jpeg("sf.initiator.steep.fig.jpeg", 336, 336)
+sf.initiator.steep.fig
+dev.off()
+
+sf.initiator.ttri.fig
+sf.initiator.dci.fig
+sf.initiator.steep.fig
+
+
+
+#INITIATOR WINS AVOID TRIANGLE TRANSITIVITY
+setwd("~/Desktop")
+addline_format <- function(x,...){
+    gsub('\\s','\n',x)
+}
+
+sf.initiator.ttri.avoid.fig <- overall.initiator.sf.avoids %>%
+  ggplot( aes(x=combo2, y=triangle.transitivity,color=distribution)) +
+  geom_boxplot(outlier.shape=NA) +
+    geom_point(aes(shape=distribution),size=2.5,position=position_dodge(width=0.75))+
+    scale_shape_manual(values=c(1, 2))+
+    xlab("")+
+    ylab("Triangle Transitivity") +
+    theme_bw() +
+    theme(panel.grid.major.x = element_line(color = "grey",size = 0.3,linetype = 2),legend.position="none",panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text.x=element_text(size=13, colour="black"),axis.text.y=element_text(size=12, colour="black"), panel.border=element_rect(colour="black", size=1, fill=NA), axis.title.y=element_text(size=14))+    scale_color_manual(values = c("blue","#CC5500")) +
+    scale_x_discrete(limit=c("mutual rhp", "mutual history"), labels=c("RHP", "Experience"))  + 
+    annotate(geom="text", x=c(1.5, 3.5, 5.5), y=-0.63, label=c("Mutual"), size=5)+
+    coord_cartesian(expand=F, clip="off", xlim=c(0.25, 2.75), ylim=c(-0.5, 1.05))
+jpeg("sf.initiator.ttri.avoid.fig.jpeg", 369.6, 336)
+sf.initiator.ttri.avoid.fig
+dev.off()
+
+#INITIATOR WINS AVOID DCI
+sf.initiator.dci.avoid.fig <- overall.initiator.sf.avoids %>%
+  ggplot( aes(x=combo2, y=dci,color=distribution)) +
+geom_boxplot(outlier.shape=NA) +
+    geom_point(aes(shape=distribution),size=2.5,position=position_dodge(width=0.75))+
+    scale_shape_manual(values=c(1, 2))+
+    xlab("")+
+    ylab("Directional Consistency Index") +
+    theme_bw() +
+    theme(panel.grid.major.x = element_line(color = "grey",size = 0.3,linetype = 2),legend.position="none",panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text.x=element_text(size=13, colour="black"),axis.text.y=element_text(size=12, colour="black"), panel.border=element_rect(colour="black", size=1, fill=NA), axis.title.y=element_text(size=14))+    scale_color_manual(values = c("blue","#CC5500")) +
+    scale_x_discrete(limit=c("mutual rhp", "mutual history"), labels=c("RHP", "Experience"))  + 
+    annotate(geom="text", x=c(1.5, 3.5, 5.5), y=-0.14, label=c("Mutual"), size=5)+
+    coord_cartesian(expand=F, clip="off", xlim=c(0.25, 2.75), ylim=c(-0.05,1.05))
+jpeg("sf.initiator.dci.avoid.fig.jpeg", 369.6, 336)
+sf.initiator.dci.avoid.fig
+dev.off()
+
+#INITIATOR WINS AVOID STEEPNESS
+setwd("~/Desktop")
+addline_format <- function(x,...){
+    gsub('\\s','\n',x)
+}    
+sf.initiator.steep.avoid.fig <- overall.initiator.sf.avoids %>%
+  ggplot( aes(x=combo2, y=abs(steepness),color=distribution)) +
+  geom_boxplot(outlier.shape=NA) +
+    geom_point(aes(shape=distribution),size=2.5,position=position_dodge(width=0.75))+
+    scale_shape_manual(values=c(1, 2))+
+    xlab("")+
+    ylab("Steepness") +
+    theme_bw() +
+    theme(panel.grid.major.x = element_line(color = "grey",size = 0.3,linetype = 2),legend.position="none",panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text.x=element_text(size=13, colour="black"),axis.text.y=element_text(size=12, colour="black"), panel.border=element_rect(colour="black", size=1, fill=NA), axis.title.y=element_text(size=14))+    scale_color_manual(values = c("blue","#CC5500")) +
+    scale_x_discrete(limit=c("mutual rhp", "mutual history"), labels=c("RHP", "Experience"))  + 
+    annotate(geom="text", x=c(1.5), y=-0.14, label=c("Mutual"), size=5)+
+    coord_cartesian(expand=F, clip="off", xlim=c(0.25, 2.75), ylim=c(-0.05,1.05))
+jpeg("sf.initiator.steep.avoid.fig.jpeg", 369.6, 336)
+sf.initiator.steep.avoid.fig
+dev.off()
+
+sf.initiator.ttri.avoid.fig
+sf.initiator.dci.avoid.fig
+sf.initiator.steep.avoid.fig
+
+
+
+#INITIATOR WINS ATTACKS TRIANGLE TRANSITIVITY
+setwd("~/Desktop")
+addline_format <- function(x,...){
+    gsub('\\s','\n',x)
+}
+
+sf.initiator.ttri.attack <- overall.initiator.sf.attacks %>%
+  ggplot( aes(x=combo2, y=triangle.transitivity,color=distribution)) +
+  geom_boxplot(outlier.shape=NA) +
+    geom_point(aes(shape=distribution),size=2.5,position=position_dodge(width=0.75))+
+    scale_shape_manual(values=c(1, 2))+
+    xlab("")+
+    ylab("Triangle Transitivity") +
+    theme_bw() +
+    theme(panel.grid.major.x = element_line(color = "grey",size = 0.3,linetype = 2),legend.position="none",panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text.x=element_text(size=13, colour="black"),axis.text.y=element_text(size=12, colour="black"), panel.border=element_rect(colour="black", size=1, fill=NA), axis.title.y=element_text(size=14))+    scale_color_manual(values = c("blue","#CC5500")) +
+    scale_x_discrete(limit=c("mutual rhp", "mutual history"), labels=c("RHP", "Experience"))  + 
+    annotate(geom="text", x=c(1.5, 3.5, 5.5), y=-0.63, label=c("Mutual"), size=5)+
+    coord_cartesian(expand=F, clip="off", xlim=c(0.25, 2.75), ylim=c(-0.5, 1.05))
+jpeg("sf.initiator.ttri.attack.jpeg", 369.6, 336)
+sf.initiator.ttri.attack
+dev.off()
+
+
+#INITIATOR WINS ATTACKS DCI
+sf.initiator.dci.attack <- overall.initiator.sf.attacks %>%
+  ggplot( aes(x=combo2, y=dci,color=distribution)) +
+geom_boxplot(outlier.shape=NA) +
+    geom_point(aes(shape=distribution),size=2.5,position=position_dodge(width=0.75))+
+    scale_shape_manual(values=c(1, 2))+
+    xlab("")+
+    ylab("Directional Consistency Index") +
+    theme_bw() +
+    theme(panel.grid.major.x = element_line(color = "grey",size = 0.3,linetype = 2),legend.position="none",panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text.x=element_text(size=13, colour="black"),axis.text.y=element_text(size=12, colour="black"), panel.border=element_rect(colour="black", size=1, fill=NA), axis.title.y=element_text(size=14))+    scale_color_manual(values = c("blue","#CC5500")) +
+    scale_x_discrete(limit=c("mutual rhp", "mutual history"), labels=c("RHP", "Experience"))  + 
+    annotate(geom="text", x=c(1.5, 3.5, 5.5), y=-0.14, label=c("Mutual"), size=5)+
+    coord_cartesian(expand=F, clip="off", xlim=c(0.25, 2.75), ylim=c(-0.05,1.05))
+jpeg("sf.initiator.dci.attack.jpeg", 369.6, 336)
+sf.initiator.dci.attack
+dev.off()
+
+
+#INITIATOR WINS ATTACKS STEEPNESS
+setwd("~/Desktop")
+addline_format <- function(x,...){
+    gsub('\\s','\n',x)
+}
+sf.initiator.steep.attack <- overall.initiator.sf.attacks %>%
+  ggplot( aes(x=combo2, y=abs(steepness),color=distribution)) +
+  geom_boxplot(outlier.shape=NA) +
+    geom_point(aes(shape=distribution),size=2.5,position=position_dodge(width=0.75))+
+    scale_shape_manual(values=c(1, 2))+
+    xlab("")+
+    ylab("Steepness") +
+    theme_bw() +
+    theme(panel.grid.major.x = element_line(color = "grey",size = 0.3,linetype = 2),legend.position="none",panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text.x=element_text(size=13, colour="black"),axis.text.y=element_text(size=12, colour="black"), panel.border=element_rect(colour="black", size=1, fill=NA), axis.title.y=element_text(size=14))+    scale_color_manual(values = c("blue","#CC5500")) +
+    scale_x_discrete(limit=c("mutual rhp", "mutual history"), labels=c("RHP", "Experience"))  + 
+    annotate(geom="text", x=c(1.5), y=-0.14, label=c("Mutual"), size=5)+
+    coord_cartesian(expand=F, clip="off", xlim=c(0.25, 2.75), ylim=c(-0.05,1.05))
+jpeg("sf.initiator.steep.attack.jpeg", 369.6, 336)
+sf.initiator.steep.attack
+dev.off()
+
+sf.initiator.ttri.attack
+sf.initiator.dci.attack
+sf.initiator.steep.attack
+
+
+
+#INITIATOR WINS ENERGY
+setwd("~/Desktop")
+jpeg("initiator.wins.energy.jpeg", 672, 336)
+par(cex.axis=1, cex.lab=1.3, mar=c(2.65,2.75,0.4,0.4),family="sans")
+
+initiator.wins.energy<-plot(total.energy.ci.sf$energy_over_time~total.energy.ci.sf$normDS,pch=1,cex=1.4,xaxt="n",yaxt="n",col="blue",xlab="",ylab="",main="",ylim=c(0.4,0.8),xlim=c(0.85,8.25),las=1); points(total.energy.iu$energy_over_time~total.energy.iu$normDS,pch=2,cex=1.4,col="#CC5500"); abline(km.lm.ci.sf, lwd=3);abline(hm.lm.ci.sf, lwd=3);abline(km.lm.ui.sf, col="black", lty=4, lwd=3);abline(hm.lm.ui.sf, col="black", lty=4, lwd=3);title(xlab="Normalized David's Scores",line=1.25);title(ylab="Energy per unit Time", line=1.5); axis(1, at = c(0, 1, 2, 3, 4, 5, 6, 7, 8), label=rep("",9), tck=-0.015, line=0);axis(2, at = c(0.4,0.5,0.6,0.7,0.8), label=rep("",5),tck=-0.015);axis(1, at = 1:10, line = -0.8, lwd = 0, cex.axis = 1);axis(2, at = c(0.4,0.5,0.6,0.7,0.8), line = -0.7, lwd = 0, cex.axis = 1, las=1);box(col="black",lwd=3)
+dev.off()
+
+
+```{r}
+initiator.wins.energy<-plot(total.energy.ci.sf$energy_over_time~total.energy.ci.sf$normDS,pch=1,cex=1.4,xaxt="n",yaxt="n",col="blue",xlab="",ylab="",main="",ylim=c(0.4,0.8),xlim=c(0.85,8.25),las=1); abline(km.lm.ci.sf, lwd=4);abline(hm.lm.ci.sf, lwd=3)
+```
