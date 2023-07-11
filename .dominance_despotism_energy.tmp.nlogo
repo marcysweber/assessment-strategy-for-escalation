@@ -1,3 +1,12 @@
+;This is an agent-based model of contest competition for the research project
+;"Steep hierarchies without skew? Modeling how ecology and decision-making shape despotism of relationships"
+;currently in revisions at the American Naturalist
+
+;No input files are needed to run this model, but a specific folder structure is necessary for the output (results) files.
+;Empty folders for this purpose are included in the project repository.
+;Ensure that the correct file path to the directory containing these empty folders is correct (see code line 902).
+
+
 extensions [csv matrix]
 ;;much of the below code has been borrowed from Marcy's testing environment for primate patch movement
 globals [
@@ -8,7 +17,6 @@ globals [
   digestion-rate-average
   regrowth-rate
 
-  ;;;;;; THESE ARE HERE FOR THE TESTING ENVIRONMENT, INSTEAD OF SLIDERS
   starting-pop-primates
 
   go-tests-on?
@@ -45,17 +53,14 @@ globals [
 ;undirected-link-breed [members member] ;;link between primagent and group
 
 breed [primates primate]
-;breed [groups group] ;;groups will actually be a kind of turtle "under the hood"
-;breed [predators predator]
+
 
 directed-link-breed [fightsavoided fightavoided] ;; this is a link from the one who avoided TO the opponent they decided not to fight
 directed-link-breed [attacks attack] ;; this is a link from the approaching agent to the opponent that they did decide to fight
 directed-link-breed [victories victory] ;;this is a link from the winner to the loser
 directed-link-breed [defeats defeat] ;; this is a link from the loser to the winner
 
-;;; as an alternative to the old way, i'm trying to do a different storage system for the interaction data
-;; a contest link to be made for any interaction
-undirected-link-breed [contests contest]
+
 
 primates-own[
   xp
@@ -92,18 +97,10 @@ victories-own [victory-counter]
 defeats-own [defeat-counter]
 
 
-contests-own[ ;; i can't make it so that each interaction is its own link, because there cannot be
-  ;;multiple links of the same breed between the same 2 agents
-  escalated? ;; false if the actual fight was avoided; true if the actor decided to fight
-  loser ;; primate who lost; either backed down if not escalated, or was beaten in fight
-  timestamp ;;ticks at which the contest took place
-
-]
 
 patches-own [
   penergy
   quality
-  digestibility
   extraction-rate
 ]
 
@@ -671,7 +668,7 @@ set cost-est cost-estimation opponent
           ;let correct-choice avoid
 
           (ifelse function = "linear" [set probr (cost-est / (bene + cost-est))]
-            function = "sigmoid" [set probr ((bene ^ 2) / (bene ^ 2 + (cost-est ^ 2)))])
+            function = "sigmoid" [set probr ((cost-est ^ 2) / (bene ^ 2 + (cost-est ^ 2)))])
 
 
           (ifelse probr > roll [
@@ -901,7 +898,8 @@ set attacks-saved true
 end
 
 to set_folder_path
-  set folder-path "C:\\Users\\Marcy\\Desktop\\despotism full results 12.23.22"
+  ;change the line below to the directory on your machine that contains the empty folder structure provided with the code repository
+  set folder-path "
 
   ;; folders should look like hm.c.d
   let scenario-folder "none"
