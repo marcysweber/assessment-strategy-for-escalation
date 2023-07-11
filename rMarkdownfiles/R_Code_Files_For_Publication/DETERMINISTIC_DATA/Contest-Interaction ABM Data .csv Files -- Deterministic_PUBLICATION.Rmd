@@ -1,0 +1,956 @@
+---
+title: "Contest-Interaction ABM Data .csv Files -- Deterministic"
+author: "C.J. O'Connor-Coates"
+date: "2022-12-15"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+#-------------------------------------------------------------------------------------------------------------------------
+
+# All data was generated in NetLogo Agent-Based Models (ABM) and imported into this program for analysis. These data and analyses are used in the publication "Steep hierarchies without skew? Modeling how ecology and decision-making shape despotism of relationships" by Marcy S. Ekanayake-Weber, Christopher J. O'Connor-Coates, and Andreas Koenig.
+
+# The NetLogo model was created by Marcy S. Ekanayake-Weber and Christopher J. O'Connor-Coates. The following R-code was written by Christopher J. O'Connor-Coates. The code for the Triangle Transitivity Function was written by Shizuka & McDonald (2012). For questions regarding the R-code email Christopher J. O'Connor-Coates at christopher.oconnor-coates@stonybrook.edu.
+
+#-------------------------------------------------------------------------------------------------------------------------
+
+#-------------------------------------------------------------------------------------------------------------------------
+
+# DEFINITIONS:
+# 1. Knowledge (k): Individuals know of either their own or their opponent's Resource Holding Potential (RHP)
+# 2. History (h): Individuals know of either their own or their opponent's fighting history, including how often theiy won or lost conflicts
+# 3. Mutual (m): Individuals have knowledge of both their own and their opponent's RHP or History
+# 4. Self (s): Individuals have knowledge of only their own RHP or History
+# 5. Opponent (o): Individuals have knowledge of only their opponent's RHP or History
+# 6. Deterministic (d): Scenarios in which fight outcomes were determined by the strength of an individual's RHP. Individuals with higher RHP values always won escalated conflicts.
+# 7. Probabilistic (p): Scenarios in which fight outcomes were determined by a probability calculated in the NetLogo program. Individuals with higher RHP values are more likely to win escalated conflicts, but there is also a (smaller) chance that the individual with lower RHP could win the conflict.
+# 8. Initiator Wins (iw; i): Scenarios in which the escalated conflict is always won by the individual which initiated the conflict.
+# 9. Sigmoid Function (sf): Scenarios in which fights were escalated through a cost-benefit analysis that was modeled as a sigmoid function.
+# 10. Clumped Distribution (cd; c): Resources were arranged in the landscape such that they only appeared in clumps; can also be called a heterogenous distribution
+# 11. Uniform Distribution (ud; u): Resources were arranged in the landscape such that they were evenly distributed across the area; can also be called a homogenous distribution
+# 12. Avoid: An individual avoided an escalation/conflict
+# 13. Victory: An individual won an escalation/conflict
+# 14. Foraging Efficiency: An Individual's Energy Intake Over Time
+
+#ABBREVIATIONS:
+# 1. inter.mat: Interaction Matrices
+# 2. ep: Proportion of Escalation
+# 3. t.tri: Triangle Transitivity
+# 4. dci: Directional Conistency Index
+# 5. Steep: steepness
+
+#-------------------------------------------------------------------------------------------------------------------------
+
+
+#-------------------------------------------------------------------------------------------------------------------------
+
+# TO USE CODE SET YOUR WORKING DIRECTORY FILEPATHS (WHERE INDICATED) TO WHERE YOU HAVE SAVED THE DATA FILES.
+# INDICATED FILEPATHS LOOK LIKE: setwd("~/SET/YOUR/WORKING/DIRECTORY/...")
+
+#-------------------------------------------------------------------------------------------------------------------------
+
+
+
+#Deterministic Clumped
+```{r}
+# Write .csv documents for each of the interaction matrices for each trial and save them to a unique folder with unique file names in the GitHub repository:
+write.csv(mat1.cd.km,"~/SET/YOUR/FILEPATHS/km_dc_mat1.csv")
+write.csv(mat2.cd.km,"~/SET/YOUR/FILEPATHS/km_dc_mat2.csv")
+write.csv(mat3.cd.km,"~/SET/YOUR/FILEPATHS/km_dc_mat3.csv")
+write.csv(mat4.cd.km,"~/SET/YOUR/FILEPATHS/km_dc_mat4.csv")
+write.csv(mat5.cd.km,"~/SET/YOUR/FILEPATHS/km_dc_mat5.csv")
+write.csv(mat6.cd.km,"~/SET/YOUR/FILEPATHS/km_dc_mat6.csv")
+write.csv(mat7.cd.km,"~/SET/YOUR/FILEPATHS/km_dc_mat7.csv")
+write.csv(mat8.cd.km,"~/SET/YOUR/FILEPATHS/km_dc_mat8.csv")
+write.csv(mat9.cd.km,"~/SET/YOUR/FILEPATHS/km_dc_mat9.csv")
+write.csv(mat10.cd.km,"~/SET/YOUR/FILEPATHS/km_dc_mat10.csv")
+
+# Write .csv documents for each of the interaction matrices for each trial and save them to a unique folder with unique file names in the GitHub repository:
+write.csv(mat1.cd.ks,"~/SET/YOUR/FILEPATHS/ks_dc_mat1.csv")
+write.csv(mat2.cd.ks,"~/SET/YOUR/FILEPATHS/ks_dc_mat2.csv")
+write.csv(mat3.cd.ks,"~/SET/YOUR/FILEPATHS/ks_dc_mat3.csv")
+write.csv(mat4.cd.ks,"~/SET/YOUR/FILEPATHS/ks_dc_mat4.csv")
+write.csv(mat5.cd.ks,"~/SET/YOUR/FILEPATHS/ks_dc_mat5.csv")
+write.csv(mat6.cd.ks,"~/SET/YOUR/FILEPATHS/ks_dc_mat6.csv")
+write.csv(mat7.cd.ks,"~/SET/YOUR/FILEPATHS/ks_dc_mat7.csv")
+write.csv(mat8.cd.ks,"~/SET/YOUR/FILEPATHS/ks_dc_mat8.csv")
+write.csv(mat9.cd.ks,"~/SET/YOUR/FILEPATHS/ks_dc_mat9.csv")
+write.csv(mat10.cd.ks,"~/SET/YOUR/FILEPATHS/ks_dc_mat10.csv")
+
+# Write .csv documents for each of the interaction matrices for each trial and save them to a unique folder with unique file names in the GitHub repository:
+write.csv(mat1.cd.ko,"~/SET/YOUR/FILEPATHS/ko_dc_mat1.csv")
+write.csv(mat2.cd.ko,"~/SET/YOUR/FILEPATHS/ko_dc_mat2.csv")
+write.csv(mat3.cd.ko,"~/SET/YOUR/FILEPATHS/ko_dc_mat3.csv")
+write.csv(mat4.cd.ko,"~/SET/YOUR/FILEPATHS/ko_dc_mat4.csv")
+write.csv(mat5.cd.ko,"~/SET/YOUR/FILEPATHS/ko_dc_mat5.csv")
+write.csv(mat6.cd.ko,"~/SET/YOUR/FILEPATHS/ko_dc_mat6.csv")
+write.csv(mat7.cd.ko,"~/SET/YOUR/FILEPATHS/ko_dc_mat7.csv")
+write.csv(mat8.cd.ko,"~/SET/YOUR/FILEPATHS/ko_dc_mat8.csv")
+write.csv(mat9.cd.ko,"~/SET/YOUR/FILEPATHS/ko_dc_mat9.csv")
+write.csv(mat10.cd.ko,"~/SET/YOUR/FILEPATHS/ko_dc_mat10.csv")
+
+# Write .csv documents for each of the interaction matrices for each trial and save them to a unique folder with unique file names in the GitHub repository:
+write.csv(mat1.cd.hm,"~/SET/YOUR/FILEPATHS/hm_dc_mat1.csv")
+write.csv(mat2.cd.hm,"~/SET/YOUR/FILEPATHS/hm_dc_mat2.csv")
+write.csv(mat3.cd.hm,"~/SET/YOUR/FILEPATHS/hm_dc_mat3.csv")
+write.csv(mat4.cd.hm,"~/SET/YOUR/FILEPATHS/hm_dc_mat4.csv")
+write.csv(mat5.cd.hm,"~/SET/YOUR/FILEPATHS/hm_dc_mat5.csv")
+write.csv(mat6.cd.hm,"~/SET/YOUR/FILEPATHS/hm_dc_mat6.csv")
+write.csv(mat7.cd.hm,"~/SET/YOUR/FILEPATHS/hm_dc_mat7.csv")
+write.csv(mat8.cd.hm,"~/SET/YOUR/FILEPATHS/hm_dc_mat8.csv")
+write.csv(mat9.cd.hm,"~/SET/YOUR/FILEPATHS/hm_dc_mat9.csv")
+write.csv(mat10.cd.hm,"~/SET/YOUR/FILEPATHS/hm_dc_mat10.csv")
+
+# Write .csv documents for each of the interaction matrices for each trial and save them to a unique folder with unique file names in the GitHub repository:
+write.csv(mat1.cd.hs,"~/SET/YOUR/FILEPATHS/hs_dc_mat1.csv")
+write.csv(mat2.cd.hs,"~/SET/YOUR/FILEPATHS/hs_dc_mat2.csv")
+write.csv(mat3.cd.hs,"~/SET/YOUR/FILEPATHS/hs_dc_mat3.csv")
+write.csv(mat4.cd.hs,"~/SET/YOUR/FILEPATHS/hs_dc_mat4.csv")
+write.csv(mat5.cd.hs,"~/SET/YOUR/FILEPATHS/hs_dc_mat5.csv")
+write.csv(mat6.cd.hs,"~/SET/YOUR/FILEPATHS/hs_dc_mat6.csv")
+write.csv(mat7.cd.hs,"~/SET/YOUR/FILEPATHS/hs_dc_mat7.csv")
+write.csv(mat8.cd.hs,"~/SET/YOUR/FILEPATHS/hs_dc_mat8.csv")
+write.csv(mat9.cd.hs,"~/SET/YOUR/FILEPATHS/hs_dc_mat9.csv")
+write.csv(mat10.cd.hs,"~/SET/YOUR/FILEPATHS/hs_dc_mat10.csv")
+
+# Write .csv documents for each of the interaction matrices for each trial and save them to a unique folder with unique file names in the GitHub repository:
+write.csv(mat1.cd.ho,"~/SET/YOUR/FILEPATHS/ho_dc_mat1.csv")
+write.csv(mat2.cd.ho,"~/SET/YOUR/FILEPATHS/ho_dc_mat2.csv")
+write.csv(mat3.cd.ho,"~/SET/YOUR/FILEPATHS/ho_dc_mat3.csv")
+write.csv(mat4.cd.ho,"~/SET/YOUR/FILEPATHS/ho_dc_mat4.csv")
+write.csv(mat5.cd.ho,"~/SET/YOUR/FILEPATHS/ho_dc_mat5.csv")
+write.csv(mat6.cd.ho,"~/SET/YOUR/FILEPATHS/ho_dc_mat6.csv")
+write.csv(mat7.cd.ho,"~/SET/YOUR/FILEPATHS/ho_dc_mat7.csv")
+write.csv(mat8.cd.ho,"~/SET/YOUR/FILEPATHS/ho_dc_mat8.csv")
+write.csv(mat9.cd.ho,"~/SET/YOUR/FILEPATHS/ho_dc_mat9.csv")
+write.csv(mat10.cd.ho,"~/SET/YOUR/FILEPATHS/ho_dc_mat10.csv")
+```
+
+#Deterministic Clumped Avoids
+```{r}
+# Write .csv documents for each of the Avoid Interaction Matrices for each trial and save them to a unique folder with unique file names in the GitHub repository:
+write.csv(mat1.acd.km,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_clumped/km_dc_avoid_mat1.csv")
+write.csv(mat2.acd.km,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_clumped/km_dc_avoid_mat2.csv")
+write.csv(mat3.acd.km,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_clumped/km_dc_avoid_mat3.csv")
+write.csv(mat4.acd.km,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_clumped/km_dc_avoid_mat4.csv")
+write.csv(mat5.acd.km,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_clumped/km_dc_avoid_mat5.csv")
+write.csv(mat6.acd.km,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_clumped/km_dc_avoid_mat6.csv")
+write.csv(mat7.acd.km,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_clumped/km_dc_avoid_mat7.csv")
+write.csv(mat8.acd.km,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_clumped/km_dc_avoid_mat8.csv")
+write.csv(mat9.acd.km,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_clumped/km_dc_avoid_mat9.csv")
+write.csv(mat10.acd.km,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_clumped/km_dc_avoid_mat10.csv")
+
+# Write .csv documents for each of the Avoid Interaction Matrices for each trial and save them to a unique folder with unique file names in the GitHub repository:
+write.csv(mat1.acd.ks,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_clumped/ks_dc_avoid_mat1.csv")
+write.csv(mat2.acd.ks,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_clumped/ks_dc_avoid_mat2.csv")
+write.csv(mat3.acd.ks,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_clumped/ks_dc_avoid_mat3.csv")
+write.csv(mat4.acd.ks,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_clumped/ks_dc_avoid_mat4.csv")
+write.csv(mat5.acd.ks,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_clumped/ks_dc_avoid_mat5.csv")
+write.csv(mat6.acd.ks,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_clumped/ks_dc_avoid_mat6.csv")
+write.csv(mat7.acd.ks,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_clumped/ks_dc_avoid_mat7.csv")
+write.csv(mat8.acd.ks,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_clumped/ks_dc_avoid_mat8.csv")
+write.csv(mat9.acd.ks,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_clumped/ks_dc_avoid_mat9.csv")
+write.csv(mat10.acd.ks,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_clumped/ks_dc_avoid_mat10.csv")
+
+# Write .csv documents for each of the Avoid Interaction Matrices for each trial and save them to a unique folder with unique file names in the GitHub repository:
+write.csv(mat1.acd.ko,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_clumped/ko_dc_avoid_mat1.csv")
+write.csv(mat2.acd.ko,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_clumped/ko_dc_avoid_mat2.csv")
+write.csv(mat3.acd.ko,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_clumped/ko_dc_avoid_mat3.csv")
+write.csv(mat4.acd.ko,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_clumped/ko_dc_avoid_mat4.csv")
+write.csv(mat5.acd.ko,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_clumped/ko_dc_avoid_mat5.csv")
+write.csv(mat6.acd.ko,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_clumped/ko_dc_avoid_mat6.csv")
+write.csv(mat7.acd.ko,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_clumped/ko_dc_avoid_mat7.csv")
+write.csv(mat8.acd.ko,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_clumped/ko_dc_avoid_mat8.csv")
+write.csv(mat9.acd.ko,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_clumped/ko_dc_avoid_mat9.csv")
+write.csv(mat10.acd.ko,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_clumped/ko_dc_avoid_mat10.csv")
+
+# Write .csv documents for each of the Avoid Interaction Matrices for each trial and save them to a unique folder with unique file names in the GitHub repository:
+write.csv(mat1.acd.hm,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_clumped/hm_dc_avoid_mat1.csv")
+write.csv(mat2.acd.hm,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_clumped/hm_dc_avoid_mat2.csv")
+write.csv(mat3.acd.hm,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_clumped/hm_dc_avoid_mat3.csv")
+write.csv(mat4.acd.hm,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_clumped/hm_dc_avoid_mat4.csv")
+write.csv(mat5.acd.hm,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_clumped/hm_dc_avoid_mat5.csv")
+write.csv(mat6.acd.hm,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_clumped/hm_dc_avoid_mat6.csv")
+write.csv(mat7.acd.hm,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_clumped/hm_dc_avoid_mat7.csv")
+write.csv(mat8.acd.hm,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_clumped/hm_dc_avoid_mat8.csv")
+write.csv(mat9.acd.hm,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_clumped/hm_dc_avoid_mat9.csv")
+write.csv(mat10.acd.hm,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_clumped/hm_dc_avoid_mat10.csv")
+
+# Write .csv documents for each of the Avoid Interaction Matrices for each trial and save them to a unique folder with unique file names in the GitHub repository:
+write.csv(mat1.acd.hs,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_clumped/hs_dc_avoid_mat1.csv")
+write.csv(mat2.acd.hs,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_clumped/hs_dc_avoid_mat2.csv")
+write.csv(mat3.acd.hs,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_clumped/hs_dc_avoid_mat3.csv")
+write.csv(mat4.acd.hs,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_clumped/hs_dc_avoid_mat4.csv")
+write.csv(mat5.acd.hs,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_clumped/hs_dc_avoid_mat5.csv")
+write.csv(mat6.acd.hs,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_clumped/hs_dc_avoid_mat6.csv")
+write.csv(mat7.acd.hs,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_clumped/hs_dc_avoid_mat7.csv")
+write.csv(mat8.acd.hs,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_clumped/hs_dc_avoid_mat8.csv")
+write.csv(mat9.acd.hs,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_clumped/hs_dc_avoid_mat9.csv")
+write.csv(mat10.acd.hs,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_clumped/hs_dc_avoid_mat10.csv")
+
+# Write .csv documents for each of the Avoid Interaction Matrices for each trial and save them to a unique folder with unique file names in the GitHub repository:
+write.csv(mat1.acd.ho,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_clumped/ho_dc_avoid_mat1.csv")
+write.csv(mat2.acd.ho,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_clumped/ho_dc_avoid_mat2.csv")
+write.csv(mat3.acd.ho,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_clumped/ho_dc_avoid_mat3.csv")
+write.csv(mat4.acd.ho,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_clumped/ho_dc_avoid_mat4.csv")
+write.csv(mat5.acd.ho,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_clumped/ho_dc_avoid_mat5.csv")
+write.csv(mat6.acd.ho,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_clumped/ho_dc_avoid_mat6.csv")
+write.csv(mat7.acd.ho,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_clumped/ho_dc_avoid_mat7.csv")
+write.csv(mat8.acd.ho,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_clumped/ho_dc_avoid_mat8.csv")
+write.csv(mat9.acd.ho,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_clumped/ho_dc_avoid_mat9.csv")
+write.csv(mat10.acd.ho,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_clumped/ho_dc_avoid_mat10.csv")
+```
+
+#Deterministic Clumped Attacks
+```{r}
+# Write .csv documents for each of the attacks Interaction Matrices for each trial and save them to a unique folder with unique file names in the GitHub repository:
+write.csv(mat1.atcd.km,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Deterministic_clumped/km_dc_attacks_mat1.csv")
+write.csv(mat2.atcd.km,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Deterministic_clumped/km_dc_attacks_mat2.csv")
+write.csv(mat3.atcd.km,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Deterministic_clumped/km_dc_attacks_mat3.csv")
+write.csv(mat4.atcd.km,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Deterministic_clumped/km_dc_attacks_mat4.csv")
+write.csv(mat5.atcd.km,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Deterministic_clumped/km_dc_attacks_mat5.csv")
+write.csv(mat6.atcd.km,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Deterministic_clumped/km_dc_attacks_mat6.csv")
+write.csv(mat7.atcd.km,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Deterministic_clumped/km_dc_attacks_mat7.csv")
+write.csv(mat8.atcd.km,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Deterministic_clumped/km_dc_attacks_mat8.csv")
+write.csv(mat9.atcd.km,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Deterministic_clumped/km_dc_attacks_mat9.csv")
+write.csv(mat10.atcd.km,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Deterministic_clumped/km_dc_attacks_mat10.csv")
+
+# Write .csv documents for each of the attacks Interaction Matrices for each trial and save them to a unique folder with unique file names in the GitHub repository:
+write.csv(mat1.atcd.ks,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Deterministic_clumped/ks_dc_attacks_mat1.csv")
+write.csv(mat2.atcd.ks,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Deterministic_clumped/ks_dc_attacks_mat2.csv")
+write.csv(mat3.atcd.ks,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Deterministic_clumped/ks_dc_attacks_mat3.csv")
+write.csv(mat4.atcd.ks,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Deterministic_clumped/ks_dc_attacks_mat4.csv")
+write.csv(mat5.atcd.ks,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Deterministic_clumped/ks_dc_attacks_mat5.csv")
+write.csv(mat6.atcd.ks,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Deterministic_clumped/ks_dc_attacks_mat6.csv")
+write.csv(mat7.atcd.ks,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Deterministic_clumped/ks_dc_attacks_mat7.csv")
+write.csv(mat8.atcd.ks,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Deterministic_clumped/ks_dc_attacks_mat8.csv")
+write.csv(mat9.atcd.ks,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Deterministic_clumped/ks_dc_attacks_mat9.csv")
+write.csv(mat10.atcd.ks,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Deterministic_clumped/ks_dc_attacks_mat10.csv")
+
+# Write .csv documents for each of the attacks Interaction Matrices for each trial and save them to a unique folder with unique file names in the GitHub repository:
+write.csv(mat1.atcd.ko,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Deterministic_clumped/ko_dc_attacks_mat1.csv")
+write.csv(mat2.atcd.ko,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Deterministic_clumped/ko_dc_attacks_mat2.csv")
+write.csv(mat3.atcd.ko,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Deterministic_clumped/ko_dc_attacks_mat3.csv")
+write.csv(mat4.atcd.ko,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Deterministic_clumped/ko_dc_attacks_mat4.csv")
+write.csv(mat5.atcd.ko,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Deterministic_clumped/ko_dc_attacks_mat5.csv")
+write.csv(mat6.atcd.ko,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Deterministic_clumped/ko_dc_attacks_mat6.csv")
+write.csv(mat7.atcd.ko,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Deterministic_clumped/ko_dc_attacks_mat7.csv")
+write.csv(mat8.atcd.ko,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Deterministic_clumped/ko_dc_attacks_mat8.csv")
+write.csv(mat9.atcd.ko,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Deterministic_clumped/ko_dc_attacks_mat9.csv")
+write.csv(mat10.atcd.ko,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Deterministic_clumped/ko_dc_attacks_mat10.csv")
+
+# Write .csv documents for each of the attacks Interaction Matrices for each trial and save them to a unique folder with unique file names in the GitHub repository:
+write.csv(mat1.atcd.hm,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Deterministic_clumped/hm_dc_attacks_mat1.csv")
+write.csv(mat2.atcd.hm,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Deterministic_clumped/hm_dc_attacks_mat2.csv")
+write.csv(mat3.atcd.hm,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Deterministic_clumped/hm_dc_attacks_mat3.csv")
+write.csv(mat4.atcd.hm,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Deterministic_clumped/hm_dc_attacks_mat4.csv")
+write.csv(mat5.atcd.hm,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Deterministic_clumped/hm_dc_attacks_mat5.csv")
+write.csv(mat6.atcd.hm,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Deterministic_clumped/hm_dc_attacks_mat6.csv")
+write.csv(mat7.atcd.hm,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Deterministic_clumped/hm_dc_attacks_mat7.csv")
+write.csv(mat8.atcd.hm,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Deterministic_clumped/hm_dc_attacks_mat8.csv")
+write.csv(mat9.atcd.hm,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Deterministic_clumped/hm_dc_attacks_mat9.csv")
+write.csv(mat10.atcd.hm,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Deterministic_clumped/hm_dc_attacks_mat10.csv")
+
+# Write .csv documents for each of the attacks Interaction Matrices for each trial and save them to a unique folder with unique file names in the GitHub repository:
+write.csv(mat1.atcd.hs,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Deterministic_clumped/hs_dc_attacks_mat1.csv")
+write.csv(mat2.atcd.hs,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Deterministic_clumped/hs_dc_attacks_mat2.csv")
+write.csv(mat3.atcd.hs,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Deterministic_clumped/hs_dc_attacks_mat3.csv")
+write.csv(mat4.atcd.hs,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Deterministic_clumped/hs_dc_attacks_mat4.csv")
+write.csv(mat5.atcd.hs,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Deterministic_clumped/hs_dc_attacks_mat5.csv")
+write.csv(mat6.atcd.hs,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Deterministic_clumped/hs_dc_attacks_mat6.csv")
+write.csv(mat7.atcd.hs,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Deterministic_clumped/hs_dc_attacks_mat7.csv")
+write.csv(mat8.atcd.hs,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Deterministic_clumped/hs_dc_attacks_mat8.csv")
+write.csv(mat9.atcd.hs,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Deterministic_clumped/hs_dc_attacks_mat9.csv")
+write.csv(mat10.atcd.hs,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Deterministic_clumped/hs_dc_attacks_mat10.csv")
+
+# Write .csv documents for each of the attacks Interaction Matrices for each trial and save them to a unique folder with unique file names in the GitHub repository:
+write.csv(mat1.atcd.ho,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Deterministic_clumped/ho_dc_attacks_mat1.csv")
+write.csv(mat2.atcd.ho,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Deterministic_clumped/ho_dc_attacks_mat2.csv")
+write.csv(mat3.atcd.ho,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Deterministic_clumped/ho_dc_attacks_mat3.csv")
+write.csv(mat4.atcd.ho,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Deterministic_clumped/ho_dc_attacks_mat4.csv")
+write.csv(mat5.atcd.ho,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Deterministic_clumped/ho_dc_attacks_mat5.csv")
+write.csv(mat6.atcd.ho,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Deterministic_clumped/ho_dc_attacks_mat6.csv")
+write.csv(mat7.atcd.ho,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Deterministic_clumped/ho_dc_attacks_mat7.csv")
+write.csv(mat8.atcd.ho,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Deterministic_clumped/ho_dc_attacks_mat8.csv")
+write.csv(mat9.atcd.ho,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Deterministic_clumped/ho_dc_attacks_mat9.csv")
+write.csv(mat10.atcd.ho,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Deterministic_clumped/ho_dc_attacks_mat10.csv")
+```
+
+#Deterministic Uniform
+```{r}
+# Write .csv documents for each of the interaction matrices for each trial and save them to a unique folder with unique file names in the GitHub repository:
+write.csv(mat1.ud.km,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Deterministic_Uniform/km_du_mat1.csv")
+write.csv(mat2.ud.km,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Deterministic_Uniform/km_du_mat2.csv")
+write.csv(mat3.ud.km,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Deterministic_Uniform/km_du_mat3.csv")
+write.csv(mat4.ud.km,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Deterministic_Uniform/km_du_mat4.csv")
+write.csv(mat5.ud.km,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Deterministic_Uniform/km_du_mat5.csv")
+write.csv(mat6.ud.km,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Deterministic_Uniform/km_du_mat6.csv")
+write.csv(mat7.ud.km,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Deterministic_Uniform/km_du_mat7.csv")
+write.csv(mat8.ud.km,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Deterministic_Uniform/km_du_mat8.csv")
+write.csv(mat9.ud.km,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Deterministic_Uniform/km_du_mat9.csv")
+write.csv(mat10.ud.km,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Deterministic_Uniform/km_du_mat10.csv")
+
+# Write .csv documents for each of the interaction matrices for each trial and save them to a unique folder with unique file names in the GitHub repository:
+write.csv(mat1.ud.ks,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Deterministic_Uniform/ks_du_mat1.csv")
+write.csv(mat2.ud.ks,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Deterministic_Uniform/ks_du_mat2.csv")
+write.csv(mat3.ud.ks,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Deterministic_Uniform/ks_du_mat3.csv")
+write.csv(mat4.ud.ks,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Deterministic_Uniform/ks_du_mat4.csv")
+write.csv(mat5.ud.ks,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Deterministic_Uniform/ks_du_mat5.csv")
+write.csv(mat6.ud.ks,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Deterministic_Uniform/ks_du_mat6.csv")
+write.csv(mat7.ud.ks,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Deterministic_Uniform/ks_du_mat7.csv")
+write.csv(mat8.ud.ks,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Deterministic_Uniform/ks_du_mat8.csv")
+write.csv(mat9.ud.ks,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Deterministic_Uniform/ks_du_mat9.csv")
+write.csv(mat10.ud.ks,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Deterministic_Uniform/ks_du_mat10.csv")
+
+# Write .csv documents for each of the interaction matrices for each trial and save them to a unique folder with unique file names in the GitHub repository:
+write.csv(mat1.ud.ko,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Deterministic_Uniform/ko_du_mat1.csv")
+write.csv(mat2.ud.ko,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Deterministic_Uniform/ko_du_mat2.csv")
+write.csv(mat3.ud.ko,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Deterministic_Uniform/ko_du_mat3.csv")
+write.csv(mat4.ud.ko,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Deterministic_Uniform/ko_du_mat4.csv")
+write.csv(mat5.ud.ko,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Deterministic_Uniform/ko_du_mat5.csv")
+write.csv(mat6.ud.ko,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Deterministic_Uniform/ko_du_mat6.csv")
+write.csv(mat7.ud.ko,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Deterministic_Uniform/ko_du_mat7.csv")
+write.csv(mat8.ud.ko,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Deterministic_Uniform/ko_du_mat8.csv")
+write.csv(mat9.ud.ko,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Deterministic_Uniform/ko_du_mat9.csv")
+write.csv(mat10.ud.ko,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Deterministic_Uniform/ko_du_mat10.csv")
+
+# Write .csv documents for each of the interaction matrices for each trial and save them to a unique folder with unique file names in the GitHub repository:
+write.csv(mat1.ud.hm,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Deterministic_Uniform/hm_du_mat1.csv")
+write.csv(mat2.ud.hm,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Deterministic_Uniform/hm_du_mat2.csv")
+write.csv(mat3.ud.hm,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Deterministic_Uniform/hm_du_mat3.csv")
+write.csv(mat4.ud.hm,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Deterministic_Uniform/hm_du_mat4.csv")
+write.csv(mat5.ud.hm,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Deterministic_Uniform/hm_du_mat5.csv")
+write.csv(mat6.ud.hm,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Deterministic_Uniform/hm_du_mat6.csv")
+write.csv(mat7.ud.hm,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Deterministic_Uniform/hm_du_mat7.csv")
+write.csv(mat8.ud.hm,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Deterministic_Uniform/hm_du_mat8.csv")
+write.csv(mat9.ud.hm,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Deterministic_Uniform/hm_du_mat9.csv")
+write.csv(mat10.ud.hm,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Deterministic_Uniform/hm_du_mat10.csv")
+
+# Write .csv documents for each of the interaction matrices for each trial and save them to a unique folder with unique file names in the GitHub repository:
+write.csv(mat1.ud.hs,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Deterministic_Uniform/hs_du_mat1.csv")
+write.csv(mat2.ud.hs,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Deterministic_Uniform/hs_du_mat2.csv")
+write.csv(mat3.ud.hs,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Deterministic_Uniform/hs_du_mat3.csv")
+write.csv(mat4.ud.hs,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Deterministic_Uniform/hs_du_mat4.csv")
+write.csv(mat5.ud.hs,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Deterministic_Uniform/hs_du_mat5.csv")
+write.csv(mat6.ud.hs,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Deterministic_Uniform/hs_du_mat6.csv")
+write.csv(mat7.ud.hs,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Deterministic_Uniform/hs_du_mat7.csv")
+write.csv(mat8.ud.hs,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Deterministic_Uniform/hs_du_mat8.csv")
+write.csv(mat9.ud.hs,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Deterministic_Uniform/hs_du_mat9.csv")
+write.csv(mat10.ud.hs,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Deterministic_Uniform/hs_du_mat10.csv")
+
+# Write .csv documents for each of the interaction matrices for each trial and save them to a unique folder with unique file names in the GitHub repository:
+write.csv(mat1.ud.ho,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Deterministic_Uniform/ho_du_mat1.csv")
+write.csv(mat2.ud.ho,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Deterministic_Uniform/ho_du_mat2.csv")
+write.csv(mat3.ud.ho,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Deterministic_Uniform/ho_du_mat3.csv")
+write.csv(mat4.ud.ho,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Deterministic_Uniform/ho_du_mat4.csv")
+write.csv(mat5.ud.ho,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Deterministic_Uniform/ho_du_mat5.csv")
+write.csv(mat6.ud.ho,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Deterministic_Uniform/ho_du_mat6.csv")
+write.csv(mat7.ud.ho,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Deterministic_Uniform/ho_du_mat7.csv")
+write.csv(mat8.ud.ho,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Deterministic_Uniform/ho_du_mat8.csv")
+write.csv(mat9.ud.ho,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Deterministic_Uniform/ho_du_mat9.csv")
+write.csv(mat10.ud.ho,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Deterministic_Uniform/ho_du_mat10.csv")
+```
+
+#Deterministic Uniform Avoids
+```{r}
+# Write .csv documents for each of the Avoid Interaction Matrices for each trial and save them to a unique folder with unique file names in the GitHub repository:
+write.csv(mat1.aud.km,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_Uniform/km_du_avoid_mat1.csv")
+write.csv(mat2.aud.km,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_Uniform/km_du_avoid_mat2.csv")
+write.csv(mat3.aud.km,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_Uniform/km_du_avoid_mat3.csv")
+write.csv(mat4.aud.km,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_Uniform/km_du_avoid_mat4.csv")
+write.csv(mat5.aud.km,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_Uniform/km_du_avoid_mat5.csv")
+write.csv(mat6.aud.km,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_Uniform/km_du_avoid_mat6.csv")
+write.csv(mat7.aud.km,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_Uniform/km_du_avoid_mat7.csv")
+write.csv(mat8.aud.km,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_Uniform/km_du_avoid_mat8.csv")
+write.csv(mat9.aud.km,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_Uniform/km_du_avoid_mat9.csv")
+write.csv(mat10.aud.km,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_Uniform/km_du_avoid_mat10.csv")
+
+# Write .csv documents for each of the Avoid Interaction Matrices for each trial and save them to a unique folder with unique file names in the GitHub repository:
+write.csv(mat1.aud.ks,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_Uniform/ks_du_avoid_mat1.csv")
+write.csv(mat2.aud.ks,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_Uniform/ks_du_avoid_mat2.csv")
+write.csv(mat3.aud.ks,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_Uniform/ks_du_avoid_mat3.csv")
+write.csv(mat4.aud.ks,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_Uniform/ks_du_avoid_mat4.csv")
+write.csv(mat5.aud.ks,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_Uniform/ks_du_avoid_mat5.csv")
+write.csv(mat6.aud.ks,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_Uniform/ks_du_avoid_mat6.csv")
+write.csv(mat7.aud.ks,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_Uniform/ks_du_avoid_mat7.csv")
+write.csv(mat8.aud.ks,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_Uniform/ks_du_avoid_mat8.csv")
+write.csv(mat9.aud.ks,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_Uniform/ks_du_avoid_mat9.csv")
+write.csv(mat10.aud.ks,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_Uniform/ks_du_avoid_mat10.csv")
+
+# Write .csv documents for each of the Avoid Interaction Matrices for each trial and save them to a unique folder with unique file names in the GitHub repository:
+write.csv(mat1.aud.ko,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_Uniform/ko_du_avoid_mat1.csv")
+write.csv(mat2.aud.ko,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_Uniform/ko_du_avoid_mat2.csv")
+write.csv(mat3.aud.ko,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_Uniform/ko_du_avoid_mat3.csv")
+write.csv(mat4.aud.ko,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_Uniform/ko_du_avoid_mat4.csv")
+write.csv(mat5.aud.ko,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_Uniform/ko_du_avoid_mat5.csv")
+write.csv(mat6.aud.ko,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_Uniform/ko_du_avoid_mat6.csv")
+write.csv(mat7.aud.ko,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_Uniform/ko_du_avoid_mat7.csv")
+write.csv(mat8.aud.ko,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_Uniform/ko_du_avoid_mat8.csv")
+write.csv(mat9.aud.ko,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_Uniform/ko_du_avoid_mat9.csv")
+write.csv(mat10.aud.ko,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_Uniform/ko_du_avoid_mat10.csv")
+
+# Write .csv documents for each of the Avoid Interaction Matrices for each trial and save them to a unique folder with unique file names in the GitHub repository:
+write.csv(mat1.aud.hm,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_Uniform/hm_du_avoid_mat1.csv")
+write.csv(mat2.aud.hm,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_Uniform/hm_du_avoid_mat2.csv")
+write.csv(mat3.aud.hm,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_Uniform/hm_du_avoid_mat3.csv")
+write.csv(mat4.aud.hm,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_Uniform/hm_du_avoid_mat4.csv")
+write.csv(mat5.aud.hm,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_Uniform/hm_du_avoid_mat5.csv")
+write.csv(mat6.aud.hm,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_Uniform/hm_du_avoid_mat6.csv")
+write.csv(mat7.aud.hm,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_Uniform/hm_du_avoid_mat7.csv")
+write.csv(mat8.aud.hm,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_Uniform/hm_du_avoid_mat8.csv")
+write.csv(mat9.aud.hm,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_Uniform/hm_du_avoid_mat9.csv")
+write.csv(mat10.aud.hm,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_Uniform/hm_du_avoid_mat10.csv")
+
+# Write .csv documents for each of the Avoid Interaction Matrices for each trial and save them to a unique folder with unique file names in the GitHub repository:
+write.csv(mat1.aud.hs,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_Uniform/hs_du_avoid_mat1.csv")
+write.csv(mat2.aud.hs,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_Uniform/hs_du_avoid_mat2.csv")
+write.csv(mat3.aud.hs,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_Uniform/hs_du_avoid_mat3.csv")
+write.csv(mat4.aud.hs,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_Uniform/hs_du_avoid_mat4.csv")
+write.csv(mat5.aud.hs,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_Uniform/hs_du_avoid_mat5.csv")
+write.csv(mat6.aud.hs,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_Uniform/hs_du_avoid_mat6.csv")
+write.csv(mat7.aud.hs,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_Uniform/hs_du_avoid_mat7.csv")
+write.csv(mat8.aud.hs,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_Uniform/hs_du_avoid_mat8.csv")
+write.csv(mat9.aud.hs,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_Uniform/hs_du_avoid_mat9.csv")
+write.csv(mat10.aud.hs,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_Uniform/hs_du_avoid_mat10.csv")
+
+# Write .csv documents for each of the Avoid Interaction Matrices for each trial and save them to a unique folder with unique file names in the GitHub repository:
+write.csv(mat1.aud.ho,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_Uniform/ho_du_avoid_mat1.csv")
+write.csv(mat2.aud.ho,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_Uniform/ho_du_avoid_mat2.csv")
+write.csv(mat3.aud.ho,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_Uniform/ho_du_avoid_mat3.csv")
+write.csv(mat4.aud.ho,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_Uniform/ho_du_avoid_mat4.csv")
+write.csv(mat5.aud.ho,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_Uniform/ho_du_avoid_mat5.csv")
+write.csv(mat6.aud.ho,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_Uniform/ho_du_avoid_mat6.csv")
+write.csv(mat7.aud.ho,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_Uniform/ho_du_avoid_mat7.csv")
+write.csv(mat8.aud.ho,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_Uniform/ho_du_avoid_mat8.csv")
+write.csv(mat9.aud.ho,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_Uniform/ho_du_avoid_mat9.csv")
+write.csv(mat10.aud.ho,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Deterministic_Uniform/ho_du_avoid_mat10.csv")
+```
+
+#Deterministic Uniform Attacks
+```{r}
+# Write .csv documents for each of the attacks Interaction Matrices for each trial and save them to a unique folder with unique file names in the GitHub repository:
+write.csv(mat1.atud.km,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Deterministic_Uniform/km_du_attacks_mat1.csv")
+write.csv(mat2.atud.km,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Deterministic_Uniform/km_du_attacks_mat2.csv")
+write.csv(mat3.atud.km,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Deterministic_Uniform/km_du_attacks_mat3.csv")
+write.csv(mat4.atud.km,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Deterministic_Uniform/km_du_attacks_mat4.csv")
+write.csv(mat5.atud.km,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Deterministic_Uniform/km_du_attacks_mat5.csv")
+write.csv(mat6.atud.km,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Deterministic_Uniform/km_du_attacks_mat6.csv")
+write.csv(mat7.atud.km,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Deterministic_Uniform/km_du_attacks_mat7.csv")
+write.csv(mat8.atud.km,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Deterministic_Uniform/km_du_attacks_mat8.csv")
+write.csv(mat9.atud.km,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Deterministic_Uniform/km_du_attacks_mat9.csv")
+write.csv(mat10.atud.km,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Deterministic_Uniform/km_du_attacks_mat10.csv")
+
+# Write .csv documents for each of the attacks Interaction Matrices for each trial and save them to a unique folder with unique file names in the GitHub repository:
+write.csv(mat1.atud.ks,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Deterministic_Uniform/ks_du_attacks_mat1.csv")
+write.csv(mat2.atud.ks,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Deterministic_Uniform/ks_du_attacks_mat2.csv")
+write.csv(mat3.atud.ks,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Deterministic_Uniform/ks_du_attacks_mat3.csv")
+write.csv(mat4.atud.ks,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Deterministic_Uniform/ks_du_attacks_mat4.csv")
+write.csv(mat5.atud.ks,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Deterministic_Uniform/ks_du_attacks_mat5.csv")
+write.csv(mat6.atud.ks,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Deterministic_Uniform/ks_du_attacks_mat6.csv")
+write.csv(mat7.atud.ks,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Deterministic_Uniform/ks_du_attacks_mat7.csv")
+write.csv(mat8.atud.ks,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Deterministic_Uniform/ks_du_attacks_mat8.csv")
+write.csv(mat9.atud.ks,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Deterministic_Uniform/ks_du_attacks_mat9.csv")
+write.csv(mat10.atud.ks,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Deterministic_Uniform/ks_du_attacks_mat10.csv")
+
+# Write .csv documents for each of the attacks Interaction Matrices for each trial and save them to a unique folder with unique file names in the GitHub repository:
+write.csv(mat1.atud.ko,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Deterministic_Uniform/ko_du_attacks_mat1.csv")
+write.csv(mat2.atud.ko,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Deterministic_Uniform/ko_du_attacks_mat2.csv")
+write.csv(mat3.atud.ko,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Deterministic_Uniform/ko_du_attacks_mat3.csv")
+write.csv(mat4.atud.ko,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Deterministic_Uniform/ko_du_attacks_mat4.csv")
+write.csv(mat5.atud.ko,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Deterministic_Uniform/ko_du_attacks_mat5.csv")
+write.csv(mat6.atud.ko,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Deterministic_Uniform/ko_du_attacks_mat6.csv")
+write.csv(mat7.atud.ko,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Deterministic_Uniform/ko_du_attacks_mat7.csv")
+write.csv(mat8.atud.ko,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Deterministic_Uniform/ko_du_attacks_mat8.csv")
+write.csv(mat9.atud.ko,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Deterministic_Uniform/ko_du_attacks_mat9.csv")
+write.csv(mat10.atud.ko,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Deterministic_Uniform/ko_du_attacks_mat10.csv")
+
+# Write .csv documents for each of the attacks Interaction Matrices for each trial and save them to a unique folder with unique file names in the GitHub repository:
+write.csv(mat1.atud.hm,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Deterministic_Uniform/hm_du_attacks_mat1.csv")
+write.csv(mat2.atud.hm,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Deterministic_Uniform/hm_du_attacks_mat2.csv")
+write.csv(mat3.atud.hm,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Deterministic_Uniform/hm_du_attacks_mat3.csv")
+write.csv(mat4.atud.hm,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Deterministic_Uniform/hm_du_attacks_mat4.csv")
+write.csv(mat5.atud.hm,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Deterministic_Uniform/hm_du_attacks_mat5.csv")
+write.csv(mat6.atud.hm,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Deterministic_Uniform/hm_du_attacks_mat6.csv")
+write.csv(mat7.atud.hm,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Deterministic_Uniform/hm_du_attacks_mat7.csv")
+write.csv(mat8.atud.hm,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Deterministic_Uniform/hm_du_attacks_mat8.csv")
+write.csv(mat9.atud.hm,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Deterministic_Uniform/hm_du_attacks_mat9.csv")
+write.csv(mat10.atud.hm,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Deterministic_Uniform/hm_du_attacks_mat10.csv")
+
+# Write .csv documents for each of the attacks Interaction Matrices for each trial and save them to a unique folder with unique file names in the GitHub repository:
+write.csv(mat1.atud.hs,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Deterministic_Uniform/hs_du_attacks_mat1.csv")
+write.csv(mat2.atud.hs,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Deterministic_Uniform/hs_du_attacks_mat2.csv")
+write.csv(mat3.atud.hs,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Deterministic_Uniform/hs_du_attacks_mat3.csv")
+write.csv(mat4.atud.hs,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Deterministic_Uniform/hs_du_attacks_mat4.csv")
+write.csv(mat5.atud.hs,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Deterministic_Uniform/hs_du_attacks_mat5.csv")
+write.csv(mat6.atud.hs,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Deterministic_Uniform/hs_du_attacks_mat6.csv")
+write.csv(mat7.atud.hs,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Deterministic_Uniform/hs_du_attacks_mat7.csv")
+write.csv(mat8.atud.hs,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Deterministic_Uniform/hs_du_attacks_mat8.csv")
+write.csv(mat9.atud.hs,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Deterministic_Uniform/hs_du_attacks_mat9.csv")
+write.csv(mat10.atud.hs,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Deterministic_Uniform/hs_du_attacks_mat10.csv")
+
+# Write .csv documents for each of the attacks Interaction Matrices for each trial and save them to a unique folder with unique file names in the GitHub repository:
+write.csv(mat1.atud.ho,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Deterministic_Uniform/ho_du_attacks_mat1.csv")
+write.csv(mat2.atud.ho,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Deterministic_Uniform/ho_du_attacks_mat2.csv")
+write.csv(mat3.atud.ho,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Deterministic_Uniform/ho_du_attacks_mat3.csv")
+write.csv(mat4.atud.ho,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Deterministic_Uniform/ho_du_attacks_mat4.csv")
+write.csv(mat5.atud.ho,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Deterministic_Uniform/ho_du_attacks_mat5.csv")
+write.csv(mat6.atud.ho,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Deterministic_Uniform/ho_du_attacks_mat6.csv")
+write.csv(mat7.atud.ho,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Deterministic_Uniform/ho_du_attacks_mat7.csv")
+write.csv(mat8.atud.ho,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Deterministic_Uniform/ho_du_attacks_mat8.csv")
+write.csv(mat9.atud.ho,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Deterministic_Uniform/ho_du_attacks_mat9.csv")
+write.csv(mat10.atud.ho,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Deterministic_Uniform/ho_du_attacks_mat10.csv")
+```
+
+#Initiator Clumped
+```{r}
+# Write .csv documents for each of the interaction matrices for each trial and save them to a unique folder with unique file names in the GitHub repository:
+write.csv(mat1.ci.km,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_clumped/km_ic_mat1.csv")
+write.csv(mat2.ci.km,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_clumped/km_ic_mat2.csv")
+write.csv(mat3.ci.km,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_clumped/km_ic_mat3.csv")
+write.csv(mat4.ci.km,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_clumped/km_ic_mat4.csv")
+write.csv(mat5.ci.km,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_clumped/km_ic_mat5.csv")
+write.csv(mat6.ci.km,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_clumped/km_ic_mat6.csv")
+write.csv(mat7.ci.km,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_clumped/km_ic_mat7.csv")
+write.csv(mat8.ci.km,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_clumped/km_ic_mat8.csv")
+write.csv(mat9.ci.km,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_clumped/km_ic_mat9.csv")
+write.csv(mat10.ci.km,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_clumped/km_ic_mat10.csv")
+
+# Write .csv documents for each of the interaction matrices for each trial and save them to a unique folder with unique file names in the GitHub repository:
+write.csv(mat1.ci.ks,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_clumped/ks_ic_mat1.csv")
+write.csv(mat2.ci.ks,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_clumped/ks_ic_mat2.csv")
+write.csv(mat3.ci.ks,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_clumped/ks_ic_mat3.csv")
+write.csv(mat4.ci.ks,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_clumped/ks_ic_mat4.csv")
+write.csv(mat5.ci.ks,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_clumped/ks_ic_mat5.csv")
+write.csv(mat6.ci.ks,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_clumped/ks_ic_mat6.csv")
+write.csv(mat7.ci.ks,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_clumped/ks_ic_mat7.csv")
+write.csv(mat8.ci.ks,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_clumped/ks_ic_mat8.csv")
+write.csv(mat9.ci.ks,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_clumped/ks_ic_mat9.csv")
+write.csv(mat10.ci.ks,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_clumped/ks_ic_mat10.csv")
+
+# Write .csv documents for each of the interaction matrices for each trial and save them to a unique folder with unique file names in the GitHub repository:
+write.csv(mat1.ci.ko,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_clumped/ko_ic_mat1.csv")
+write.csv(mat2.ci.ko,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_clumped/ko_ic_mat2.csv")
+write.csv(mat3.ci.ko,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_clumped/ko_ic_mat3.csv")
+write.csv(mat4.ci.ko,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_clumped/ko_ic_mat4.csv")
+write.csv(mat5.ci.ko,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_clumped/ko_ic_mat5.csv")
+write.csv(mat6.ci.ko,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_clumped/ko_ic_mat6.csv")
+write.csv(mat7.ci.ko,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_clumped/ko_ic_mat7.csv")
+write.csv(mat8.ci.ko,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_clumped/ko_ic_mat8.csv")
+write.csv(mat9.ci.ko,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_clumped/ko_ic_mat9.csv")
+write.csv(mat10.ci.ko,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_clumped/ko_ic_mat10.csv")
+
+# Write .csv documents for each of the interaction matrices for each trial and save them to a unique folder with unique file names in the GitHub repository:
+write.csv(mat1.ci.hm,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_clumped/hm_ic_mat1.csv")
+write.csv(mat2.ci.hm,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_clumped/hm_ic_mat2.csv")
+write.csv(mat3.ci.hm,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_clumped/hm_ic_mat3.csv")
+write.csv(mat4.ci.hm,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_clumped/hm_ic_mat4.csv")
+write.csv(mat5.ci.hm,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_clumped/hm_ic_mat5.csv")
+write.csv(mat6.ci.hm,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_clumped/hm_ic_mat6.csv")
+write.csv(mat7.ci.hm,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_clumped/hm_ic_mat7.csv")
+write.csv(mat8.ci.hm,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_clumped/hm_ic_mat8.csv")
+write.csv(mat9.ci.hm,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_clumped/hm_ic_mat9.csv")
+write.csv(mat10.ci.hm,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_clumped/hm_ic_mat10.csv")
+
+# Write .csv documents for each of the interaction matrices for each trial and save them to a unique folder with unique file names in the GitHub repository:
+write.csv(mat1.ci.hs,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_clumped/hs_ic_mat1.csv")
+write.csv(mat2.ci.hs,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_clumped/hs_ic_mat2.csv")
+write.csv(mat3.ci.hs,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_clumped/hs_ic_mat3.csv")
+write.csv(mat4.ci.hs,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_clumped/hs_ic_mat4.csv")
+write.csv(mat5.ci.hs,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_clumped/hs_ic_mat5.csv")
+write.csv(mat6.ci.hs,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_clumped/hs_ic_mat6.csv")
+write.csv(mat7.ci.hs,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_clumped/hs_ic_mat7.csv")
+write.csv(mat8.ci.hs,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_clumped/hs_ic_mat8.csv")
+write.csv(mat9.ci.hs,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_clumped/hs_ic_mat9.csv")
+write.csv(mat10.ci.hs,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_clumped/hs_ic_mat10.csv")
+
+# Write .csv documents for each of the interaction matrices for each trial and save them to a unique folder with unique file names in the GitHub repository:
+write.csv(mat1.ci.ho,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_clumped/ho_ic_mat1.csv")
+write.csv(mat2.ci.ho,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_clumped/ho_ic_mat2.csv")
+write.csv(mat3.ci.ho,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_clumped/ho_ic_mat3.csv")
+write.csv(mat4.ci.ho,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_clumped/ho_ic_mat4.csv")
+write.csv(mat5.ci.ho,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_clumped/ho_ic_mat5.csv")
+write.csv(mat6.ci.ho,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_clumped/ho_ic_mat6.csv")
+write.csv(mat7.ci.ho,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_clumped/ho_ic_mat7.csv")
+write.csv(mat8.ci.ho,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_clumped/ho_ic_mat8.csv")
+write.csv(mat9.ci.ho,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_clumped/ho_ic_mat9.csv")
+write.csv(mat10.ci.ho,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_clumped/ho_ic_mat10.csv")
+```
+
+#Initiator Clumped Avoids
+```{r}
+# Write .csv documents for each of the Avoid Interaction Matrices for each trial and save them to a unique folder with unique file names in the GitHub repository:
+write.csv(mat1.aci.km,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_clumped/km_ic_avoid_mat1.csv")
+write.csv(mat2.aci.km,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_clumped/km_ic_avoid_mat2.csv")
+write.csv(mat3.aci.km,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_clumped/km_ic_avoid_mat3.csv")
+write.csv(mat4.aci.km,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_clumped/km_ic_avoid_mat4.csv")
+write.csv(mat5.aci.km,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_clumped/km_ic_avoid_mat5.csv")
+write.csv(mat6.aci.km,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_clumped/km_ic_avoid_mat6.csv")
+write.csv(mat7.aci.km,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_clumped/km_ic_avoid_mat7.csv")
+write.csv(mat8.aci.km,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_clumped/km_ic_avoid_mat8.csv")
+write.csv(mat9.aci.km,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_clumped/km_ic_avoid_mat9.csv")
+write.csv(mat10.aci.km,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_clumped/km_ic_avoid_mat10.csv")
+
+# Write .csv documents for each of the Avoid Interaction Matrices for each trial and save them to a unique folder with unique file names in the GitHub repository:
+write.csv(mat1.aci.ks,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_clumped/ks_ic_avoid_mat1.csv")
+write.csv(mat2.aci.ks,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_clumped/ks_ic_avoid_mat2.csv")
+write.csv(mat3.aci.ks,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_clumped/ks_ic_avoid_mat3.csv")
+write.csv(mat4.aci.ks,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_clumped/ks_ic_avoid_mat4.csv")
+write.csv(mat5.aci.ks,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_clumped/ks_ic_avoid_mat5.csv")
+write.csv(mat6.aci.ks,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_clumped/ks_ic_avoid_mat6.csv")
+write.csv(mat7.aci.ks,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_clumped/ks_ic_avoid_mat7.csv")
+write.csv(mat8.aci.ks,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_clumped/ks_ic_avoid_mat8.csv")
+write.csv(mat9.aci.ks,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_clumped/ks_ic_avoid_mat9.csv")
+write.csv(mat10.aci.ks,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_clumped/ks_ic_avoid_mat10.csv")
+
+# Write .csv documents for each of the Avoid Interaction Matrices for each trial and save them to a unique folder with unique file names in the GitHub repository:
+write.csv(mat1.aci.ko,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_clumped/ko_ic_avoid_mat1.csv")
+write.csv(mat2.aci.ko,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_clumped/ko_ic_avoid_mat2.csv")
+write.csv(mat3.aci.ko,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_clumped/ko_ic_avoid_mat3.csv")
+write.csv(mat4.aci.ko,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_clumped/ko_ic_avoid_mat4.csv")
+write.csv(mat5.aci.ko,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_clumped/ko_ic_avoid_mat5.csv")
+write.csv(mat6.aci.ko,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_clumped/ko_ic_avoid_mat6.csv")
+write.csv(mat7.aci.ko,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_clumped/ko_ic_avoid_mat7.csv")
+write.csv(mat8.aci.ko,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_clumped/ko_ic_avoid_mat8.csv")
+write.csv(mat9.aci.ko,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_clumped/ko_ic_avoid_mat9.csv")
+write.csv(mat10.aci.ko,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_clumped/ko_ic_avoid_mat10.csv")
+
+# Write .csv documents for each of the Avoid Interaction Matrices for each trial and save them to a unique folder with unique file names in the GitHub repository:
+write.csv(mat1.aci.hm,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_clumped/hm_ic_avoid_mat1.csv")
+write.csv(mat2.aci.hm,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_clumped/hm_ic_avoid_mat2.csv")
+write.csv(mat3.aci.hm,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_clumped/hm_ic_avoid_mat3.csv")
+write.csv(mat4.aci.hm,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_clumped/hm_ic_avoid_mat4.csv")
+write.csv(mat5.aci.hm,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_clumped/hm_ic_avoid_mat5.csv")
+write.csv(mat6.aci.hm,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_clumped/hm_ic_avoid_mat6.csv")
+write.csv(mat7.aci.hm,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_clumped/hm_ic_avoid_mat7.csv")
+write.csv(mat8.aci.hm,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_clumped/hm_ic_avoid_mat8.csv")
+write.csv(mat9.aci.hm,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_clumped/hm_ic_avoid_mat9.csv")
+write.csv(mat10.aci.hm,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_clumped/hm_ic_avoid_mat10.csv")
+
+# Write .csv documents for each of the Avoid Interaction Matrices for each trial and save them to a unique folder with unique file names in the GitHub repository:
+write.csv(mat1.aci.hs,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_clumped/hs_ic_avoid_mat1.csv")
+write.csv(mat2.aci.hs,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_clumped/hs_ic_avoid_mat2.csv")
+write.csv(mat3.aci.hs,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_clumped/hs_ic_avoid_mat3.csv")
+write.csv(mat4.aci.hs,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_clumped/hs_ic_avoid_mat4.csv")
+write.csv(mat5.aci.hs,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_clumped/hs_ic_avoid_mat5.csv")
+write.csv(mat6.aci.hs,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_clumped/hs_ic_avoid_mat6.csv")
+write.csv(mat7.aci.hs,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_clumped/hs_ic_avoid_mat7.csv")
+write.csv(mat8.aci.hs,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_clumped/hs_ic_avoid_mat8.csv")
+write.csv(mat9.aci.hs,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_clumped/hs_ic_avoid_mat9.csv")
+write.csv(mat10.aci.hs,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_clumped/hs_ic_avoid_mat10.csv")
+
+# Write .csv documents for each of the Avoid Interaction Matrices for each trial and save them to a unique folder with unique file names in the GitHub repository:
+write.csv(mat1.aci.ho,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_clumped/ho_ic_avoid_mat1.csv")
+write.csv(mat2.aci.ho,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_clumped/ho_ic_avoid_mat2.csv")
+write.csv(mat3.aci.ho,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_clumped/ho_ic_avoid_mat3.csv")
+write.csv(mat4.aci.ho,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_clumped/ho_ic_avoid_mat4.csv")
+write.csv(mat5.aci.ho,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_clumped/ho_ic_avoid_mat5.csv")
+write.csv(mat6.aci.ho,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_clumped/ho_ic_avoid_mat6.csv")
+write.csv(mat7.aci.ho,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_clumped/ho_ic_avoid_mat7.csv")
+write.csv(mat8.aci.ho,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_clumped/ho_ic_avoid_mat8.csv")
+write.csv(mat9.aci.ho,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_clumped/ho_ic_avoid_mat9.csv")
+write.csv(mat10.aci.ho,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_clumped/ho_ic_avoid_mat10.csv")
+```
+
+#Initiator Clumped Attacks
+```{r}
+# Write .csv documents for each of the attacks Interaction Matrices for each trial and save them to a unique folder with unique file names in the GitHub repository:
+write.csv(mat1.atci.km,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Initiator_clumped/km_ic_attacks_mat1.csv")
+write.csv(mat2.atci.km,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Initiator_clumped/km_ic_attacks_mat2.csv")
+write.csv(mat3.atci.km,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Initiator_clumped/km_ic_attacks_mat3.csv")
+write.csv(mat4.atci.km,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Initiator_clumped/km_ic_attacks_mat4.csv")
+write.csv(mat5.atci.km,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Initiator_clumped/km_ic_attacks_mat5.csv")
+write.csv(mat6.atci.km,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Initiator_clumped/km_ic_attacks_mat6.csv")
+write.csv(mat7.atci.km,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Initiator_clumped/km_ic_attacks_mat7.csv")
+write.csv(mat8.atci.km,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Initiator_clumped/km_ic_attacks_mat8.csv")
+write.csv(mat9.atci.km,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Initiator_clumped/km_ic_attacks_mat9.csv")
+write.csv(mat10.atci.km,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Initiator_clumped/km_ic_attacks_mat10.csv")
+
+# Write .csv documents for each of the attacks Interaction Matrices for each trial and save them to a unique folder with unique file names in the GitHub repository:
+write.csv(mat1.atci.ks,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Initiator_clumped/ks_ic_attacks_mat1.csv")
+write.csv(mat2.atci.ks,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Initiator_clumped/ks_ic_attacks_mat2.csv")
+write.csv(mat3.atci.ks,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Initiator_clumped/ks_ic_attacks_mat3.csv")
+write.csv(mat4.atci.ks,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Initiator_clumped/ks_ic_attacks_mat4.csv")
+write.csv(mat5.atci.ks,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Initiator_clumped/ks_ic_attacks_mat5.csv")
+write.csv(mat6.atci.ks,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Initiator_clumped/ks_ic_attacks_mat6.csv")
+write.csv(mat7.atci.ks,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Initiator_clumped/ks_ic_attacks_mat7.csv")
+write.csv(mat8.atci.ks,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Initiator_clumped/ks_ic_attacks_mat8.csv")
+write.csv(mat9.atci.ks,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Initiator_clumped/ks_ic_attacks_mat9.csv")
+write.csv(mat10.atci.ks,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Initiator_clumped/ks_ic_attacks_mat10.csv")
+
+# Write .csv documents for each of the attacks Interaction Matrices for each trial and save them to a unique folder with unique file names in the GitHub repository:
+write.csv(mat1.atci.ko,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Initiator_clumped/ko_ic_attacks_mat1.csv")
+write.csv(mat2.atci.ko,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Initiator_clumped/ko_ic_attacks_mat2.csv")
+write.csv(mat3.atci.ko,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Initiator_clumped/ko_ic_attacks_mat3.csv")
+write.csv(mat4.atci.ko,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Initiator_clumped/ko_ic_attacks_mat4.csv")
+write.csv(mat5.atci.ko,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Initiator_clumped/ko_ic_attacks_mat5.csv")
+write.csv(mat6.atci.ko,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Initiator_clumped/ko_ic_attacks_mat6.csv")
+write.csv(mat7.atci.ko,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Initiator_clumped/ko_ic_attacks_mat7.csv")
+write.csv(mat8.atci.ko,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Initiator_clumped/ko_ic_attacks_mat8.csv")
+write.csv(mat9.atci.ko,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Initiator_clumped/ko_ic_attacks_mat9.csv")
+write.csv(mat10.atci.ko,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Initiator_clumped/ko_ic_attacks_mat10.csv")
+
+# Write .csv documents for each of the attacks Interaction Matrices for each trial and save them to a unique folder with unique file names in the GitHub repository:
+write.csv(mat1.atci.hm,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Initiator_clumped/hm_ic_attacks_mat1.csv")
+write.csv(mat2.atci.hm,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Initiator_clumped/hm_ic_attacks_mat2.csv")
+write.csv(mat3.atci.hm,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Initiator_clumped/hm_ic_attacks_mat3.csv")
+write.csv(mat4.atci.hm,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Initiator_clumped/hm_ic_attacks_mat4.csv")
+write.csv(mat5.atci.hm,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Initiator_clumped/hm_ic_attacks_mat5.csv")
+write.csv(mat6.atci.hm,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Initiator_clumped/hm_ic_attacks_mat6.csv")
+write.csv(mat7.atci.hm,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Initiator_clumped/hm_ic_attacks_mat7.csv")
+write.csv(mat8.atci.hm,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Initiator_clumped/hm_ic_attacks_mat8.csv")
+write.csv(mat9.atci.hm,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Initiator_clumped/hm_ic_attacks_mat9.csv")
+write.csv(mat10.atci.hm,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Initiator_clumped/hm_ic_attacks_mat10.csv")
+
+# Write .csv documents for each of the attacks Interaction Matrices for each trial and save them to a unique folder with unique file names in the GitHub repository:
+write.csv(mat1.atci.hs,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Initiator_clumped/hs_ic_attacks_mat1.csv")
+write.csv(mat2.atci.hs,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Initiator_clumped/hs_ic_attacks_mat2.csv")
+write.csv(mat3.atci.hs,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Initiator_clumped/hs_ic_attacks_mat3.csv")
+write.csv(mat4.atci.hs,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Initiator_clumped/hs_ic_attacks_mat4.csv")
+write.csv(mat5.atci.hs,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Initiator_clumped/hs_ic_attacks_mat5.csv")
+write.csv(mat6.atci.hs,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Initiator_clumped/hs_ic_attacks_mat6.csv")
+write.csv(mat7.atci.hs,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Initiator_clumped/hs_ic_attacks_mat7.csv")
+write.csv(mat8.atci.hs,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Initiator_clumped/hs_ic_attacks_mat8.csv")
+write.csv(mat9.atci.hs,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Initiator_clumped/hs_ic_attacks_mat9.csv")
+write.csv(mat10.atci.hs,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Initiator_clumped/hs_ic_attacks_mat10.csv")
+
+# Write .csv documents for each of the attacks Interaction Matrices for each trial and save them to a unique folder with unique file names in the GitHub repository:
+write.csv(mat1.atci.ho,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Initiator_clumped/ho_ic_attacks_mat1.csv")
+write.csv(mat2.atci.ho,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Initiator_clumped/ho_ic_attacks_mat2.csv")
+write.csv(mat3.atci.ho,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Initiator_clumped/ho_ic_attacks_mat3.csv")
+write.csv(mat4.atci.ho,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Initiator_clumped/ho_ic_attacks_mat4.csv")
+write.csv(mat5.atci.ho,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Initiator_clumped/ho_ic_attacks_mat5.csv")
+write.csv(mat6.atci.ho,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Initiator_clumped/ho_ic_attacks_mat6.csv")
+write.csv(mat7.atci.ho,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Initiator_clumped/ho_ic_attacks_mat7.csv")
+write.csv(mat8.atci.ho,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Initiator_clumped/ho_ic_attacks_mat8.csv")
+write.csv(mat9.atci.ho,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Initiator_clumped/ho_ic_attacks_mat9.csv")
+write.csv(mat10.atci.ho,"~/Documents/GitHub/primate-social-groups-model/Attacks Interaction Matrices/Initiator_clumped/ho_ic_attacks_mat10.csv")
+```
+
+#Initiator Uniform
+```{r}
+# Write .csv documents for each of the interaction matrices for each trial and save them to a unique folder with unique file names in the GitHub repository:
+write.csv(mat1.ui.km,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_Uniform/km_iu_mat1.csv")
+write.csv(mat2.ui.km,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_Uniform/km_iu_mat2.csv")
+write.csv(mat3.ui.km,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_Uniform/km_iu_mat3.csv")
+write.csv(mat4.ui.km,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_Uniform/km_iu_mat4.csv")
+write.csv(mat5.ui.km,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_Uniform/km_iu_mat5.csv")
+write.csv(mat6.ui.km,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_Uniform/km_iu_mat6.csv")
+write.csv(mat7.ui.km,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_Uniform/km_iu_mat7.csv")
+write.csv(mat8.ui.km,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_Uniform/km_iu_mat8.csv")
+write.csv(mat9.ui.km,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_Uniform/km_iu_mat9.csv")
+write.csv(mat10.ui.km,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_Uniform/km_iu_mat10.csv")
+
+# Write .csv documents for each of the interaction matrices for each trial and save them to a unique folder with unique file names in the GitHub repository:
+write.csv(mat1.ui.ks,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_Uniform/ks_iu_mat1.csv")
+write.csv(mat2.ui.ks,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_Uniform/ks_iu_mat2.csv")
+write.csv(mat3.ui.ks,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_Uniform/ks_iu_mat3.csv")
+write.csv(mat4.ui.ks,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_Uniform/ks_iu_mat4.csv")
+write.csv(mat5.ui.ks,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_Uniform/ks_iu_mat5.csv")
+write.csv(mat6.ui.ks,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_Uniform/ks_iu_mat6.csv")
+write.csv(mat7.ui.ks,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_Uniform/ks_iu_mat7.csv")
+write.csv(mat8.ui.ks,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_Uniform/ks_iu_mat8.csv")
+write.csv(mat9.ui.ks,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_Uniform/ks_iu_mat9.csv")
+write.csv(mat10.ui.ks,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_Uniform/ks_iu_mat10.csv")
+
+# Write .csv documents for each of the interaction matrices for each trial and save them to a unique folder with unique file names in the GitHub repository:
+write.csv(mat1.ui.ko,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_Uniform/ko_iu_mat1.csv")
+write.csv(mat2.ui.ko,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_Uniform/ko_iu_mat2.csv")
+write.csv(mat3.ui.ko,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_Uniform/ko_iu_mat3.csv")
+write.csv(mat4.ui.ko,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_Uniform/ko_iu_mat4.csv")
+write.csv(mat5.ui.ko,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_Uniform/ko_iu_mat5.csv")
+write.csv(mat6.ui.ko,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_Uniform/ko_iu_mat6.csv")
+write.csv(mat7.ui.ko,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_Uniform/ko_iu_mat7.csv")
+write.csv(mat8.ui.ko,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_Uniform/ko_iu_mat8.csv")
+write.csv(mat9.ui.ko,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_Uniform/ko_iu_mat9.csv")
+write.csv(mat10.ui.ko,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_Uniform/ko_iu_mat10.csv")
+
+# Write .csv documents for each of the interaction matrices for each trial and save them to a unique folder with unique file names in the GitHub repository:
+write.csv(mat1.ui.hm,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_Uniform/hm_iu_mat1.csv")
+write.csv(mat2.ui.hm,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_Uniform/hm_iu_mat2.csv")
+write.csv(mat3.ui.hm,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_Uniform/hm_iu_mat3.csv")
+write.csv(mat4.ui.hm,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_Uniform/hm_iu_mat4.csv")
+write.csv(mat5.ui.hm,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_Uniform/hm_iu_mat5.csv")
+write.csv(mat6.ui.hm,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_Uniform/hm_iu_mat6.csv")
+write.csv(mat7.ui.hm,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_Uniform/hm_iu_mat7.csv")
+write.csv(mat8.ui.hm,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_Uniform/hm_iu_mat8.csv")
+write.csv(mat9.ui.hm,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_Uniform/hm_iu_mat9.csv")
+write.csv(mat10.ui.hm,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_Uniform/hm_iu_mat10.csv")
+
+# Write .csv documents for each of the interaction matrices for each trial and save them to a unique folder with unique file names in the GitHub repository:
+write.csv(mat1.ui.hs,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_Uniform/hs_iu_mat1.csv")
+write.csv(mat2.ui.hs,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_Uniform/hs_iu_mat2.csv")
+write.csv(mat3.ui.hs,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_Uniform/hs_iu_mat3.csv")
+write.csv(mat4.ui.hs,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_Uniform/hs_iu_mat4.csv")
+write.csv(mat5.ui.hs,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_Uniform/hs_iu_mat5.csv")
+write.csv(mat6.ui.hs,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_Uniform/hs_iu_mat6.csv")
+write.csv(mat7.ui.hs,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_Uniform/hs_iu_mat7.csv")
+write.csv(mat8.ui.hs,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_Uniform/hs_iu_mat8.csv")
+write.csv(mat9.ui.hs,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_Uniform/hs_iu_mat9.csv")
+write.csv(mat10.ui.hs,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_Uniform/hs_iu_mat10.csv")
+
+# Write .csv documents for each of the interaction matrices for each trial and save them to a unique folder with unique file names in the GitHub repository:
+write.csv(mat1.ui.ho,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_Uniform/ho_iu_mat1.csv")
+write.csv(mat2.ui.ho,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_Uniform/ho_iu_mat2.csv")
+write.csv(mat3.ui.ho,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_Uniform/ho_iu_mat3.csv")
+write.csv(mat4.ui.ho,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_Uniform/ho_iu_mat4.csv")
+write.csv(mat5.ui.ho,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_Uniform/ho_iu_mat5.csv")
+write.csv(mat6.ui.ho,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_Uniform/ho_iu_mat6.csv")
+write.csv(mat7.ui.ho,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_Uniform/ho_iu_mat7.csv")
+write.csv(mat8.ui.ho,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_Uniform/ho_iu_mat8.csv")
+write.csv(mat9.ui.ho,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_Uniform/ho_iu_mat9.csv")
+write.csv(mat10.ui.ho,"~/Documents/GitHub/primate-social-groups-model/Interaction Matrices/Initiator_Uniform/ho_iu_mat10.csv")
+```
+
+#Initiator Uniform Avoids
+```{r}
+# Write .csv documents for each of the Avoid Interaction Matrices for each trial and save them to a unique folder with unique file names in the GitHub repository:
+write.csv(mat1.aui.km,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_Uniform/km_iu_avoid_mat1.csv")
+write.csv(mat2.aui.km,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_Uniform/km_iu_avoid_mat2.csv")
+write.csv(mat3.aui.km,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_Uniform/km_iu_avoid_mat3.csv")
+write.csv(mat4.aui.km,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_Uniform/km_iu_avoid_mat4.csv")
+write.csv(mat5.aui.km,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_Uniform/km_iu_avoid_mat5.csv")
+write.csv(mat6.aui.km,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_Uniform/km_iu_avoid_mat6.csv")
+write.csv(mat7.aui.km,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_Uniform/km_iu_avoid_mat7.csv")
+write.csv(mat8.aui.km,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_Uniform/km_iu_avoid_mat8.csv")
+write.csv(mat9.aui.km,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_Uniform/km_iu_avoid_mat9.csv")
+write.csv(mat10.aui.km,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_Uniform/km_iu_avoid_mat10.csv")
+
+# Write .csv documents for each of the Avoid Interaction Matrices for each trial and save them to a unique folder with unique file names in the GitHub repository:
+write.csv(mat1.aui.ks,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_Uniform/ks_iu_avoid_mat1.csv")
+write.csv(mat2.aui.ks,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_Uniform/ks_iu_avoid_mat2.csv")
+write.csv(mat3.aui.ks,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_Uniform/ks_iu_avoid_mat3.csv")
+write.csv(mat4.aui.ks,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_Uniform/ks_iu_avoid_mat4.csv")
+write.csv(mat5.aui.ks,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_Uniform/ks_iu_avoid_mat5.csv")
+write.csv(mat6.aui.ks,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_Uniform/ks_iu_avoid_mat6.csv")
+write.csv(mat7.aui.ks,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_Uniform/ks_iu_avoid_mat7.csv")
+write.csv(mat8.aui.ks,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_Uniform/ks_iu_avoid_mat8.csv")
+write.csv(mat9.aui.ks,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_Uniform/ks_iu_avoid_mat9.csv")
+write.csv(mat10.aui.ks,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_Uniform/ks_iu_avoid_mat10.csv")
+
+# Write .csv documents for each of the Avoid Interaction Matrices for each trial and save them to a unique folder with unique file names in the GitHub repository:
+write.csv(mat1.aui.ko,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_Uniform/ko_iu_avoid_mat1.csv")
+write.csv(mat2.aui.ko,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_Uniform/ko_iu_avoid_mat2.csv")
+write.csv(mat3.aui.ko,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_Uniform/ko_iu_avoid_mat3.csv")
+write.csv(mat4.aui.ko,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_Uniform/ko_iu_avoid_mat4.csv")
+write.csv(mat5.aui.ko,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_Uniform/ko_iu_avoid_mat5.csv")
+write.csv(mat6.aui.ko,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_Uniform/ko_iu_avoid_mat6.csv")
+write.csv(mat7.aui.ko,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_Uniform/ko_iu_avoid_mat7.csv")
+write.csv(mat8.aui.ko,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_Uniform/ko_iu_avoid_mat8.csv")
+write.csv(mat9.aui.ko,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_Uniform/ko_iu_avoid_mat9.csv")
+write.csv(mat10.aui.ko,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_Uniform/ko_iu_avoid_mat10.csv")
+
+# Write .csv documents for each of the Avoid Interaction Matrices for each trial and save them to a unique folder with unique file names in the GitHub repository:
+write.csv(mat1.aui.hm,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_Uniform/hm_iu_avoid_mat1.csv")
+write.csv(mat2.aui.hm,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_Uniform/hm_iu_avoid_mat2.csv")
+write.csv(mat3.aui.hm,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_Uniform/hm_iu_avoid_mat3.csv")
+write.csv(mat4.aui.hm,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_Uniform/hm_iu_avoid_mat4.csv")
+write.csv(mat5.aui.hm,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_Uniform/hm_iu_avoid_mat5.csv")
+write.csv(mat6.aui.hm,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_Uniform/hm_iu_avoid_mat6.csv")
+write.csv(mat7.aui.hm,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_Uniform/hm_iu_avoid_mat7.csv")
+write.csv(mat8.aui.hm,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_Uniform/hm_iu_avoid_mat8.csv")
+write.csv(mat9.aui.hm,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_Uniform/hm_iu_avoid_mat9.csv")
+write.csv(mat10.aui.hm,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_Uniform/hm_iu_avoid_mat10.csv")
+
+# Write .csv documents for each of the Avoid Interaction Matrices for each trial and save them to a unique folder with unique file names in the GitHub repository:
+write.csv(mat1.aui.hs,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_Uniform/hs_iu_avoid_mat1.csv")
+write.csv(mat2.aui.hs,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_Uniform/hs_iu_avoid_mat2.csv")
+write.csv(mat3.aui.hs,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_Uniform/hs_iu_avoid_mat3.csv")
+write.csv(mat4.aui.hs,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_Uniform/hs_iu_avoid_mat4.csv")
+write.csv(mat5.aui.hs,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_Uniform/hs_iu_avoid_mat5.csv")
+write.csv(mat6.aui.hs,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_Uniform/hs_iu_avoid_mat6.csv")
+write.csv(mat7.aui.hs,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_Uniform/hs_iu_avoid_mat7.csv")
+write.csv(mat8.aui.hs,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_Uniform/hs_iu_avoid_mat8.csv")
+write.csv(mat9.aui.hs,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_Uniform/hs_iu_avoid_mat9.csv")
+write.csv(mat10.aui.hs,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_Uniform/hs_iu_avoid_mat10.csv")
+
+# Write .csv documents for each of the Avoid Interaction Matrices for each trial and save them to a unique folder with unique file names in the GitHub repository:
+write.csv(mat1.aui.ho,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_Uniform/ho_iu_avoid_mat1.csv")
+write.csv(mat2.aui.ho,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_Uniform/ho_iu_avoid_mat2.csv")
+write.csv(mat3.aui.ho,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_Uniform/ho_iu_avoid_mat3.csv")
+write.csv(mat4.aui.ho,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_Uniform/ho_iu_avoid_mat4.csv")
+write.csv(mat5.aui.ho,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_Uniform/ho_iu_avoid_mat5.csv")
+write.csv(mat6.aui.ho,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_Uniform/ho_iu_avoid_mat6.csv")
+write.csv(mat7.aui.ho,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_Uniform/ho_iu_avoid_mat7.csv")
+write.csv(mat8.aui.ho,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_Uniform/ho_iu_avoid_mat8.csv")
+write.csv(mat9.aui.ho,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_Uniform/ho_iu_avoid_mat9.csv")
+write.csv(mat10.aui.ho,"~/Documents/GitHub/primate-social-groups-model/Avoid Interaction Matrices/Initiator_Uniform/ho_iu_avoid_mat10.csv")
+```
+
+#Initiator Uniform Attacks
+```{r}
+# Write .csv documents for each of the attacks Interaction Matrices for each trial and save them to a unique folder with unique file names in the GitHub repository:
+write.csv(mat1.atui.km,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Initiator_Uniform/km_iu_attacks_mat1.csv")
+write.csv(mat2.atui.km,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Initiator_Uniform/km_iu_attacks_mat2.csv")
+write.csv(mat3.atui.km,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Initiator_Uniform/km_iu_attacks_mat3.csv")
+write.csv(mat4.atui.km,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Initiator_Uniform/km_iu_attacks_mat4.csv")
+write.csv(mat5.atui.km,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Initiator_Uniform/km_iu_attacks_mat5.csv")
+write.csv(mat6.atui.km,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Initiator_Uniform/km_iu_attacks_mat6.csv")
+write.csv(mat7.atui.km,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Initiator_Uniform/km_iu_attacks_mat7.csv")
+write.csv(mat8.atui.km,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Initiator_Uniform/km_iu_attacks_mat8.csv")
+write.csv(mat9.atui.km,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Initiator_Uniform/km_iu_attacks_mat9.csv")
+write.csv(mat10.atui.km,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Initiator_Uniform/km_iu_attacks_mat10.csv")
+
+# Write .csv documents for each of the attacks Interaction Matrices for each trial and save them to a unique folder with unique file names in the GitHub repository:
+write.csv(mat1.atui.ks,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Initiator_Uniform/ks_iu_attacks_mat1.csv")
+write.csv(mat2.atui.ks,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Initiator_Uniform/ks_iu_attacks_mat2.csv")
+write.csv(mat3.atui.ks,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Initiator_Uniform/ks_iu_attacks_mat3.csv")
+write.csv(mat4.atui.ks,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Initiator_Uniform/ks_iu_attacks_mat4.csv")
+write.csv(mat5.atui.ks,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Initiator_Uniform/ks_iu_attacks_mat5.csv")
+write.csv(mat6.atui.ks,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Initiator_Uniform/ks_iu_attacks_mat6.csv")
+write.csv(mat7.atui.ks,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Initiator_Uniform/ks_iu_attacks_mat7.csv")
+write.csv(mat8.atui.ks,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Initiator_Uniform/ks_iu_attacks_mat8.csv")
+write.csv(mat9.atui.ks,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Initiator_Uniform/ks_iu_attacks_mat9.csv")
+write.csv(mat10.atui.ks,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Initiator_Uniform/ks_iu_attacks_mat10.csv")
+
+# Write .csv documents for each of the attacks Interaction Matrices for each trial and save them to a unique folder with unique file names in the GitHub repository:
+write.csv(mat1.atui.ko,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Initiator_Uniform/ko_iu_attacks_mat1.csv")
+write.csv(mat2.atui.ko,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Initiator_Uniform/ko_iu_attacks_mat2.csv")
+write.csv(mat3.atui.ko,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Initiator_Uniform/ko_iu_attacks_mat3.csv")
+write.csv(mat4.atui.ko,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Initiator_Uniform/ko_iu_attacks_mat4.csv")
+write.csv(mat5.atui.ko,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Initiator_Uniform/ko_iu_attacks_mat5.csv")
+write.csv(mat6.atui.ko,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Initiator_Uniform/ko_iu_attacks_mat6.csv")
+write.csv(mat7.atui.ko,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Initiator_Uniform/ko_iu_attacks_mat7.csv")
+write.csv(mat8.atui.ko,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Initiator_Uniform/ko_iu_attacks_mat8.csv")
+write.csv(mat9.atui.ko,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Initiator_Uniform/ko_iu_attacks_mat9.csv")
+write.csv(mat10.atui.ko,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Initiator_Uniform/ko_iu_attacks_mat10.csv")
+
+# Write .csv documents for each of the attacks Interaction Matrices for each trial and save them to a unique folder with unique file names in the GitHub repository:
+write.csv(mat1.atui.hm,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Initiator_Uniform/hm_iu_attacks_mat1.csv")
+write.csv(mat2.atui.hm,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Initiator_Uniform/hm_iu_attacks_mat2.csv")
+write.csv(mat3.atui.hm,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Initiator_Uniform/hm_iu_attacks_mat3.csv")
+write.csv(mat4.atui.hm,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Initiator_Uniform/hm_iu_attacks_mat4.csv")
+write.csv(mat5.atui.hm,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Initiator_Uniform/hm_iu_attacks_mat5.csv")
+write.csv(mat6.atui.hm,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Initiator_Uniform/hm_iu_attacks_mat6.csv")
+write.csv(mat7.atui.hm,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Initiator_Uniform/hm_iu_attacks_mat7.csv")
+write.csv(mat8.atui.hm,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Initiator_Uniform/hm_iu_attacks_mat8.csv")
+write.csv(mat9.atui.hm,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Initiator_Uniform/hm_iu_attacks_mat9.csv")
+write.csv(mat10.atui.hm,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Initiator_Uniform/hm_iu_attacks_mat10.csv")
+
+# Write .csv documents for each of the attacks Interaction Matrices for each trial and save them to a unique folder with unique file names in the GitHub repository:
+write.csv(mat1.atui.hs,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Initiator_Uniform/hs_iu_attacks_mat1.csv")
+write.csv(mat2.atui.hs,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Initiator_Uniform/hs_iu_attacks_mat2.csv")
+write.csv(mat3.atui.hs,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Initiator_Uniform/hs_iu_attacks_mat3.csv")
+write.csv(mat4.atui.hs,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Initiator_Uniform/hs_iu_attacks_mat4.csv")
+write.csv(mat5.atui.hs,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Initiator_Uniform/hs_iu_attacks_mat5.csv")
+write.csv(mat6.atui.hs,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Initiator_Uniform/hs_iu_attacks_mat6.csv")
+write.csv(mat7.atui.hs,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Initiator_Uniform/hs_iu_attacks_mat7.csv")
+write.csv(mat8.atui.hs,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Initiator_Uniform/hs_iu_attacks_mat8.csv")
+write.csv(mat9.atui.hs,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Initiator_Uniform/hs_iu_attacks_mat9.csv")
+write.csv(mat10.atui.hs,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Initiator_Uniform/hs_iu_attacks_mat10.csv")
+
+# Write .csv documents for each of the attacks Interaction Matrices for each trial and save them to a unique folder with unique file names in the GitHub repository:
+write.csv(mat1.atui.ho,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Initiator_Uniform/ho_iu_attacks_mat1.csv")
+write.csv(mat2.atui.ho,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Initiator_Uniform/ho_iu_attacks_mat2.csv")
+write.csv(mat3.atui.ho,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Initiator_Uniform/ho_iu_attacks_mat3.csv")
+write.csv(mat4.atui.ho,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Initiator_Uniform/ho_iu_attacks_mat4.csv")
+write.csv(mat5.atui.ho,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Initiator_Uniform/ho_iu_attacks_mat5.csv")
+write.csv(mat6.atui.ho,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Initiator_Uniform/ho_iu_attacks_mat6.csv")
+write.csv(mat7.atui.ho,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Initiator_Uniform/ho_iu_attacks_mat7.csv")
+write.csv(mat8.atui.ho,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Initiator_Uniform/ho_iu_attacks_mat8.csv")
+write.csv(mat9.atui.ho,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Initiator_Uniform/ho_iu_attacks_mat9.csv")
+write.csv(mat10.atui.ho,"~/Documents/GitHub/primate-social-groups-model/attacks Interaction Matrices/Initiator_Uniform/ho_iu_attacks_mat10.csv")
+```
