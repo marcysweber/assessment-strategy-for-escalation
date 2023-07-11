@@ -7,12 +7,14 @@ Marcy Ekanayake-Weber, Chris O’Connor-Coates, Andreas Koenig
 
 
 
-This repository contains a .nlogo file, which is the agent-based model itself; the ODD for the model; the raw data which was used for our American Naturalist manuscript; the interaction matrices which we further analyzed; and the results for the individual replicates included in the MS.
+This repository contains a .nlogo file, which is the agent-based model itself; the ODD for the model; the raw data which was used for our American Naturalist manuscript; the interaction matrices which we further analyzed; the results for the individual replicates included in the MS; and empty, nested folders that are necessary to organize new output from the model.
 
 
 HOW TO RUN THE MODEL
 
 You must have NetLogo 6.2.2 downloaded and setup on your machine. To run the model, open "dominance_despotism_energy.nlogo" in NetLogo. From there, you will be presented with an interface that allows you to control the scenario to be run, using various drop-down lists. 
+
+To generate output that can be analyzed, you will need a specific folder structure that is included in the code repository. The parent folder for this folder structure is called "Directory to organize new output".
 
 "sensitivity_analysis_dominance_despotism_energy.nlogo" is a version of the model where many of the constants were implemented as parameters, so that sensitivity analysis could be performed. The code to rerun the sensitivity analyses is in the file "sensitivity_analysis_constants.R".
 
