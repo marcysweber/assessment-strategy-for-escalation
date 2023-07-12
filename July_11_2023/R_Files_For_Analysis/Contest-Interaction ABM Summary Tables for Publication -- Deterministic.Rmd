@@ -1,0 +1,636 @@
+---
+title: "Contest-Interaction ABM Summary Tables for Publication -- Deterministic"
+author: "C.J. O'Connor-Coates"
+date: "2023-01-03"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Summary Tables For Publication
+```{r}
+#Subset attack proportions data into individual data frames based on the distribution type and assessment information.
+
+dist.split.d <- split(attack.prop.2, attack.prop.2$X.1) #Splits attack proportions into separate data frames for "clumped" and "uniform" distributions (line 17)
+new.dist <- c("clumped.attack.prop.d", "uniform.attack.prop.d")
+for (i in 1:length(dist.split.d)) { #Variable "i" represents data by distribution
+  assign(new.dist[i], dist.split.d[[i]]) #Assigns data to the named dataframes above (line 17)
+}
+
+
+clump.attack.prop.split.d <- split(clumped.attack.prop.d, clumped.attack.prop.d$combo2) #Splits attack proportions into separate data frames that occurred the "clumped" distribution based on assessment information (lines 21:26)
+new.names.c.d <- c("hm.attack.prop.c.d",
+                   "km.attack.prop.c.d",
+                   "ho.attack.prop.c.d",
+                   "ko.attack.prop.c.d",
+                   "hs.attack.prop.c.d",
+                   "ks.attack.prop.c.d")
+uni.attack.prop.split.d <- split(uniform.attack.prop.d, uniform.attack.prop.d$combo2) #Splits attack proportions into separate data frames that occurred the "uniform" distribution based on assessment information (lines 28:33)
+new.names.u.d <- c("hm.attack.prop.u.d", 
+                   "km.attack.prop.u.d", 
+                   "ho.attack.prop.u.d", 
+                   "ko.attack.prop.u.d", 
+                   "hs.attack.prop.u.d", 
+                   "ks.attack.prop.u.d")
+for (j in 1:length(clump.attack.prop.split.d)) { #Variable "j" represents data in the clumped distribution by assessment information
+  for (k in 1:length(uni.attack.prop.split.d)) { #Variable "k" represents data in the uniform distribution by assessment information
+        assign(new.names.c.d[j], clump.attack.prop.split.d[[j]]) #Assigns data to the named dataframes above (lines 21:26)
+        assign(new.names.u.d[k], uni.attack.prop.split.d[[k]]) #Assigns data to the named dataframes above (lines 28:33)
+  }
+}
+```
+
+```{r Deterministic Clumped Summary Table}
+# Generate summary tables of the deterministic clumped data for publication:
+
+# Knowledge mutual
+km.st<-overall.ss.deter[overall.ss.deter$combo=="mutual rhp clumped",]
+  km.tt<-mean(km.st$triangle.transitivity)
+  km.dci<-mean(km.st$dci)
+  
+  km.poa<-mean(km.attack.prop.c.d$X.10)
+  
+  km.steep<-abs(mean(km.st$steepness))
+  km.ov<-data.frame(Knowledge.Mutual = c(km.poa,km.dci,km.tt,km.steep,avg.int.km.dc,avg.av.km.dc))
+
+# Knowledge self
+ks.st<-overall.ss.deter[overall.ss.deter$combo=="self rhp clumped",]
+  ks.tt<-mean(ks.st$triangle.transitivity)
+  ks.dci<-mean(ks.st$dci)
+  ks.poa<-mean(ks.attack.prop.c.d$X.10)
+  ks.steep<-abs(mean(ks.st$steepness))
+  ks.ov<-data.frame(Knowledge.Self = c(ks.poa,ks.dci,ks.tt,ks.steep,avg.int.ks.dc,avg.av.ks.dc))
+
+# Knowledge opponent
+ko.st<-overall.ss.deter[overall.ss.deter$combo=="opponent rhp clumped",]
+  ko.tt<-mean(ko.st$triangle.transitivity)
+  ko.dci<-mean(ko.st$dci)
+  ko.poa<-mean(ko.attack.prop.c.d$X.10)
+  ko.steep<-abs(mean(ko.st$steepness))
+  ko.ov<-data.frame(Knowledge.Opponent = c(ko.poa,ko.dci,ko.tt,ko.steep,avg.int.ko.dc,avg.av.ko.dc))
+
+# history mutual
+hm.st<-overall.ss.deter[overall.ss.deter$combo=="mutual history clumped",]
+  hm.tt<-mean(hm.st$triangle.transitivity)
+  hm.dci<-mean(hm.st$dci)
+  hm.poa<-mean(hm.attack.prop.c.d$X.10)
+  hm.steep<-abs(mean(hm.st$steepness))
+  hm.ov<-data.frame(History.Mutual = c(hm.poa,hm.dci,hm.tt,hm.steep,avg.int.hm.dc,avg.av.hm.dc))
+
+# history self
+hs.st<-overall.ss.deter[overall.ss.deter$combo=="self history clumped",]
+  hs.tt<-mean(hs.st$triangle.transitivity)
+  hs.dci<-mean(hs.st$dci)
+  hs.poa<-mean(hs.attack.prop.c.d$X.10)
+  hs.steep<-abs(mean(hs.st$steepness))
+  hs.ov<-data.frame(History.Self = c(hs.poa,hs.dci,hs.tt,hs.steep,avg.int.hs.dc,avg.av.hs.dc))
+
+# history opponent
+ho.st<-overall.ss.deter[overall.ss.deter$combo=="opponent history clumped",]
+  ho.tt<-mean(ho.st$triangle.transitivity)
+  ho.dci<-mean(ho.st$dci)
+  ho.poa<-mean(ho.attack.prop.c.d$X.10)
+  ho.steep<-abs(mean(ho.st$steepness))
+  ho.ov<-data.frame(History.Opponent = c(ho.poa,ho.dci,ho.tt,ho.steep,avg.int.ho.dc,avg.av.ho.dc))
+
+# Generate overall data frame of the summary tables above:
+overall.c.st<-data.frame(kno.mut=km.ov,hist.mut=hm.ov,kno.self=ks.ov,hist.self=hs.ov,kno.opp=ko.ov,hist.opp=ho.ov)
+row.names(overall.c.st)<-c("Proportion of Attack","Directional Consitancy Index","Triangle Transitivity","Steepness", "Average Attacks", "Average Avoids")
+
+# Write .csv file of the overall data frame to create summary table:
+write.csv(overall.c.st,"~/Desktop/overall_summary_table_dc.csv")
+```
+
+```{r Deterministic Uniform Summary Table}
+# Generate summary tables of the deterministic uniform data for publication:
+
+# Knowledge mutual
+km.st.u<-overall.ss.deter[overall.ss.deter$combo=="mutual rhp Uniform",]
+  km.tt.u<-mean(km.st.u$triangle.transitivity)
+  km.dci.u<-mean(km.st.u$dci)
+  km.poa.u<-mean(km.attack.prop.u.d$X.10)
+  km.steep.u<-abs(mean(km.st.u$steepness))
+  km.ov.u<-data.frame(Knowledge.Mutual = c(km.poa.u,km.dci.u,km.tt.u,km.steep.u,avg.int.km.du,avg.av.km.du))
+
+# Knowledge self  
+ks.st.u<-overall.ss.deter[overall.ss.deter$combo=="self rhp Uniform",]
+  ks.tt.u<-mean(ks.st.u$triangle.transitivity)
+  ks.dci.u<-mean(ks.st.u$dci)
+  ks.poa.u<-mean(ks.attack.prop.u.d$X.10)
+  ks.steep.u<-abs(mean(ks.st.u$steepness))
+  ks.ov.u<-data.frame(Knowledge.Self = c(ks.poa.u,ks.dci.u,ks.tt.u,ks.steep.u,avg.int.ks.du,avg.av.ks.du))
+
+# Knowledge opponent
+ko.st.u<-overall.ss.deter[overall.ss.deter$combo=="opponent rhp Uniform",]
+  ko.tt.u<-mean(ko.st.u$triangle.transitivity)
+  ko.dci.u<-mean(ko.st.u$dci)
+  ko.poa.u<-mean(ko.attack.prop.u.d$X.10)
+  ko.steep.u<-abs(mean(ko.st.u$steepness))
+  ko.ov.u<-data.frame(Knowledge.Opponent = c(ko.poa.u,ko.dci.u,ko.tt.u,ko.steep.u,avg.int.ko.du,avg.av.ko.du))
+
+# History mutual
+hm.st.u<-overall.ss.deter[overall.ss.deter$combo=="mutual history Uniform",]
+  hm.tt.u<-mean(hm.st.u$triangle.transitivity)
+  hm.dci.u<-mean(hm.st.u$dci)
+  hm.poa.u<-mean(hm.attack.prop.u.d$X.10)
+  hm.steep.u<-abs(mean(hm.st.u$steepness))
+  hm.ov.u<-data.frame(History.Mutual = c(hm.poa.u,hm.dci.u,hm.tt.u,hm.steep.u,avg.int.hm.du,avg.av.hm.du))
+
+# History self
+hs.st.u<-overall.ss.deter[overall.ss.deter$combo=="self history Uniform",]
+  hs.tt.u<-mean(hs.st.u$triangle.transitivity)
+  hs.dci.u<-mean(hs.st.u$dci)
+  hs.poa.u<-mean(hs.attack.prop.u.d$X.10)
+  hs.steep.u<-abs(mean(hs.st.u$steepness))
+  hs.ov.u<-data.frame(History.Self = c(hs.poa.u,hs.dci.u,hs.tt.u,hs.steep.u,avg.int.hs.du,avg.av.hs.du))
+
+# History opponent
+ho.st.u<-overall.ss.deter[overall.ss.deter$combo=="opponent history Uniform",]
+  ho.tt.u<-mean(ho.st.u$triangle.transitivity)
+  ho.dci.u<-mean(ho.st.u$dci)
+  ho.poa.u<-mean(ho.attack.prop.u.d$X.10)
+  ho.steep.u<-abs(mean(ho.st.u$steepness))
+  ho.ov.u<-data.frame(History.Opponent = c(ho.poa.u,ho.dci.u,ho.tt.u,ho.steep.u,avg.int.ho.du,avg.av.ho.du))
+
+# Generate overall data frame of the summary tables above:
+overall.c.st.u<-data.frame(kno.mut=km.ov.u,hist.mut=hm.ov.u,kno.self=ks.ov.u,hist.self=hs.ov.u,kno.opp=ko.ov.u,hist.opp=ho.ov.u)
+row.names(overall.c.st.u)<-c("Proportion of Attack","Directional Consitancy Index","Triangle Transitivity","Steepness", "Average Attacks", "Average Avoids")
+
+# Write .csv file of the overall data frame to create summary table:
+write.csv(overall.c.st.u,"~/Desktop/overall_summary_table_du.csv")
+```
+
+```{r Deterministic Clumped Avoid Summary Table}
+# Generate summary tables of the deterministic clumped avoid data for publication:
+
+# Knowledge mutual
+km.st.avoid<-overall.ss.deter.clumped.avoid[overall.ss.deter.clumped.avoid$combo=="mutual rhp clumped",]
+  km.tt.avoid<-mean(km.st.avoid$triangle.transitivity)
+  km.dci.avoid<-mean(km.st.avoid$dci)
+  km.poa.avoid<-mean(km.attack.prop.c.d$rate.avoids)
+  km..steep.avoid<-abs(mean(km.st.avoid$steepness))
+  km.ov.avoid<-data.frame(Knowledge.Mutual = c(km.poa.avoid,km.dci.avoid,km.tt.avoid,km..steep.avoid,avg.int.km.acd,avg.av.km.acd))
+
+# Knowledge self  
+ks.st.avoid<-overall.ss.deter.clumped.avoid[overall.ss.deter.clumped.avoid$combo=="self rhp clumped",]
+  ks.tt.avoid<-mean(ks.st.avoid$triangle.transitivity)
+  ks.dci.avoid<-mean(ks.st.avoid$dci)
+  ks.poa.avoid<-mean(ks.attack.prop.c.d$rate.avoids)
+  ks..steep.avoid<-abs(mean(ks.st.avoid$steepness))
+  ks.ov.avoid<-data.frame(Knowledge.Self = c(ks.poa.avoid,ks.dci.avoid,ks.tt.avoid,ks..steep.avoid,avg.int.ks.acd,avg.av.ks.acd))
+
+# Knowledge opponent
+ko.st.avoid<-overall.ss.deter.clumped.avoid[overall.ss.deter.clumped.avoid$combo=="opponent rhp clumped",]
+  ko.tt.avoid<-mean(ko.st.avoid$triangle.transitivity)
+  ko.dci.avoid<-mean(ko.st.avoid$dci)
+  ko.poa.avoid<-mean(ko.attack.prop.c.d$rate.avoids)
+  ko..steep.avoid<-abs(mean(ko.st.avoid$steepness))
+  ko.ov.avoid<-data.frame(Knowledge.Opponent = c(ko.poa.avoid,ko.dci.avoid,ko.tt.avoid,ko..steep.avoid,avg.int.ko.acd,avg.av.ko.acd))
+
+# History mutual
+hm.st.avoid<-overall.ss.deter.clumped.avoid[overall.ss.deter.clumped.avoid$combo=="mutual history clumped",]
+  hm.tt.avoid<-mean(hm.st.avoid$triangle.transitivity)
+  hm.dci.avoid<-mean(hm.st.avoid$dci)
+  hm.poa.avoid<-mean(hm.attack.prop.c.d$rate.avoids)
+  hm..steep.avoid<-abs(mean(hm.st.avoid$steepness))
+  hm.ov.avoid<-data.frame(History.Mutual = c(hm.poa.avoid,hm.dci.avoid,hm.tt.avoid,hm..steep.avoid,avg.int.hm.acd,avg.av.km.acd))
+
+# History self
+hs.st.avoid<-overall.ss.deter.clumped.avoid[overall.ss.deter.clumped.avoid$combo=="self history clumped",]
+  hs.tt.avoid<-mean(hs.st.avoid$triangle.transitivity)
+  hs.dci.avoid<-mean(hs.st.avoid$dci)
+  hs.poa.avoid<-mean(hs.attack.prop.c.d$rate.avoids)
+  hs..steep.avoid<-abs(mean(hs.st.avoid$steepness))
+  hs.ov.avoid<-data.frame(History.Self = c(hs.poa.avoid,hs.dci.avoid,hs.tt.avoid,hs..steep.avoid,avg.int.hs.acd,avg.av.hs.acd))
+
+# History opponent
+ho.st.avoid<-overall.ss.deter.clumped.avoid[overall.ss.deter.clumped.avoid$combo=="opponent history clumped",]
+  ho.tt.avoid<-mean(ho.st.avoid$triangle.transitivity)
+  ho.dci.avoid<-mean(ho.st.avoid$dci)
+  ho.poa.avoid<-mean(ho.attack.prop.c.d$rate.avoids)
+  ho..steep.avoid<-abs(mean(ho.st.avoid$steepness))
+  ho.ov.avoid<-data.frame(History.Opponent = c(ho.poa.avoid,ho.dci.avoid,ho.tt.avoid,ho..steep.avoid,avg.int.ho.acd,avg.av.ho.acd))
+
+# Generate overall data frame of the summary tables above:
+overall.c.st.avoid<-data.frame(kno.mut=km.ov.avoid,hist.mut=hm.ov.avoid,kno.self=ks.ov.avoid,hist.self=hs.ov.avoid,kno.opp=ko.ov.avoid,hist.opp=ho.ov.avoid)
+row.names(overall.c.st.avoid)<-c("Rate of Avoids","Directional Consitancy Index","Triangle Transitivity","Steepness", "Average Attacks", "Average Avoids")
+
+# Write .csv file of the overall data frame to create summary table:
+write.csv(overall.c.st.avoid,"~/Desktop/overall_clump_avoid_summary_table_dc.csv")
+```
+
+```{r Deterministic Clumped Attacks Summary Table}
+# Generate summary tables of the deterministic uniform data for publication:
+
+# Knowledge mutual
+km.st.attacks<-overall.ss.deter.clumped.attacks[overall.ss.deter.clumped.attacks$combo=="mutual rhp clumped",]
+  km.tt.attacks<-mean(km.st.attacks$triangle.transitivity)
+  km.dci.attacks<-mean(km.st.attacks$dci)
+  km.poa.attacks<-mean(km.attack.prop.c.d$rate.attacks)
+  km..steep.attacks<-abs(mean(km.st.attacks$steepness))
+  km.ov.attacks<-data.frame(Knowledge.Mutual = c(km.poa.attacks,km.dci.attacks,km.tt.attacks,km..steep.attacks,avg.int.km.acd,avg.av.km.acd))
+
+# Knowledge self  
+ks.st.attacks<-overall.ss.deter.clumped.attacks[overall.ss.deter.clumped.attacks$combo=="self rhp clumped",]
+  ks.tt.attacks<-mean(ks.st.attacks$triangle.transitivity)
+  ks.dci.attacks<-mean(ks.st.attacks$dci)
+  ks.poa.attacks<-mean(ks.attack.prop.c.d$rate.attacks)
+  ks..steep.attacks<-abs(mean(ks.st.attacks$steepness))
+  ks.ov.attacks<-data.frame(Knowledge.Self = c(ks.poa.attacks,ks.dci.attacks,ks.tt.attacks,ks..steep.attacks,avg.int.ks.acd,avg.av.ks.acd))
+
+# Knowledge opponent
+ko.st.attacks<-overall.ss.deter.clumped.attacks[overall.ss.deter.clumped.attacks$combo=="opponent rhp clumped",]
+  ko.tt.attacks<-mean(ko.st.attacks$triangle.transitivity)
+  ko.dci.attacks<-mean(ko.st.attacks$dci)
+  ko.poa.attacks<-mean(ko.attack.prop.c.d$rate.attacks)
+  ko..steep.attacks<-abs(mean(ko.st.attacks$steepness))
+  ko.ov.attacks<-data.frame(Knowledge.Opponent = c(ko.poa.attacks,ko.dci.attacks,ko.tt.attacks,ko..steep.attacks,avg.int.ko.acd,avg.av.ko.acd))
+
+# History mutual
+hm.st.attacks<-overall.ss.deter.clumped.attacks[overall.ss.deter.clumped.attacks$combo=="mutual history clumped",]
+  hm.tt.attacks<-mean(hm.st.attacks$triangle.transitivity)
+  hm.dci.attacks<-mean(hm.st.attacks$dci)
+  hm.poa.attacks<-mean(hm.attack.prop.c.d$rate.attacks)
+  hm..steep.attacks<-abs(mean(hm.st.attacks$steepness))
+  hm.ov.attacks<-data.frame(History.Mutual = c(hm.poa.attacks,hm.dci.attacks,hm.tt.attacks,hm..steep.attacks,avg.int.hm.acd,avg.av.hm.acd))
+
+# History self
+hs.st.attacks<-overall.ss.deter.clumped.attacks[overall.ss.deter.clumped.attacks$combo=="self history clumped",]
+  hs.tt.attacks<-mean(hs.st.attacks$triangle.transitivity)
+  hs.dci.attacks<-mean(hs.st.attacks$dci)
+  hs.poa.attacks<-mean(hs.attack.prop.c.d$rate.attacks)
+  hs..steep.attacks<-abs(mean(hs.st.attacks$steepness))
+  hs.ov.attacks<-data.frame(History.Self = c(hs.poa.attacks,hs.dci.attacks,hs.tt.attacks,hs..steep.attacks,avg.int.hs.acd,avg.av.hs.acd))
+
+# History opponent
+ho.st.attacks<-overall.ss.deter.clumped.attacks[overall.ss.deter.clumped.attacks$combo=="opponent history clumped",]
+  ho.tt.attacks<-mean(ho.st.attacks$triangle.transitivity)
+  ho.dci.attacks<-mean(ho.st.attacks$dci)
+  ho.poa.attacks<-mean(ho.attack.prop.c.d$rate.attacks)
+  ho..steep.attacks<-abs(mean(ho.st.attacks$steepness))
+  ho.ov.attacks<-data.frame(History.Opponent = c(ho.poa.attacks,ho.dci.attacks,ho.tt.attacks,ho..steep.attacks,avg.int.ho.acd,avg.av.ho.acd))
+
+# Generate overall data frame of the summary tables above:
+overall.c.st.attacks<-data.frame(kno.mut=km.ov.attacks,hist.mut=hm.ov.attacks,kno.self=ks.ov.attacks,hist.self=hs.ov.attacks,kno.opp=ko.ov.attacks,hist.opp=ho.ov.attacks)
+row.names(overall.c.st.attacks)<-c("Rate of Attacks","Directional Consitancy Index","Triangle Transitivity","Steepness", "Average Attacks","Average Avoids")
+
+# Write .csv file of the overall data frame to create summary table:
+write.csv(overall.c.st.attacks,"~/Desktop/overall_clump_attacks_summary_table_dc.csv")
+```
+
+```{r Deterministic Uniform Avoid Summary Table}
+# Generate summary tables of the deterministic uniform data for publication:
+
+#Knowledge mutual
+km.st.avoid<-overall.ss.deter.uniform.avoid[overall.ss.deter.uniform.avoid$combo=="mutual rhp Uniform",]
+  km.tt.avoid<-mean(km.st.avoid$triangle.transitivity)
+  km.dci.avoid<-mean(km.st.avoid$dci)
+  km.poa.avoid<-mean(km.attack.prop.u.d$rate.avoids)
+  km..steep.avoid<-abs(mean(km.st.avoid$steepness))
+  km.ov.avoid<-data.frame(Knowledge.Mutual = c(km.poa.avoid,km.dci.avoid,km.tt.avoid,km..steep.avoid,avg.int.km.adu,avg.av.km.adu))
+
+# Knowledge self 
+ks.st.avoid<-overall.ss.deter.uniform.avoid[overall.ss.deter.uniform.avoid$combo=="self rhp Uniform",]
+  ks.tt.avoid<-mean(ks.st.avoid$triangle.transitivity)
+  ks.dci.avoid<-mean(ks.st.avoid$dci)
+  ks.poa.avoid<-mean(ks.attack.prop.u.d$rate.avoids)
+  ks..steep.avoid<-abs(mean(ks.st.avoid$steepness))
+  ks.ov.avoid<-data.frame(Knowledge.Self = c(ks.poa.avoid,ks.dci.avoid,ks.tt.avoid,ks..steep.avoid,avg.int.ks.adu,avg.av.ks.adu))
+
+# Knowledge opponent
+ko.st.avoid<-overall.ss.deter.uniform.avoid[overall.ss.deter.uniform.avoid$combo=="opponent rhp Uniform",]
+  ko.tt.avoid<-mean(ko.st.avoid$triangle.transitivity)
+  ko.dci.avoid<-mean(ko.st.avoid$dci)
+  ko.poa.avoid<-mean(ko.attack.prop.u.d$rate.avoids)
+  ko..steep.avoid<-abs(mean(ko.st.avoid$steepness))
+  ko.ov.avoid<-data.frame(Knowledge.Opponent = c(ko.poa.avoid,ko.dci.avoid,ko.tt.avoid,ko..steep.avoid,avg.int.ko.adu,avg.av.ko.adu))
+
+# History mutual
+hm.st.avoid<-overall.ss.deter.uniform.avoid[overall.ss.deter.uniform.avoid$combo=="mutual history Uniform",]
+  hm.tt.avoid<-mean(hm.st.avoid$triangle.transitivity)
+  hm.dci.avoid<-mean(hm.st.avoid$dci)
+  hm.poa.avoid<-mean(hm.attack.prop.u.d$rate.avoids)
+  hm..steep.avoid<-abs(mean(hm.st.avoid$steepness))
+  hm.ov.avoid<-data.frame(History.Mutual = c(hm.poa.avoid,hm.dci.avoid,hm.tt.avoid,hm..steep.avoid,avg.int.hm.adu,avg.av.hm.adu))
+
+# History self
+hs.st.avoid<-overall.ss.deter.uniform.avoid[overall.ss.deter.uniform.avoid$combo=="self history Uniform",]
+  hs.tt.avoid<-mean(hs.st.avoid$triangle.transitivity)
+  hs.dci.avoid<-mean(hs.st.avoid$dci)
+  hs.poa.avoid<-mean(hs.attack.prop.u.d$rate.avoids)
+  hs..steep.avoid<-abs(mean(hs.st.avoid$steepness))
+  hs.ov.avoid<-data.frame(History.Self = c(hs.poa.avoid,hs.dci.avoid,hs.tt.avoid,hs..steep.avoid,avg.int.hs.adu,avg.av.hs.adu))
+
+# History opponent
+ho.st.avoid<-overall.ss.deter.uniform.avoid[overall.ss.deter.uniform.avoid$combo=="opponent history Uniform",]
+  ho.tt.avoid<-mean(ho.st.avoid$triangle.transitivity)
+  ho.dci.avoid<-mean(ho.st.avoid$dci)
+  ho.poa.avoid<-mean(ho.attack.prop.u.d$rate.avoids)
+  ho..steep.avoid<-abs(mean(ho.st.avoid$steepness))
+  ho.ov.avoid<-data.frame(History.Opponent = c(ho.poa.avoid,ho.dci.avoid,ho.tt.avoid,ho..steep.avoid,avg.int.ho.adu,avg.av.ho.adu))
+
+# Generate overall data frame of the summary tables above:
+overall.u.st.avoid<-data.frame(kno.mut=km.ov.avoid,hist.mut=hm.ov.avoid,kno.self=ks.ov.avoid,hist.self=hs.ov.avoid,kno.opp=ko.ov.avoid,hist.opp=ho.ov.avoid)
+row.names(overall.u.st.avoid)<-c("Rate of Avoids","Directional Consitancy Index","Triangle Transitivity","Steepness", "Average Attacks", "Average Avoids")
+
+# Write .csv file of the overall data frame to create summary table:
+write.csv(overall.u.st.avoid,"~/Desktop/overall_uniform_avoid_summary_table_dc.csv")
+```
+
+```{r Deterministic Uniform Attacks Summary Table}
+# Generate summary tables of the deterministic uniform data for publication:
+
+#knowledge mutual
+km.st.attacks<-overall.ss.deter.uniform.attacks[overall.ss.deter.uniform.attacks$combo=="mutual rhp Uniform",]
+  km.tt.attacks<-mean(km.st.attacks$triangle.transitivity)
+  km.dci.attacks<-mean(km.st.attacks$dci)
+  km.poa.attacks<-mean(km.attack.prop.u.d$rate.attacks)
+  km..steep.attacks<-abs(mean(km.st.attacks$steepness))
+  km.ov.attacks<-data.frame(Knowledge.Mutual = c(km.poa.attacks,km.dci.attacks,km.tt.attacks,km..steep.attacks,avg.int.km.atdu,avg.av.km.atdu))
+
+# Knowledge self  
+ks.st.attacks<-overall.ss.deter.uniform.attacks[overall.ss.deter.uniform.attacks$combo=="self rhp Uniform",]
+  ks.tt.attacks<-mean(ks.st.attacks$triangle.transitivity)
+  ks.dci.attacks<-mean(ks.st.attacks$dci)
+  ks.poa.attacks<-mean(ks.attack.prop.u.d$rate.attacks)
+  ks..steep.attacks<-abs(mean(ks.st.attacks$steepness))
+  ks.ov.attacks<-data.frame(Knowledge.Self = c(ks.poa.attacks,ks.dci.attacks,ks.tt.attacks,ks..steep.attacks,avg.int.ks.atdu,avg.av.ks.atdu))
+
+# Knowledge opponent
+ko.st.attacks<-overall.ss.deter.uniform.attacks[overall.ss.deter.uniform.attacks$combo=="opponent rhp Uniform",]
+  ko.tt.attacks<-mean(ko.st.attacks$triangle.transitivity)
+  ko.dci.attacks<-mean(ko.st.attacks$dci)
+  ko.poa.attacks<-mean(ko.attack.prop.u.d$rate.attacks)
+  ko..steep.attacks<-abs(mean(ko.st.attacks$steepness))
+  ko.ov.attacks<-data.frame(Knowledge.Opponent = c(ko.poa.attacks,ko.dci.attacks,ko.tt.attacks,ko..steep.attacks,avg.int.ko.atdu,avg.av.ko.atdu))
+
+# History mutual
+hm.st.attacks<-overall.ss.deter.uniform.attacks[overall.ss.deter.uniform.attacks$combo=="mutual history Uniform",]
+  hm.tt.attacks<-mean(hm.st.attacks$triangle.transitivity)
+  hm.dci.attacks<-mean(hm.st.attacks$dci)
+  hm.poa.attacks<-mean(hm.attack.prop.u.d$rate.attacks)
+  hm..steep.attacks<-abs(mean(hm.st.attacks$steepness))
+  hm.ov.attacks<-data.frame(History.Mutual = c(hm.poa.attacks,hm.dci.attacks,hm.tt.attacks,hm..steep.attacks,avg.int.hm.atdu,avg.av.hm.atdu))
+
+# History self
+hs.st.attacks<-overall.ss.deter.uniform.attacks[overall.ss.deter.uniform.attacks$combo=="self history Uniform",]
+  hs.tt.attacks<-mean(hs.st.attacks$triangle.transitivity)
+  hs.dci.attacks<-mean(hs.st.attacks$dci)
+  hs.poa.attacks<-mean(hs.attack.prop.u.d$rate.attacks)
+  hs..steep.attacks<-abs(mean(hs.st.attacks$steepness))
+  hs.ov.attacks<-data.frame(History.Self = c(hs.poa.attacks,hs.dci.attacks,hs.tt.attacks,hs..steep.attacks,avg.int.hs.atdu,avg.av.hs.atdu))
+
+# History opponent
+ho.st.attacks<-overall.ss.deter.uniform.attacks[overall.ss.deter.uniform.attacks$combo=="opponent history Uniform",]
+  ho.tt.attacks<-mean(ho.st.attacks$triangle.transitivity)
+  ho.dci.attacks<-mean(ho.st.attacks$dci)
+  ho.poa.attacks<-mean(ho.attack.prop.u.d$rate.attacks)
+  ho..steep.attacks<-abs(mean(ho.st.attacks$steepness))
+  ho.ov.attacks<-data.frame(History.Opponent = c(ho.poa.attacks,ho.dci.attacks,ho.tt.attacks,ho..steep.attacks,avg.int.ho.atdu,avg.av.ho.atdu))
+
+# Generate overall data frame of the summary tables above:
+overall.u.st.attacks<-data.frame(kno.mut=km.ov.attacks,hist.mut=hm.ov.attacks,kno.self=ks.ov.attacks,hist.self=hs.ov.attacks,kno.opp=ko.ov.attacks,hist.opp=ho.ov.attacks)
+row.names(overall.u.st.attacks)<-c("Rate of Attacks","Directional Consitancy Index","Triangle Transitivity","Steepness", "Average Attacks", "Average Avoids")
+
+# Write .csv file of the overall data frame to create summary table:
+write.csv(overall.u.st.attacks,"~/Desktop/overall_uniform_attacks_summary_table_dc.csv")
+```
+
+
+
+## Initiator Wins Summary Tables For Publication
+```{r}
+#Subset attack proportions data into individual data frames based on the distribution type and assessment information.
+
+dist.split.i <- split(initiator.wins.prop, initiator.wins.prop$dist) #Splits attack proportions into separate data frames for "clumped" and "uniform" distributions (line 17)
+new.dist.i <- c("clumped.attack.prop.i", "uniform.attack.prop.i")
+for (i in 1:length(dist.split.i)) { #Variable "i" represents data by distribution
+  assign(new.dist.i[i], dist.split.i[[i]]) #Assigns data to the named dataframes above (line 17)
+}
+
+
+clump.attack.prop.split.i <- split(clumped.attack.prop.i, clumped.attack.prop.i$combo2) #Splits attack proportions into separate data frames that occurred the "clumped" distribution based on assessment information (lines 21:26)
+new.names.c.i <- c("hm.attack.prop.c.i","ho.attack.prop.c.i","hs.attack.prop.c.i")
+for (j in 1:length(clump.attack.prop.split.i)) { #Variable "j" represents data in the clumped distribution by assessment information
+  assign(new.names.c.i[j], clump.attack.prop.split.i[[j]]) #Assigns data to the named dataframes above (lines 21:26)
+}
+
+
+uni.attack.prop.split.i <- split(uniform.attack.prop.i, uniform.attack.prop.i$combo2) #Splits attack proportions into separate data frames that occurred the "uniform" distribution based on assessment information (lines 28:33)
+new.names.u.i <- c("hm.attack.prop.u.i","ho.attack.prop.u.i","hs.attack.prop.u.i")
+for (k in 1:length(uni.attack.prop.split.i)) { #Variable "k" represents data in the uniform distribution by assessment information
+  assign(new.names.u.i[k], uni.attack.prop.split.i[[k]]) #Assigns data to the named dataframes above (lines 28:33)
+}
+```
+
+```{r Deterministic Clumped Summary Table}
+# Generate summary tables of the deterministic clumped data for publication:
+
+# history mutual
+hm.st.i<-overall.ss.deter.initiator[overall.ss.deter.initiator$combo=="mutual history clumped",]
+  hm.tt.i<-mean(hm.st.i$triangle.transitivity)
+  hm.dci.i<-mean(hm.st.i$dci)
+  hm.poa.i<-mean(as.numeric(hm.attack.prop.c.i$attack.proportion))
+  hm.steep.i<-abs(mean(hm.st.i$steepness))
+  hm.ov.i<-data.frame(History.Mutual = c(hm.poa.i,hm.dci.i,hm.tt.i,hm.steep.i,avg.int.hm.ic,avg.av.hm.ic))
+
+# history self
+hs.st.i<-overall.ss.deter.initiator[overall.ss.deter.initiator$combo=="self history clumped",]
+  hs.tt.i<-mean(hs.st.i$triangle.transitivity)
+  hs.dci.i<-mean(hs.st.i$dci)
+  hs.poa.i<-mean(as.numeric(hs.attack.prop.c.i$attack.proportion))
+  hs.steep.i<-abs(mean(hs.st.i$steepness))
+  hs.ov.i<-data.frame(History.Self = c(hs.poa.i,hs.dci.i,hs.tt.i,hs.steep.i,avg.int.hs.ic,avg.av.hs.ic))
+
+# history opponent
+ho.st.i<-overall.ss.deter.initiator[overall.ss.deter.initiator$combo=="opponent history clumped",]
+  ho.tt.i<-mean(ho.st.i$triangle.transitivity)
+  ho.dci.i<-mean(ho.st.i$dci)
+  ho.poa.i<-mean(as.numeric(ho.attack.prop.c.i$attack.proportion))
+  ho.steep.i<-abs(mean(ho.st.i$steepness))
+  ho.ov.i<-data.frame(History.Opponent = c(ho.poa.i,ho.dci.i,ho.tt.i,ho.steep.i,avg.int.ho.ic,avg.av.ho.ic))
+
+# Generate overall data frame of the summary tables above:
+overall.c.st.i<-data.frame(hist.mut=hm.ov.i,hist.self=hs.ov.i,hist.opp=ho.ov.i)
+row.names(overall.c.st.i)<-c("Proportion of Attack","Directional Consitancy Index","Triangle Transitivity","Steepness", "Average Attacks", "Average Avoids")
+
+# Write .csv file of the overall data frame to create summary table:
+write.csv(overall.c.st.i,"~/Desktop/overall_summary_table_ic.csv")
+```
+
+```{r Deterministic Uniform Summary Table}
+# Generate summary tables of the deterministic uniform data for publication:
+
+# History mutual
+hm.st.i.u<-overall.ss.deter.initiator[overall.ss.deter.initiator$combo=="mutual history Uniform",]
+  hm.tt.i.u<-mean(hm.st.i.u$triangle.transitivity)
+  hm.dci.i.u<-mean(hm.st.i.u$dci)
+  hm.poa.i.u<-mean(as.numeric(hm.attack.prop.u.i$attack.proportion))
+  hm.steep.i.u<-abs(mean(hm.st.i.u$steepness))
+  hm.ov.i.u<-data.frame(History.Mutual = c(hm.poa.i.u,hm.dci.i.u,hm.tt.i.u,hm.steep.i.u,avg.int.hm.iu,avg.av.hm.iu))
+
+# History self
+hs.st.i.u<-overall.ss.deter.initiator[overall.ss.deter.initiator$combo=="self history Uniform",]
+  hs.tt.i.u<-mean(hs.st.i.u$triangle.transitivity)
+  hs.dci.i.u<-mean(hs.st.i.u$dci)
+  hs.poa.i.u<-mean(as.numeric(hs.attack.prop.u.i$attack.proportion))
+  hs.steep.i.u<-abs(mean(hs.st.i.u$steepness))
+  hs.ov.i.u<-data.frame(History.Self = c(hs.poa.i.u,hs.dci.i.u,hs.tt.i.u,hs.steep.i.u,avg.int.hs.iu,avg.av.hs.iu))
+
+# History opponent
+ho.st.i.u<-overall.ss.deter.initiator[overall.ss.deter.initiator$combo=="opponent history Uniform",]
+  ho.tt.i.u<-mean(ho.st.i.u$triangle.transitivity)
+  ho.dci.i.u<-mean(ho.st.i.u$dci)
+  ho.poa.i.u<-mean(as.numeric(ho.attack.prop.u.i$attack.proportion))
+  ho.steep.i.u<-abs(mean(ho.st.i.u$steepness))
+  ho.ov.i.u<-data.frame(History.Opponent = c(ho.poa.i.u,ho.dci.i.u,ho.tt.i.u,ho.steep.i.u,avg.int.ho.iu,avg.av.ho.iu))
+
+# Generate overall data frame of the summary tables above:
+overall.c.st.i.u<-data.frame(hist.mut=hm.ov.i.u,hist.self=hs.ov.i.u,hist.opp=ho.ov.i.u)
+row.names(overall.c.st.i.u)<-c("Proportion of Attack","Directional Consitancy Index","Triangle Transitivity","Steepness", "Average Attacks", "Average Avoids")
+
+# Write .csv file of the overall data frame to create summary table:
+write.csv(overall.c.st.i.u,"~/Desktop/overall_summary_table_iu.csv")
+```
+
+```{r Deterministic Clumped Avoid Summary Table}
+# Generate summary tables of the deterministic uniform data for publication:
+
+# History mutual
+hm.st.i.c.avoid<-overall.ss.initiator.avoid[overall.ss.initiator.avoid$combo=="mutual history clumped",]
+  hm.tt.i.c.avoid<-mean(hm.st.i.c.avoid$triangle.transitivity)
+  hm.dci.i.c.avoid<-mean(hm.st.i.c.avoid$dci)
+  hm.poa.i.c.avoid<-mean(as.numeric(hm.attack.prop.c.i$rate.avoids))
+  hm..steep.i.c.avoid<-abs(mean(hm.st.i.c.avoid$steepness))
+  hm.ov.i.c.avoid<-data.frame(History.Mutual = c(hm.poa.i.c.avoid,hm.dci.i.c.avoid,hm.tt.i.c.avoid,hm..steep.i.c.avoid,avg.int.hm.aci,avg.av.km.aci))
+
+# History self
+hs.st.i.c.avoid<-overall.ss.initiator.avoid[overall.ss.initiator.avoid$combo=="self history clumped",]
+  hs.tt.i.c.avoid<-mean(hs.st.i.c.avoid$triangle.transitivity)
+  hs.dci.i.c.avoid<-mean(hs.st.i.c.avoid$dci)
+  hs.poa.i.c.avoid<-mean(as.numeric(hs.attack.prop.c.i$rate.avoids))
+  hs..steep.i.c.avoid<-abs(mean(hs.st.i.c.avoid$steepness))
+  hs.ov.i.c.avoid<-data.frame(History.Self = c(hs.poa.i.c.avoid,hs.dci.i.c.avoid,hs.tt.i.c.avoid,hs..steep.i.c.avoid,avg.int.hs.aci,avg.av.hs.aci))
+
+# History opponent
+ho.st.i.c.avoid<-overall.ss.initiator.avoid[overall.ss.initiator.avoid$combo=="opponent history clumped",]
+  ho.tt.i.c.avoid<-mean(ho.st.i.c.avoid$triangle.transitivity)
+  ho.dci.i.c.avoid<-mean(ho.st.i.c.avoid$dci)
+  ho.poa.i.c.avoid<-mean(as.numeric(ho.attack.prop.c.i$rate.avoids))
+  ho..steep.i.c.avoid<-abs(mean(ho.st.i.c.avoid$steepness))
+  ho.ov.i.c.avoid<-data.frame(History.Opponent = c(ho.poa.i.c.avoid,ho.dci.i.c.avoid,ho.tt.i.c.avoid,ho..steep.i.c.avoid,avg.int.ho.aci,avg.av.ho.aci))
+
+# Generate overall data frame of the summary tables above:
+overall.c.st.i.c.avoid<-data.frame(hist.mut=hm.ov.i.c.avoid,hist.self=hs.ov.i.c.avoid,hist.opp=ho.ov.i.c.avoid)
+row.names(overall.c.st.i.c.avoid)<-c("Rate of Avoids","Directional Consitancy Index","Triangle Transitivity","Steepness", "Average Attacks", "Average Avoids")
+
+# Write .csv file of the overall data frame to create summary table:
+write.csv(overall.c.st.i.c.avoid,"~/Desktop/overall_clump_avoid_summary_table_ic.csv")
+```
+
+```{r Deterministic Clumped Attacks Summary Table}
+# Generate summary tables of the deterministic uniform data for publication:
+
+# History mutual
+hm.st.i.c.attacks<-overall.ss.initiator.attacks[overall.ss.initiator.attacks$combo=="mutual history clumped",]
+  hm.tt.i.c.attacks<-mean(hm.st.i.c.attacks$triangle.transitivity)
+  hm.dci.i.c.attacks<-mean(hm.st.i.c.attacks$dci)
+  hm.poa.i.c.attacks<-mean(as.numeric(hm.attack.prop.c.i$rate.attacks))
+  hm..steep.i.c.attacks<-abs(mean(hm.st.i.c.attacks$steepness))
+  hm.ov.i.c.attacks<-data.frame(History.Mutual = c(hm.poa.i.c.attacks,hm.dci.i.c.attacks,hm.tt.i.c.attacks,hm..steep.i.c.attacks,avg.int.hm.aci,avg.av.hm.aci))
+
+# History self
+hs.st.i.c.attacks<-overall.ss.initiator.attacks[overall.ss.initiator.attacks$combo=="self history clumped",]
+  hs.tt.i.c.attacks<-mean(hs.st.i.c.attacks$triangle.transitivity)
+  hs.dci.i.c.attacks<-mean(hs.st.i.c.attacks$dci)
+  hs.poa.i.c.attacks<-mean(as.numeric(hs.attack.prop.c.i$rate.attacks))
+  hs..steep.i.c.attacks<-abs(mean(hs.st.i.c.attacks$steepness))
+  hs.ov.i.c.attacks<-data.frame(History.Self = c(hs.poa.i.c.attacks,hs.dci.i.c.attacks,hs.tt.i.c.attacks,hs..steep.i.c.attacks,avg.int.hs.aci,avg.av.hs.aci))
+
+# History opponent
+ho.st.i.c.attacks<-overall.ss.initiator.attacks[overall.ss.initiator.attacks$combo=="opponent history clumped",]
+  ho.tt.i.c.attacks<-mean(ho.st.i.c.attacks$triangle.transitivity)
+  ho.dci.i.c.attacks<-mean(ho.st.i.c.attacks$dci)
+  ho.poa.i.c.attacks<-mean(as.numeric(ho.attack.prop.c.i$rate.attacks))
+  ho..steep.i.c.attacks<-abs(mean(ho.st.i.c.attacks$steepness))
+  ho.ov.i.c.attacks<-data.frame(History.Opponent = c(ho.poa.i.c.attacks,ho.dci.i.c.attacks,ho.tt.i.c.attacks,ho..steep.i.c.attacks,avg.int.ho.aci,avg.av.ho.aci))
+
+# Generate overall data frame of the summary tables above:
+overall.c.st.i.c.attacks<-data.frame(hist.mut=hm.ov.i.c.attacks,hist.self=hs.ov.i.c.attacks,hist.opp=ho.ov.i.c.attacks)
+row.names(overall.c.st.i.c.attacks)<-c("Rate of Attacks","Directional Consitancy Index","Triangle Transitivity","Steepness", "Average Attacks","Average Avoids")
+
+# Write .csv file of the overall data frame to create summary table:
+write.csv(overall.c.st.i.c.attacks,"~/Desktop/overall_clump_attacks_summary_table_ic.csv")
+```
+
+```{r Deterministic Uniform Avoid Summary Table}
+# Generate summary tables of the deterministic uniform data for publication:
+
+# History mutual
+hm.st.i.u.avoid<-overall.ss.initiator.avoid[overall.ss.initiator.avoid$combo=="mutual history Uniform",]
+  hm.tt.i.u.avoid<-mean(hm.st.i.u.avoid$triangle.transitivity)
+  hm.dci.i.u.avoid<-mean(hm.st.i.u.avoid$dci)
+  hm.poa.i.u.avoid<-mean(as.numeric(hm.attack.prop.c.i$rate.avoids))
+  hm..steep.i.u.avoid<-abs(mean(hm.st.i.u.avoid$steepness))
+  hm.ov.i.u.avoid<-data.frame(History.Mutual = c(hm.poa.i.u.avoid,hm.dci.i.u.avoid,hm.tt.i.u.avoid,hm..steep.i.u.avoid,avg.int.hm.aiu,avg.av.hm.aiu))
+
+# History self
+hs.st.i.u.avoid<-overall.ss.initiator.avoid[overall.ss.initiator.avoid$combo=="self history Uniform",]
+  hs.tt.i.u.avoid<-mean(hs.st.i.u.avoid$triangle.transitivity)
+  hs.dci.i.u.avoid<-mean(hs.st.i.u.avoid$dci)
+  hs.poa.i.u.avoid<-mean(as.numeric(hs.attack.prop.c.i$rate.avoids))
+  hs..steep.i.u.avoid<-abs(mean(hs.st.i.u.avoid$steepness))
+  hs.ov.i.u.avoid<-data.frame(History.Self = c(hs.poa.i.u.avoid,hs.dci.i.u.avoid,hs.tt.i.u.avoid,hs..steep.i.u.avoid,avg.int.hs.aiu,avg.av.hs.aiu))
+
+# History opponent
+ho.st.i.u.avoid<-overall.ss.initiator.avoid[overall.ss.initiator.avoid$combo=="opponent history Uniform",]
+  ho.tt.i.u.avoid<-mean(ho.st.i.u.avoid$triangle.transitivity)
+  ho.dci.i.u.avoid<-mean(ho.st.i.u.avoid$dci)
+  ho.poa.i.u.avoid<-mean(as.numeric(ho.attack.prop.c.i$rate.avoids))
+  ho..steep.i.u.avoid<-abs(mean(ho.st.i.u.avoid$steepness))
+  ho.ov.i.u.avoid<-data.frame(History.Opponent = c(ho.poa.i.u.avoid,ho.dci.i.u.avoid,ho.tt.i.u.avoid,ho..steep.i.u.avoid,avg.int.ho.aiu,avg.av.ho.aiu))
+
+# Generate overall data frame of the summary tables above:
+overall.u.st.i.u.avoid<-data.frame(hist.mut=hm.ov.i.u.avoid,hist.self=hs.ov.i.u.avoid,hist.opp=ho.ov.i.u.avoid)
+row.names(overall.u.st.i.u.avoid)<-c("Rate of Avoids","Directional Consitancy Index","Triangle Transitivity","Steepness", "Average Attacks", "Average Avoids")
+
+# Write .csv file of the overall data frame to create summary table:
+write.csv(overall.u.st.i.u.avoid,"~/Desktop/overall_uniform_avoid_summary_table_iu.csv")
+```
+
+```{r Deterministic Uniform Attacks Summary Table}
+# Generate summary tables of the deterministic uniform data for publication:
+
+# History mutual
+hm.st.i.u.attacks<-overall.ss.initiator.attacks[overall.ss.initiator.attacks$combo=="mutual history Uniform",]
+  hm.tt.i.u.attacks<-mean(hm.st.i.u.attacks$triangle.transitivity)
+  hm.dci.i.u.attacks<-mean(hm.st.i.u.attacks$dci)
+  hm.poa.i.u.attacks<-mean(as.numeric(hm.attack.prop.c.i$rate.attacks))
+  hm..steep.i.u.attacks<-abs(mean(hm.st.i.u.attacks$steepness))
+  hm.ov.i.u.attacks<-data.frame(History.Mutual = c(hm.poa.i.u.attacks,hm.dci.i.u.attacks,hm.tt.i.u.attacks,hm..steep.i.u.attacks,avg.int.hm.atiu,avg.av.hm.atiu))
+
+# History self
+hs.st.i.u.attacks<-overall.ss.initiator.attacks[overall.ss.initiator.attacks$combo=="self history Uniform",]
+  hs.tt.i.u.attacks<-mean(hs.st.i.u.attacks$triangle.transitivity)
+  hs.dci.i.u.attacks<-mean(hs.st.i.u.attacks$dci)
+  hs.poa.i.u.attacks<-mean(as.numeric(hs.attack.prop.c.i$rate.attacks))
+  hs..steep.i.u.attacks<-abs(mean(hs.st.i.u.attacks$steepness))
+  hs.ov.i.u.attacks<-data.frame(History.Self = c(hs.poa.i.u.attacks,hs.dci.i.u.attacks,hs.tt.i.u.attacks,hs..steep.i.u.attacks,avg.int.hs.atiu,avg.av.hs.atiu))
+
+# History opponent
+ho.st.i.u.attacks<-overall.ss.initiator.attacks[overall.ss.initiator.attacks$combo=="opponent history Uniform",]
+  ho.tt.i.u.attacks<-mean(ho.st.i.u.attacks$triangle.transitivity)
+  ho.dci.i.u.attacks<-mean(ho.st.i.u.attacks$dci)
+  ho.poa.i.u.attacks<-mean(as.numeric(ho.attack.prop.c.i$rate.attacks))
+  ho..steep.i.u.attacks<-abs(mean(ho.st.i.u.attacks$steepness))
+  ho.ov.i.u.attacks<-data.frame(History.Opponent = c(ho.poa.i.u.attacks,ho.dci.i.u.attacks,ho.tt.i.u.attacks,ho..steep.i.u.attacks,avg.int.ho.atiu,avg.av.ho.atiu))
+
+# Generate overall data frame of the summary tables above:
+overall.u.st.i.u.attacks<-data.frame(hist.mut=hm.ov.i.u.attacks,hist.self=hs.ov.i.u.attacks,hist.opp=ho.ov.i.u.attacks)
+row.names(overall.u.st.i.u.attacks)<-c("Rate of Attacks","Directional Consitancy Index","Triangle Transitivity","Steepness", "Average Attacks", "Average Avoids")
+
+# Write .csv file of the overall data frame to create summary table:
+write.csv(overall.u.st.i.u.attacks,"~/Desktop/overall_uniform_attacks_summary_table_iu.csv")
+```

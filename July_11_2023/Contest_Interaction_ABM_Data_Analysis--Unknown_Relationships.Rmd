@@ -1,0 +1,1481 @@
+---
+title: "Contest-Interaction ABM Data Analysis -- Unknown Relationships"
+author: "C.J. O'Connor-Coates"
+date: "2023-06-15"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+#-------------------------------------------------------------------------------------------------------------------------
+
+# All data was generated in NetLogo Agent-Based Models (ABM) and imported into this program for analysis. These data and analyses are used in the publication "Steep hierarchies without skew? Modeling how ecology and decision-making shape despotism of relationships" by Marcy S. Ekanayake-Weber, Christopher J. O'Connor-Coates, and Andreas Koenig.
+
+# The NetLogo model was created by Marcy S. Ekanayake-Weber and Christopher J. O'Connor-Coates. The following R-code was written by Christopher J. O'Connor-Coates. The code for the Triangle Transitivity Function was written by Shizuka & McDonald (2012). For questions regarding the R-code email Christopher J. O'Connor-Coates at christopher.oconnor-coates@stonybrook.edu.
+
+#-------------------------------------------------------------------------------------------------------------------------
+
+#-------------------------------------------------------------------------------------------------------------------------
+
+# DEFINITIONS:
+# 1. Knowledge (k): Individuals know of either their own or their opponent's Resource Holding Potential (RHP)
+# 2. History (h): Individuals know of either their own or their opponent's fighting history, including how often theiy won or lost conflicts
+# 3. Mutual (m): Individuals have knowledge of both their own and their opponent's RHP or History
+# 4. Self (s): Individuals have knowledge of only their own RHP or History
+# 5. Opponent (o): Individuals have knowledge of only their opponent's RHP or History
+# 6. Deterministic (d): Scenarios in which fight outcomes were determined by the strength of an individual's RHP. Individuals with higher RHP values always won escalated conflicts.
+# 7. Probabilistic (p): Scenarios in which fight outcomes were determined by a probability calculated in the NetLogo program. Individuals with higher RHP values are more likely to win escalated conflicts, but there is also a (smaller) chance that the individual with lower RHP could win the conflict.
+# 8. Initiator Wins (iw; i): Scenarios in which the escalated conflict is always won by the individual which initiated the conflict.
+# 9. Sigmoid Function (sf): Scenarios in which fights were escalated through a cost-benefit analysis that was modeled as a sigmoid function.
+# 10. Clumped Distribution (cd; c): Resources were arranged in the landscape such that they only appeared in clumps; can also be called a heterogenous distribution
+# 11. Uniform Distribution (ud; u): Resources were arranged in the landscape such that they were evenly distributed across the area; can also be called a homogenous distribution
+# 12. Avoid: An individual avoided an escalation/conflict
+# 13. Victory: An individual won an escalation/conflict
+# 14. Foraging Efficiency: An Individual's Energy Intake Over Time
+
+#ABBREVIATIONS:
+# 1. inter.mat: Interaction Matrices
+# 2. ep: Proportion of Escalation
+# 3. t.tri: Triangle Transitivity
+# 4. dci: Directional Conistency Index
+# 5. Steep: steepness
+
+#-------------------------------------------------------------------------------------------------------------------------
+
+
+#-------------------------------------------------------------------------------------------------------------------------
+
+# TO USE CODE SET YOUR WORKING DIRECTORY FILEPATHS (WHERE INDICATED) TO WHERE YOU HAVE SAVED THE DATA FILES.
+# INDICATED FILEPATHS LOOK LIKE: setwd("~/SET/YOUR/WORKING/DIRECTORY/...")
+
+#-------------------------------------------------------------------------------------------------------------------------
+
+
+
+#Deterministic Clumped
+```{r}
+library(EloRating)
+
+unknown.relationships.cd.km<-c(prunk(mat1.cd.km), 
+                               prunk(mat2.cd.km), 
+                               prunk(mat3.cd.km), 
+                               prunk(mat4.cd.km), 
+                               prunk(mat5.cd.km), 
+                               prunk(mat6.cd.km), 
+                               prunk(mat7.cd.km), 
+                               prunk(mat8.cd.km), 
+                               prunk(mat9.cd.km), 
+                               prunk(mat10.cd.km))
+
+unknown.relationships.cd.ks<-c(prunk(mat1.cd.ks), 
+                               prunk(mat2.cd.ks), 
+                               prunk(mat3.cd.ks), 
+                               prunk(mat4.cd.ks), 
+                               prunk(mat5.cd.ks), 
+                               prunk(mat6.cd.ks), 
+                               prunk(mat7.cd.ks), 
+                               prunk(mat8.cd.ks), 
+                               prunk(mat9.cd.ks), 
+                               prunk(mat10.cd.ks))
+
+unknown.relationships.cd.ko<-c(prunk(mat1.cd.ko), 
+                               prunk(mat2.cd.ko), 
+                               prunk(mat3.cd.ko), 
+                               prunk(mat4.cd.ko), 
+                               prunk(mat5.cd.ko), 
+                               prunk(mat6.cd.ko), 
+                               prunk(mat7.cd.ko), 
+                               prunk(mat8.cd.ko), 
+                               prunk(mat9.cd.ko), 
+                               prunk(mat10.cd.ko))
+                               
+unknown.relationships.cd.hm<-c(prunk(mat1.cd.hm), 
+                               prunk(mat2.cd.hm), 
+                               prunk(mat3.cd.hm), 
+                               prunk(mat4.cd.hm), 
+                               prunk(mat5.cd.hm), 
+                               prunk(mat6.cd.hm), 
+                               prunk(mat7.cd.hm), 
+                               prunk(mat8.cd.hm), 
+                               prunk(mat9.cd.hm), 
+                               prunk(mat10.cd.hm))
+
+unknown.relationships.cd.hs<-c(prunk(mat1.cd.hs), 
+                               prunk(mat2.cd.hs), 
+                               prunk(mat3.cd.hs), 
+                               prunk(mat4.cd.hs), 
+                               prunk(mat5.cd.hs), 
+                               prunk(mat6.cd.hs), 
+                               prunk(mat7.cd.hs), 
+                               prunk(mat8.cd.hs), 
+                               prunk(mat9.cd.hs), 
+                               prunk(mat10.cd.hs))
+
+unknown.relationships.cd.ho<-c(prunk(mat1.cd.ho), 
+                               prunk(mat2.cd.ho), 
+                               prunk(mat3.cd.ho), 
+                               prunk(mat4.cd.ho), 
+                               prunk(mat5.cd.ho), 
+                               prunk(mat6.cd.ho), 
+                               prunk(mat7.cd.ho), 
+                               prunk(mat8.cd.ho), 
+                               prunk(mat9.cd.ho), 
+                               prunk(mat10.cd.ho))
+
+total.unknown.relationships.cd<-data.frame("km"=unknown.relationships.cd.km)
+total.unknown.relationships.cd<-cbind(total.unknown.relationships.cd, "ks"=unknown.relationships.cd.ks, "ko"=unknown.relationships.cd.ko, "hm"=unknown.relationships.cd.hm, "hs"=unknown.relationships.cd.hs, "ho"=unknown.relationships.cd.ho)
+
+total.unknown.relationships.cd<-total.unknown.relationships.cd[seq(1, nrow(total.unknown.relationships.cd), 4), ]
+ur.cd.sum<-data.frame("km"=sum(total.unknown.relationships.cd[,1]),"ks"=sum(total.unknown.relationships.cd[,2]),"ko"=sum(total.unknown.relationships.cd[,3]),"hm"=sum(total.unknown.relationships.cd[,4]),"hs"=sum(total.unknown.relationships.cd[,5]),"ho"=sum(total.unknown.relationships.cd[,6]))
+total.unknown.relationships.cd<-rbind(total.unknown.relationships.cd, "Summed Totals"=ur.cd.sum)
+write.csv(total.unknown.relationships.cd,"~/Desktop/total.unknown.relationships.cd.csv")
+```
+
+#Deterministic Clumped Avoids
+```{r}
+library(EloRating)
+
+unknown.relationships.acd.km<-c(prunk(mat1.acd.km), 
+                               prunk(mat2.acd.km), 
+                               prunk(mat3.acd.km), 
+                               prunk(mat4.acd.km), 
+                               prunk(mat5.acd.km), 
+                               prunk(mat6.acd.km), 
+                               prunk(mat7.acd.km), 
+                               prunk(mat8.acd.km), 
+                               prunk(mat9.acd.km), 
+                               prunk(mat10.acd.km))
+
+unknown.relationships.acd.ks<-c(prunk(mat1.acd.ks), 
+                               prunk(mat2.acd.ks), 
+                               prunk(mat3.acd.ks), 
+                               prunk(mat4.acd.ks), 
+                               prunk(mat5.acd.ks), 
+                               prunk(mat6.acd.ks), 
+                               prunk(mat7.acd.ks), 
+                               prunk(mat8.acd.ks), 
+                               prunk(mat9.acd.ks), 
+                               prunk(mat10.acd.ks))
+
+unknown.relationships.acd.ko<-c(prunk(mat1.acd.ko), 
+                               prunk(mat2.acd.ko), 
+                               prunk(mat3.acd.ko), 
+                               prunk(mat4.acd.ko), 
+                               prunk(mat5.acd.ko), 
+                               prunk(mat6.acd.ko), 
+                               prunk(mat7.acd.ko), 
+                               prunk(mat8.acd.ko), 
+                               prunk(mat9.acd.ko), 
+                               prunk(mat10.acd.ko))
+                               
+unknown.relationships.acd.hm<-c(prunk(mat1.acd.hm), 
+                               prunk(mat2.acd.hm), 
+                               prunk(mat3.acd.hm), 
+                               prunk(mat4.acd.hm), 
+                               prunk(mat5.acd.hm), 
+                               prunk(mat6.acd.hm), 
+                               prunk(mat7.acd.hm), 
+                               prunk(mat8.acd.hm), 
+                               prunk(mat9.acd.hm), 
+                               prunk(mat10.acd.hm))
+
+unknown.relationships.acd.hs<-c(prunk(mat1.acd.hs), 
+                               prunk(mat2.acd.hs), 
+                               prunk(mat3.acd.hs), 
+                               prunk(mat4.acd.hs), 
+                               prunk(mat5.acd.hs), 
+                               prunk(mat6.acd.hs), 
+                               prunk(mat7.acd.hs), 
+                               prunk(mat8.acd.hs), 
+                               prunk(mat9.acd.hs), 
+                               prunk(mat10.acd.hs))
+
+unknown.relationships.acd.ho<-c(prunk(mat1.acd.ho), 
+                               prunk(mat2.acd.ho), 
+                               prunk(mat3.acd.ho), 
+                               prunk(mat4.acd.ho), 
+                               prunk(mat5.acd.ho), 
+                               prunk(mat6.acd.ho), 
+                               prunk(mat7.acd.ho), 
+                               prunk(mat8.acd.ho), 
+                               prunk(mat9.acd.ho), 
+                               prunk(mat10.acd.ho))
+
+total.unknown.relationships.acd<-data.frame("km"=unknown.relationships.acd.km)
+total.unknown.relationships.acd<-cbind(total.unknown.relationships.acd, "ks"=unknown.relationships.acd.ks, "ko"=unknown.relationships.acd.ko, "hm"=unknown.relationships.acd.hm, "hs"=unknown.relationships.acd.hs, "ho"=unknown.relationships.acd.ho)
+
+total.unknown.relationships.acd<-total.unknown.relationships.acd[seq(1, nrow(total.unknown.relationships.acd), 4), ]
+ur.acd.sum<-data.frame("km"=sum(total.unknown.relationships.acd[,1]),"ks"=sum(total.unknown.relationships.acd[,2]),"ko"=sum(total.unknown.relationships.acd[,3]),"hm"=sum(total.unknown.relationships.acd[,4]),"hs"=sum(total.unknown.relationships.acd[,5]),"ho"=sum(total.unknown.relationships.acd[,6]))
+total.unknown.relationships.acd<-rbind(total.unknown.relationships.acd, "Summed Totals"=ur.acd.sum)
+write.csv(total.unknown.relationships.acd,"~/Desktop/total.unknown.relationships.acd.csv")
+```
+
+#Deterministic Clumped Attacks
+```{r}
+library(EloRating)
+
+unknown.relationships.atcd.km<-c(prunk(mat1.atcd.km), 
+                               prunk(mat2.atcd.km), 
+                               prunk(mat3.atcd.km), 
+                               prunk(mat4.atcd.km), 
+                               prunk(mat5.atcd.km), 
+                               prunk(mat6.atcd.km), 
+                               prunk(mat7.atcd.km), 
+                               prunk(mat8.atcd.km), 
+                               prunk(mat9.atcd.km), 
+                               prunk(mat10.atcd.km))
+
+unknown.relationships.atcd.ks<-c(prunk(mat1.atcd.ks), 
+                               prunk(mat2.atcd.ks), 
+                               prunk(mat3.atcd.ks), 
+                               prunk(mat4.atcd.ks), 
+                               prunk(mat5.atcd.ks), 
+                               prunk(mat6.atcd.ks), 
+                               prunk(mat7.atcd.ks), 
+                               prunk(mat8.atcd.ks), 
+                               prunk(mat9.atcd.ks), 
+                               prunk(mat10.atcd.ks))
+
+unknown.relationships.atcd.ko<-c(prunk(mat1.atcd.ko), 
+                               prunk(mat2.atcd.ko), 
+                               prunk(mat3.atcd.ko), 
+                               prunk(mat4.atcd.ko), 
+                               prunk(mat5.atcd.ko), 
+                               prunk(mat6.atcd.ko), 
+                               prunk(mat7.atcd.ko), 
+                               prunk(mat8.atcd.ko), 
+                               prunk(mat9.atcd.ko), 
+                               prunk(mat10.atcd.ko))
+                               
+unknown.relationships.atcd.hm<-c(prunk(mat1.atcd.hm), 
+                               prunk(mat2.atcd.hm), 
+                               prunk(mat3.atcd.hm), 
+                               prunk(mat4.atcd.hm), 
+                               prunk(mat5.atcd.hm), 
+                               prunk(mat6.atcd.hm), 
+                               prunk(mat7.atcd.hm), 
+                               prunk(mat8.atcd.hm), 
+                               prunk(mat9.atcd.hm), 
+                               prunk(mat10.atcd.hm))
+
+unknown.relationships.atcd.hs<-c(prunk(mat1.atcd.hs), 
+                               prunk(mat2.atcd.hs), 
+                               prunk(mat3.atcd.hs), 
+                               prunk(mat4.atcd.hs), 
+                               prunk(mat5.atcd.hs), 
+                               prunk(mat6.atcd.hs), 
+                               prunk(mat7.atcd.hs), 
+                               prunk(mat8.atcd.hs), 
+                               prunk(mat9.atcd.hs), 
+                               prunk(mat10.atcd.hs))
+
+unknown.relationships.atcd.ho<-c(prunk(mat1.atcd.ho), 
+                               prunk(mat2.atcd.ho), 
+                               prunk(mat3.atcd.ho), 
+                               prunk(mat4.atcd.ho), 
+                               prunk(mat5.atcd.ho), 
+                               prunk(mat6.atcd.ho), 
+                               prunk(mat7.atcd.ho), 
+                               prunk(mat8.atcd.ho), 
+                               prunk(mat9.atcd.ho), 
+                               prunk(mat10.atcd.ho))
+
+total.unknown.relationships.atcd<-data.frame("km"=unknown.relationships.atcd.km)
+total.unknown.relationships.atcd<-cbind(total.unknown.relationships.atcd, "ks"=unknown.relationships.atcd.ks, "ko"=unknown.relationships.atcd.ko, "hm"=unknown.relationships.atcd.hm, "hs"=unknown.relationships.atcd.hs, "ho"=unknown.relationships.atcd.ho)
+
+total.unknown.relationships.atcd<-total.unknown.relationships.atcd[seq(1, nrow(total.unknown.relationships.atcd), 4), ]
+ur.atcd.sum<-data.frame("km"=sum(total.unknown.relationships.atcd[,1]),"ks"=sum(total.unknown.relationships.atcd[,2]),"ko"=sum(total.unknown.relationships.atcd[,3]),"hm"=sum(total.unknown.relationships.atcd[,4]),"hs"=sum(total.unknown.relationships.atcd[,5]),"ho"=sum(total.unknown.relationships.atcd[,6]))
+total.unknown.relationships.atcd<-rbind(total.unknown.relationships.atcd, "Summed Totals"=ur.atcd.sum)
+write.csv(total.unknown.relationships.atcd,"~/Desktop/total.unknown.relationships.atcd.csv")
+```
+
+
+#Deterministic Uniform
+```{r}
+library(EloRating)
+
+unknown.relationships.ud.km<-c(prunk(mat1.ud.km), 
+                               prunk(mat2.ud.km), 
+                               prunk(mat3.ud.km), 
+                               prunk(mat4.ud.km), 
+                               prunk(mat5.ud.km), 
+                               prunk(mat6.ud.km), 
+                               prunk(mat7.ud.km), 
+                               prunk(mat8.ud.km), 
+                               prunk(mat9.ud.km), 
+                               prunk(mat10.ud.km))
+
+unknown.relationships.ud.ks<-c(prunk(mat1.ud.ks), 
+                               prunk(mat2.ud.ks), 
+                               prunk(mat3.ud.ks), 
+                               prunk(mat4.ud.ks), 
+                               prunk(mat5.ud.ks), 
+                               prunk(mat6.ud.ks), 
+                               prunk(mat7.ud.ks), 
+                               prunk(mat8.ud.ks), 
+                               prunk(mat9.ud.ks), 
+                               prunk(mat10.ud.ks))
+
+unknown.relationships.ud.ko<-c(prunk(mat1.ud.ko), 
+                               prunk(mat2.ud.ko), 
+                               prunk(mat3.ud.ko), 
+                               prunk(mat4.ud.ko), 
+                               prunk(mat5.ud.ko), 
+                               prunk(mat6.ud.ko), 
+                               prunk(mat7.ud.ko), 
+                               prunk(mat8.ud.ko), 
+                               prunk(mat9.ud.ko), 
+                               prunk(mat10.ud.ko))
+                               
+unknown.relationships.ud.hm<-c(prunk(mat1.ud.hm), 
+                               prunk(mat2.ud.hm), 
+                               prunk(mat3.ud.hm), 
+                               prunk(mat4.ud.hm), 
+                               prunk(mat5.ud.hm), 
+                               prunk(mat6.ud.hm), 
+                               prunk(mat7.ud.hm), 
+                               prunk(mat8.ud.hm), 
+                               prunk(mat9.ud.hm), 
+                               prunk(mat10.ud.hm))
+
+unknown.relationships.ud.hs<-c(prunk(mat1.ud.hs), 
+                               prunk(mat2.ud.hs), 
+                               prunk(mat3.ud.hs), 
+                               prunk(mat4.ud.hs), 
+                               prunk(mat5.ud.hs), 
+                               prunk(mat6.ud.hs), 
+                               prunk(mat7.ud.hs), 
+                               prunk(mat8.ud.hs), 
+                               prunk(mat9.ud.hs), 
+                               prunk(mat10.ud.hs))
+
+unknown.relationships.ud.ho<-c(prunk(mat1.ud.ho), 
+                               prunk(mat2.ud.ho), 
+                               prunk(mat3.ud.ho), 
+                               prunk(mat4.ud.ho), 
+                               prunk(mat5.ud.ho), 
+                               prunk(mat6.ud.ho), 
+                               prunk(mat7.ud.ho), 
+                               prunk(mat8.ud.ho), 
+                               prunk(mat9.ud.ho), 
+                               prunk(mat10.ud.ho))
+
+total.unknown.relationships.ud<-data.frame("km"=unknown.relationships.ud.km)
+total.unknown.relationships.ud<-cbind(total.unknown.relationships.ud, "ks"=unknown.relationships.ud.ks, "ko"=unknown.relationships.ud.ko, "hm"=unknown.relationships.ud.hm, "hs"=unknown.relationships.ud.hs, "ho"=unknown.relationships.ud.ho)
+
+total.unknown.relationships.ud<-total.unknown.relationships.ud[seq(1, nrow(total.unknown.relationships.ud), 4), ]
+ur.ud.sum<-data.frame("km"=sum(total.unknown.relationships.ud[,1]),"ks"=sum(total.unknown.relationships.ud[,2]),"ko"=sum(total.unknown.relationships.ud[,3]),"hm"=sum(total.unknown.relationships.ud[,4]),"hs"=sum(total.unknown.relationships.ud[,5]),"ho"=sum(total.unknown.relationships.ud[,6]))
+total.unknown.relationships.ud<-rbind(total.unknown.relationships.ud, "Summed Totals"=ur.ud.sum)
+write.csv(total.unknown.relationships.ud,"~/Desktop/total.unknown.relationships.ud.csv")
+```
+
+#Deterministic Uniform Avoids
+```{r}
+library(EloRating)
+
+unknown.relationships.aud.km<-c(prunk(mat1.aud.km), 
+                               prunk(mat2.aud.km), 
+                               prunk(mat3.aud.km), 
+                               prunk(mat4.aud.km), 
+                               prunk(mat5.aud.km), 
+                               prunk(mat6.aud.km), 
+                               prunk(mat7.aud.km), 
+                               prunk(mat8.aud.km), 
+                               prunk(mat9.aud.km), 
+                               prunk(mat10.aud.km))
+
+unknown.relationships.aud.ks<-c(prunk(mat1.aud.ks), 
+                               prunk(mat2.aud.ks), 
+                               prunk(mat3.aud.ks), 
+                               prunk(mat4.aud.ks), 
+                               prunk(mat5.aud.ks), 
+                               prunk(mat6.aud.ks), 
+                               prunk(mat7.aud.ks), 
+                               prunk(mat8.aud.ks), 
+                               prunk(mat9.aud.ks), 
+                               prunk(mat10.aud.ks))
+
+unknown.relationships.aud.ko<-c(prunk(mat1.aud.ko), 
+                               prunk(mat2.aud.ko), 
+                               prunk(mat3.aud.ko), 
+                               prunk(mat4.aud.ko), 
+                               prunk(mat5.aud.ko), 
+                               prunk(mat6.aud.ko), 
+                               prunk(mat7.aud.ko), 
+                               prunk(mat8.aud.ko), 
+                               prunk(mat9.aud.ko), 
+                               prunk(mat10.aud.ko))
+                               
+unknown.relationships.aud.hm<-c(prunk(mat1.aud.hm), 
+                               prunk(mat2.aud.hm), 
+                               prunk(mat3.aud.hm), 
+                               prunk(mat4.aud.hm), 
+                               prunk(mat5.aud.hm), 
+                               prunk(mat6.aud.hm), 
+                               prunk(mat7.aud.hm), 
+                               prunk(mat8.aud.hm), 
+                               prunk(mat9.aud.hm), 
+                               prunk(mat10.aud.hm))
+
+unknown.relationships.aud.hs<-c(prunk(mat1.aud.hs), 
+                               prunk(mat2.aud.hs), 
+                               prunk(mat3.aud.hs), 
+                               prunk(mat4.aud.hs), 
+                               prunk(mat5.aud.hs), 
+                               prunk(mat6.aud.hs), 
+                               prunk(mat7.aud.hs), 
+                               prunk(mat8.aud.hs), 
+                               prunk(mat9.aud.hs), 
+                               prunk(mat10.aud.hs))
+
+unknown.relationships.aud.ho<-c(prunk(mat1.aud.ho), 
+                               prunk(mat2.aud.ho), 
+                               prunk(mat3.aud.ho), 
+                               prunk(mat4.aud.ho), 
+                               prunk(mat5.aud.ho), 
+                               prunk(mat6.aud.ho), 
+                               prunk(mat7.aud.ho), 
+                               prunk(mat8.aud.ho), 
+                               prunk(mat9.aud.ho), 
+                               prunk(mat10.aud.ho))
+
+total.unknown.relationships.aud<-data.frame("km"=unknown.relationships.aud.km)
+total.unknown.relationships.aud<-cbind(total.unknown.relationships.aud, "ks"=unknown.relationships.aud.ks, "ko"=unknown.relationships.aud.ko, "hm"=unknown.relationships.aud.hm, "hs"=unknown.relationships.aud.hs, "ho"=unknown.relationships.aud.ho)
+
+total.unknown.relationships.aud<-total.unknown.relationships.aud[seq(1, nrow(total.unknown.relationships.aud), 4), ]
+ur.aud.sum<-data.frame("km"=sum(total.unknown.relationships.aud[,1]),"ks"=sum(total.unknown.relationships.aud[,2]),"ko"=sum(total.unknown.relationships.aud[,3]),"hm"=sum(total.unknown.relationships.aud[,4]),"hs"=sum(total.unknown.relationships.aud[,5]),"ho"=sum(total.unknown.relationships.aud[,6]))
+total.unknown.relationships.aud<-rbind(total.unknown.relationships.aud, "Summed Totals"=ur.aud.sum)
+write.csv(total.unknown.relationships.aud,"~/Desktop/total.unknown.relationships.aud.csv")
+```
+
+#Deterministic Uniform Attacks
+```{r}
+library(EloRating)
+
+unknown.relationships.atud.km<-c(prunk(mat1.atud.km), 
+                               prunk(mat2.atud.km), 
+                               prunk(mat3.atud.km), 
+                               prunk(mat4.atud.km), 
+                               prunk(mat5.atud.km), 
+                               prunk(mat6.atud.km), 
+                               prunk(mat7.atud.km), 
+                               prunk(mat8.atud.km), 
+                               prunk(mat9.atud.km), 
+                               prunk(mat10.atud.km))
+
+unknown.relationships.atud.ks<-c(prunk(mat1.atud.ks), 
+                               prunk(mat2.atud.ks), 
+                               prunk(mat3.atud.ks), 
+                               prunk(mat4.atud.ks), 
+                               prunk(mat5.atud.ks), 
+                               prunk(mat6.atud.ks), 
+                               prunk(mat7.atud.ks), 
+                               prunk(mat8.atud.ks), 
+                               prunk(mat9.atud.ks), 
+                               prunk(mat10.atud.ks))
+
+unknown.relationships.atud.ko<-c(prunk(mat1.atud.ko), 
+                               prunk(mat2.atud.ko), 
+                               prunk(mat3.atud.ko), 
+                               prunk(mat4.atud.ko), 
+                               prunk(mat5.atud.ko), 
+                               prunk(mat6.atud.ko), 
+                               prunk(mat7.atud.ko), 
+                               prunk(mat8.atud.ko), 
+                               prunk(mat9.atud.ko), 
+                               prunk(mat10.atud.ko))
+                               
+unknown.relationships.atud.hm<-c(prunk(mat1.atud.hm), 
+                               prunk(mat2.atud.hm), 
+                               prunk(mat3.atud.hm), 
+                               prunk(mat4.atud.hm), 
+                               prunk(mat5.atud.hm), 
+                               prunk(mat6.atud.hm), 
+                               prunk(mat7.atud.hm), 
+                               prunk(mat8.atud.hm), 
+                               prunk(mat9.atud.hm), 
+                               prunk(mat10.atud.hm))
+
+unknown.relationships.atud.hs<-c(prunk(mat1.atud.hs), 
+                               prunk(mat2.atud.hs), 
+                               prunk(mat3.atud.hs), 
+                               prunk(mat4.atud.hs), 
+                               prunk(mat5.atud.hs), 
+                               prunk(mat6.atud.hs), 
+                               prunk(mat7.atud.hs), 
+                               prunk(mat8.atud.hs), 
+                               prunk(mat9.atud.hs), 
+                               prunk(mat10.atud.hs))
+
+unknown.relationships.atud.ho<-c(prunk(mat1.atud.ho), 
+                               prunk(mat2.atud.ho), 
+                               prunk(mat3.atud.ho), 
+                               prunk(mat4.atud.ho), 
+                               prunk(mat5.atud.ho), 
+                               prunk(mat6.atud.ho), 
+                               prunk(mat7.atud.ho), 
+                               prunk(mat8.atud.ho), 
+                               prunk(mat9.atud.ho), 
+                               prunk(mat10.atud.ho))
+
+total.unknown.relationships.atud<-data.frame("km"=unknown.relationships.atud.km)
+total.unknown.relationships.atud<-cbind(total.unknown.relationships.atud, "ks"=unknown.relationships.atud.ks, "ko"=unknown.relationships.atud.ko, "hm"=unknown.relationships.atud.hm, "hs"=unknown.relationships.atud.hs, "ho"=unknown.relationships.atud.ho)
+
+total.unknown.relationships.atud<-total.unknown.relationships.atud[seq(1, nrow(total.unknown.relationships.atud), 4), ]
+ur.atud.sum<-data.frame("km"=sum(total.unknown.relationships.atud[,1]),"ks"=sum(total.unknown.relationships.atud[,2]),"ko"=sum(total.unknown.relationships.atud[,3]),"hm"=sum(total.unknown.relationships.atud[,4]),"hs"=sum(total.unknown.relationships.atud[,5]),"ho"=sum(total.unknown.relationships.atud[,6]))
+total.unknown.relationships.atud<-rbind(total.unknown.relationships.atud, "Summed Totals"=ur.atud.sum)
+write.csv(total.unknown.relationships.atud,"~/Desktop/total.unknown.relationships.atud.csv")
+```
+
+#Initiator Wins Clumped
+```{r}
+library(EloRating)
+
+unknown.relationships.ci.km<-c(prunk(mat1.ci.km), 
+                               prunk(mat2.ci.km), 
+                               prunk(mat3.ci.km), 
+                               prunk(mat4.ci.km), 
+                               prunk(mat5.ci.km), 
+                               prunk(mat6.ci.km), 
+                               prunk(mat7.ci.km), 
+                               prunk(mat8.ci.km), 
+                               prunk(mat9.ci.km), 
+                               prunk(mat10.ci.km))
+
+unknown.relationships.ci.ks<-c(prunk(mat1.ci.ks), 
+                               prunk(mat2.ci.ks), 
+                               prunk(mat3.ci.ks), 
+                               prunk(mat4.ci.ks), 
+                               prunk(mat5.ci.ks), 
+                               prunk(mat6.ci.ks), 
+                               prunk(mat7.ci.ks), 
+                               prunk(mat8.ci.ks), 
+                               prunk(mat9.ci.ks), 
+                               prunk(mat10.ci.ks))
+
+unknown.relationships.ci.ko<-c(prunk(mat1.ci.ko), 
+                               prunk(mat2.ci.ko), 
+                               prunk(mat3.ci.ko), 
+                               prunk(mat4.ci.ko), 
+                               prunk(mat5.ci.ko), 
+                               prunk(mat6.ci.ko), 
+                               prunk(mat7.ci.ko), 
+                               prunk(mat8.ci.ko), 
+                               prunk(mat9.ci.ko), 
+                               prunk(mat10.ci.ko))
+                               
+unknown.relationships.ci.hm<-c(prunk(mat1.ci.hm), 
+                               prunk(mat2.ci.hm), 
+                               prunk(mat3.ci.hm), 
+                               prunk(mat4.ci.hm), 
+                               prunk(mat5.ci.hm), 
+                               prunk(mat6.ci.hm), 
+                               prunk(mat7.ci.hm), 
+                               prunk(mat8.ci.hm), 
+                               prunk(mat9.ci.hm), 
+                               prunk(mat10.ci.hm))
+
+unknown.relationships.ci.hs<-c(prunk(mat1.ci.hs), 
+                               prunk(mat2.ci.hs), 
+                               prunk(mat3.ci.hs), 
+                               prunk(mat4.ci.hs), 
+                               prunk(mat5.ci.hs), 
+                               prunk(mat6.ci.hs), 
+                               prunk(mat7.ci.hs), 
+                               prunk(mat8.ci.hs), 
+                               prunk(mat9.ci.hs), 
+                               prunk(mat10.ci.hs))
+
+unknown.relationships.ci.ho<-c(prunk(mat1.ci.ho), 
+                               prunk(mat2.ci.ho), 
+                               prunk(mat3.ci.ho), 
+                               prunk(mat4.ci.ho), 
+                               prunk(mat5.ci.ho), 
+                               prunk(mat6.ci.ho), 
+                               prunk(mat7.ci.ho), 
+                               prunk(mat8.ci.ho), 
+                               prunk(mat9.ci.ho), 
+                               prunk(mat10.ci.ho))
+
+total.unknown.relationships.ci<-data.frame("km"=unknown.relationships.ci.km)
+total.unknown.relationships.ci<-cbind(total.unknown.relationships.ci, "ks"=unknown.relationships.ci.ks, "ko"=unknown.relationships.ci.ko, "hm"=unknown.relationships.ci.hm, "hs"=unknown.relationships.ci.hs, "ho"=unknown.relationships.ci.ho)
+
+total.unknown.relationships.ci<-total.unknown.relationships.ci[seq(1, nrow(total.unknown.relationships.ci), 4), ]
+ur.ci.sum<-data.frame("km"=sum(total.unknown.relationships.ci[,1]),"ks"=sum(total.unknown.relationships.ci[,2]),"ko"=sum(total.unknown.relationships.ci[,3]),"hm"=sum(total.unknown.relationships.ci[,4]),"hs"=sum(total.unknown.relationships.ci[,5]),"ho"=sum(total.unknown.relationships.ci[,6]))
+total.unknown.relationships.ci<-rbind(total.unknown.relationships.ci, "Summed Totals"=ur.ci.sum)
+write.csv(total.unknown.relationships.ci,"~/Desktop/total.unknown.relationships.ci.csv")
+```
+
+#Initiator Wins Clumped Avoids
+```{r}
+library(EloRating)
+
+unknown.relationships.aci.km<-c(prunk(mat1.aci.km), 
+                                prunk(mat2.aci.km), 
+                                prunk(mat3.aci.km), 
+                                prunk(mat4.aci.km), 
+                                prunk(mat5.aci.km), 
+                                prunk(mat6.aci.km), 
+                                prunk(mat7.aci.km), 
+                                prunk(mat8.aci.km), 
+                                prunk(mat9.aci.km), 
+                               prunk(mat10.aci.km))
+
+unknown.relationships.aci.ks<-c(prunk(mat1.aci.ks), 
+                                prunk(mat2.aci.ks), 
+                                prunk(mat3.aci.ks), 
+                                prunk(mat4.aci.ks), 
+                                prunk(mat5.aci.ks), 
+                                prunk(mat6.aci.ks), 
+                                prunk(mat7.aci.ks), 
+                                prunk(mat8.aci.ks), 
+                                prunk(mat9.aci.ks), 
+                               prunk(mat10.aci.ks))
+
+unknown.relationships.aci.ko<-c(prunk(mat1.aci.ko), 
+                                prunk(mat2.aci.ko), 
+                                prunk(mat3.aci.ko), 
+                                prunk(mat4.aci.ko), 
+                                prunk(mat5.aci.ko), 
+                                prunk(mat6.aci.ko), 
+                                prunk(mat7.aci.ko), 
+                                prunk(mat8.aci.ko), 
+                                prunk(mat9.aci.ko), 
+                               prunk(mat10.aci.ko))
+                               
+unknown.relationships.aci.hm<-c(prunk(mat1.aci.hm), 
+                                prunk(mat2.aci.hm), 
+                                prunk(mat3.aci.hm), 
+                                prunk(mat4.aci.hm), 
+                                prunk(mat5.aci.hm), 
+                                prunk(mat6.aci.hm), 
+                                prunk(mat7.aci.hm), 
+                                prunk(mat8.aci.hm), 
+                                prunk(mat9.aci.hm), 
+                               prunk(mat10.aci.hm))
+
+unknown.relationships.aci.hs<-c(prunk(mat1.aci.hs), 
+                                prunk(mat2.aci.hs), 
+                                prunk(mat3.aci.hs), 
+                                prunk(mat4.aci.hs), 
+                                prunk(mat5.aci.hs), 
+                                prunk(mat6.aci.hs), 
+                                prunk(mat7.aci.hs), 
+                                prunk(mat8.aci.hs), 
+                                prunk(mat9.aci.hs), 
+                               prunk(mat10.aci.hs))
+
+unknown.relationships.aci.ho<-c(prunk(mat1.aci.ho), 
+                                prunk(mat2.aci.ho), 
+                                prunk(mat3.aci.ho), 
+                                prunk(mat4.aci.ho), 
+                                prunk(mat5.aci.ho), 
+                                prunk(mat6.aci.ho), 
+                                prunk(mat7.aci.ho), 
+                                prunk(mat8.aci.ho), 
+                                prunk(mat9.aci.ho), 
+                               prunk(mat10.aci.ho))
+
+total.unknown.relationships.aci<-data.frame("km"=unknown.relationships.aci.km)
+total.unknown.relationships.aci<-cbind(total.unknown.relationships.aci, "ks"=unknown.relationships.aci.ks, "ko"=unknown.relationships.aci.ko, "hm"=unknown.relationships.aci.hm, "hs"=unknown.relationships.aci.hs, "ho"=unknown.relationships.aci.ho)
+
+total.unknown.relationships.aci<-total.unknown.relationships.aci[seq(1, nrow(total.unknown.relationships.aci), 4), ]
+ur.aci.sum<-data.frame("km"=sum(total.unknown.relationships.aci[,1]),"ks"=sum(total.unknown.relationships.aci[,2]),"ko"=sum(total.unknown.relationships.aci[,3]),"hm"=sum(total.unknown.relationships.aci[,4]),"hs"=sum(total.unknown.relationships.aci[,5]),"ho"=sum(total.unknown.relationships.aci[,6]))
+total.unknown.relationships.aci<-rbind(total.unknown.relationships.aci, "Summed Totals"=ur.aci.sum)
+write.csv(total.unknown.relationships.aci,"~/Desktop/total.unknown.relationships.aci.csv")
+```
+
+#Initiator Wins Clumped Attacks
+```{r}
+library(EloRating)
+
+unknown.relationships.atci.km<-c(prunk(mat1.atci.km), 
+                                 prunk(mat2.atci.km), 
+                                 prunk(mat3.atci.km), 
+                                 prunk(mat4.atci.km), 
+                                 prunk(mat5.atci.km), 
+                                 prunk(mat6.atci.km), 
+                                 prunk(mat7.atci.km), 
+                                 prunk(mat8.atci.km), 
+                                 prunk(mat9.atci.km), 
+                                prunk(mat10.atci.km))
+
+unknown.relationships.atci.ks<-c(prunk(mat1.atci.ks), 
+                                 prunk(mat2.atci.ks), 
+                                 prunk(mat3.atci.ks), 
+                                 prunk(mat4.atci.ks), 
+                                 prunk(mat5.atci.ks), 
+                                 prunk(mat6.atci.ks), 
+                                 prunk(mat7.atci.ks), 
+                                 prunk(mat8.atci.ks), 
+                                 prunk(mat9.atci.ks), 
+                                prunk(mat10.atci.ks))
+
+unknown.relationships.atci.ko<-c(prunk(mat1.atci.ko), 
+                                 prunk(mat2.atci.ko), 
+                                 prunk(mat3.atci.ko), 
+                                 prunk(mat4.atci.ko), 
+                                 prunk(mat5.atci.ko), 
+                                 prunk(mat6.atci.ko), 
+                                 prunk(mat7.atci.ko), 
+                                 prunk(mat8.atci.ko), 
+                                 prunk(mat9.atci.ko), 
+                                prunk(mat10.atci.ko))
+                               
+unknown.relationships.atci.hm<-c(prunk(mat1.atci.hm), 
+                                 prunk(mat2.atci.hm), 
+                                 prunk(mat3.atci.hm), 
+                                 prunk(mat4.atci.hm), 
+                                 prunk(mat5.atci.hm), 
+                                 prunk(mat6.atci.hm), 
+                                 prunk(mat7.atci.hm), 
+                                 prunk(mat8.atci.hm), 
+                                 prunk(mat9.atci.hm), 
+                                prunk(mat10.atci.hm))
+
+unknown.relationships.atci.hs<-c(prunk(mat1.atci.hs), 
+                                 prunk(mat2.atci.hs), 
+                                 prunk(mat3.atci.hs), 
+                                 prunk(mat4.atci.hs), 
+                                 prunk(mat5.atci.hs), 
+                                 prunk(mat6.atci.hs), 
+                                 prunk(mat7.atci.hs), 
+                                 prunk(mat8.atci.hs), 
+                                 prunk(mat9.atci.hs), 
+                                prunk(mat10.atci.hs))
+
+unknown.relationships.atci.ho<-c(prunk(mat1.atci.ho), 
+                                 prunk(mat2.atci.ho), 
+                                 prunk(mat3.atci.ho), 
+                                 prunk(mat4.atci.ho), 
+                                 prunk(mat5.atci.ho), 
+                                 prunk(mat6.atci.ho), 
+                                 prunk(mat7.atci.ho), 
+                                 prunk(mat8.atci.ho), 
+                                 prunk(mat9.atci.ho), 
+                                prunk(mat10.atci.ho))
+
+total.unknown.relationships.atci<-data.frame("km"=unknown.relationships.atci.km)
+total.unknown.relationships.atci<-cbind(total.unknown.relationships.atci, "ks"=unknown.relationships.atci.ks, "ko"=unknown.relationships.atci.ko, "hm"=unknown.relationships.atci.hm, "hs"=unknown.relationships.atci.hs, "ho"=unknown.relationships.atci.ho)
+
+total.unknown.relationships.atci<-total.unknown.relationships.atci[seq(1, nrow(total.unknown.relationships.atci), 4), ]
+ur.atci.sum<-data.frame("km"=sum(total.unknown.relationships.atci[,1]),"ks"=sum(total.unknown.relationships.atci[,2]),"ko"=sum(total.unknown.relationships.atci[,3]),"hm"=sum(total.unknown.relationships.atci[,4]),"hs"=sum(total.unknown.relationships.atci[,5]),"ho"=sum(total.unknown.relationships.atci[,6]))
+total.unknown.relationships.atci<-rbind(total.unknown.relationships.atci, "Summed Totals"=ur.atci.sum)
+write.csv(total.unknown.relationships.atci,"~/Desktop/total.unknown.relationships.atci.csv")
+```
+
+
+#Initiator Wins Uniform
+```{r}
+library(EloRating)
+
+unknown.relationships.ui.km<-c(prunk(mat1.ui.km), 
+                               prunk(mat2.ui.km), 
+                               prunk(mat3.ui.km), 
+                               prunk(mat4.ui.km), 
+                               prunk(mat5.ui.km), 
+                               prunk(mat6.ui.km), 
+                               prunk(mat7.ui.km), 
+                               prunk(mat8.ui.km), 
+                               prunk(mat9.ui.km), 
+                               prunk(mat10.ui.km))
+
+unknown.relationships.ui.ks<-c(prunk(mat1.ui.ks), 
+                               prunk(mat2.ui.ks), 
+                               prunk(mat3.ui.ks), 
+                               prunk(mat4.ui.ks), 
+                               prunk(mat5.ui.ks), 
+                               prunk(mat6.ui.ks), 
+                               prunk(mat7.ui.ks), 
+                               prunk(mat8.ui.ks), 
+                               prunk(mat9.ui.ks), 
+                               prunk(mat10.ui.ks))
+
+unknown.relationships.ui.ko<-c(prunk(mat1.ui.ko), 
+                               prunk(mat2.ui.ko), 
+                               prunk(mat3.ui.ko), 
+                               prunk(mat4.ui.ko), 
+                               prunk(mat5.ui.ko), 
+                               prunk(mat6.ui.ko), 
+                               prunk(mat7.ui.ko), 
+                               prunk(mat8.ui.ko), 
+                               prunk(mat9.ui.ko), 
+                               prunk(mat10.ui.ko))
+                               
+unknown.relationships.ui.hm<-c(prunk(mat1.ui.hm), 
+                               prunk(mat2.ui.hm), 
+                               prunk(mat3.ui.hm), 
+                               prunk(mat4.ui.hm), 
+                               prunk(mat5.ui.hm), 
+                               prunk(mat6.ui.hm), 
+                               prunk(mat7.ui.hm), 
+                               prunk(mat8.ui.hm), 
+                               prunk(mat9.ui.hm), 
+                               prunk(mat10.ui.hm))
+
+unknown.relationships.ui.hs<-c(prunk(mat1.ui.hs), 
+                               prunk(mat2.ui.hs), 
+                               prunk(mat3.ui.hs), 
+                               prunk(mat4.ui.hs), 
+                               prunk(mat5.ui.hs), 
+                               prunk(mat6.ui.hs), 
+                               prunk(mat7.ui.hs), 
+                               prunk(mat8.ui.hs), 
+                               prunk(mat9.ui.hs), 
+                               prunk(mat10.ui.hs))
+
+unknown.relationships.ui.ho<-c(prunk(mat1.ui.ho), 
+                               prunk(mat2.ui.ho), 
+                               prunk(mat3.ui.ho), 
+                               prunk(mat4.ui.ho), 
+                               prunk(mat5.ui.ho), 
+                               prunk(mat6.ui.ho), 
+                               prunk(mat7.ui.ho), 
+                               prunk(mat8.ui.ho), 
+                               prunk(mat9.ui.ho), 
+                               prunk(mat10.ui.ho))
+
+total.unknown.relationships.ui<-data.frame("km"=unknown.relationships.ui.km)
+total.unknown.relationships.ui<-cbind(total.unknown.relationships.ui, "ks"=unknown.relationships.ui.ks, "ko"=unknown.relationships.ui.ko, "hm"=unknown.relationships.ui.hm, "hs"=unknown.relationships.ui.hs, "ho"=unknown.relationships.ui.ho)
+
+total.unknown.relationships.ui<-total.unknown.relationships.ui[seq(1, nrow(total.unknown.relationships.ui), 4), ]
+ur.ui.sum<-data.frame("km"=sum(total.unknown.relationships.ui[,1]),"ks"=sum(total.unknown.relationships.ui[,2]),"ko"=sum(total.unknown.relationships.ui[,3]),"hm"=sum(total.unknown.relationships.ui[,4]),"hs"=sum(total.unknown.relationships.ui[,5]),"ho"=sum(total.unknown.relationships.ui[,6]))
+total.unknown.relationships.ui<-rbind(total.unknown.relationships.ui, "Summed Totals"=ur.ui.sum)
+write.csv(total.unknown.relationships.ui,"~/Desktop/total.unknown.relationships.ui.csv")
+```
+
+#Initiator Wins Uniform Avoids
+```{r}
+library(EloRating)
+
+unknown.relationships.aui.km<-c(prunk(mat1.aui.km), 
+                                prunk(mat2.aui.km), 
+                                prunk(mat3.aui.km), 
+                                prunk(mat4.aui.km), 
+                                prunk(mat5.aui.km), 
+                                prunk(mat6.aui.km), 
+                                prunk(mat7.aui.km), 
+                                prunk(mat8.aui.km), 
+                                prunk(mat9.aui.km), 
+                               prunk(mat10.aui.km))
+
+unknown.relationships.aui.ks<-c(prunk(mat1.aui.ks), 
+                                prunk(mat2.aui.ks), 
+                                prunk(mat3.aui.ks), 
+                                prunk(mat4.aui.ks), 
+                                prunk(mat5.aui.ks), 
+                                prunk(mat6.aui.ks), 
+                                prunk(mat7.aui.ks), 
+                                prunk(mat8.aui.ks), 
+                                prunk(mat9.aui.ks), 
+                               prunk(mat10.aui.ks))
+
+unknown.relationships.aui.ko<-c(prunk(mat1.aui.ko), 
+                                prunk(mat2.aui.ko), 
+                                prunk(mat3.aui.ko), 
+                                prunk(mat4.aui.ko), 
+                                prunk(mat5.aui.ko), 
+                                prunk(mat6.aui.ko), 
+                                prunk(mat7.aui.ko), 
+                                prunk(mat8.aui.ko), 
+                                prunk(mat9.aui.ko), 
+                               prunk(mat10.aui.ko))
+                               
+unknown.relationships.aui.hm<-c(prunk(mat1.aui.hm), 
+                                prunk(mat2.aui.hm), 
+                                prunk(mat3.aui.hm), 
+                                prunk(mat4.aui.hm), 
+                                prunk(mat5.aui.hm), 
+                                prunk(mat6.aui.hm), 
+                                prunk(mat7.aui.hm), 
+                                prunk(mat8.aui.hm), 
+                                prunk(mat9.aui.hm), 
+                               prunk(mat10.aui.hm))
+
+unknown.relationships.aui.hs<-c(prunk(mat1.aui.hs), 
+                                prunk(mat2.aui.hs), 
+                                prunk(mat3.aui.hs), 
+                                prunk(mat4.aui.hs), 
+                                prunk(mat5.aui.hs), 
+                                prunk(mat6.aui.hs), 
+                                prunk(mat7.aui.hs), 
+                                prunk(mat8.aui.hs), 
+                                prunk(mat9.aui.hs), 
+                               prunk(mat10.aui.hs))
+
+unknown.relationships.aui.ho<-c(prunk(mat1.aui.ho), 
+                                prunk(mat2.aui.ho), 
+                                prunk(mat3.aui.ho), 
+                                prunk(mat4.aui.ho), 
+                                prunk(mat5.aui.ho), 
+                                prunk(mat6.aui.ho), 
+                                prunk(mat7.aui.ho), 
+                                prunk(mat8.aui.ho), 
+                                prunk(mat9.aui.ho), 
+                               prunk(mat10.aui.ho))
+
+total.unknown.relationships.aui<-data.frame("km"=unknown.relationships.aui.km)
+total.unknown.relationships.aui<-cbind(total.unknown.relationships.aui, "ks"=unknown.relationships.aui.ks, "ko"=unknown.relationships.aui.ko, "hm"=unknown.relationships.aui.hm, "hs"=unknown.relationships.aui.hs, "ho"=unknown.relationships.aui.ho)
+
+total.unknown.relationships.aui<-total.unknown.relationships.aui[seq(1, nrow(total.unknown.relationships.aui), 4), ]
+ur.aui.sum<-data.frame("km"=sum(total.unknown.relationships.aui[,1]),"ks"=sum(total.unknown.relationships.aui[,2]),"ko"=sum(total.unknown.relationships.aui[,3]),"hm"=sum(total.unknown.relationships.aui[,4]),"hs"=sum(total.unknown.relationships.aui[,5]),"ho"=sum(total.unknown.relationships.aui[,6]))
+total.unknown.relationships.aui<-rbind(total.unknown.relationships.aui, "Summed Totals"=ur.aui.sum)
+write.csv(total.unknown.relationships.aui,"~/Desktop/total.unknown.relationships.aui.csv")
+```
+
+#Initiator Wins Uniform Attacks
+```{r}
+library(EloRating)
+
+unknown.relationships.atui.km<-c(prunk(mat1.atui.km), 
+                                 prunk(mat2.atui.km), 
+                                 prunk(mat3.atui.km), 
+                                 prunk(mat4.atui.km), 
+                                 prunk(mat5.atui.km), 
+                                 prunk(mat6.atui.km), 
+                                 prunk(mat7.atui.km), 
+                                 prunk(mat8.atui.km), 
+                                 prunk(mat9.atui.km), 
+                                prunk(mat10.atui.km))
+
+unknown.relationships.atui.ks<-c(prunk(mat1.atui.ks), 
+                                 prunk(mat2.atui.ks), 
+                                 prunk(mat3.atui.ks), 
+                                 prunk(mat4.atui.ks), 
+                                 prunk(mat5.atui.ks), 
+                                 prunk(mat6.atui.ks), 
+                                 prunk(mat7.atui.ks), 
+                                 prunk(mat8.atui.ks), 
+                                 prunk(mat9.atui.ks), 
+                                prunk(mat10.atui.ks))
+
+unknown.relationships.atui.ko<-c(prunk(mat1.atui.ko), 
+                                 prunk(mat2.atui.ko), 
+                                 prunk(mat3.atui.ko), 
+                                 prunk(mat4.atui.ko), 
+                                 prunk(mat5.atui.ko), 
+                                 prunk(mat6.atui.ko), 
+                                 prunk(mat7.atui.ko), 
+                                 prunk(mat8.atui.ko), 
+                                 prunk(mat9.atui.ko), 
+                                prunk(mat10.atui.ko))
+                               
+unknown.relationships.atui.hm<-c(prunk(mat1.atui.hm), 
+                                 prunk(mat2.atui.hm), 
+                                 prunk(mat3.atui.hm), 
+                                 prunk(mat4.atui.hm), 
+                                 prunk(mat5.atui.hm), 
+                                 prunk(mat6.atui.hm), 
+                                 prunk(mat7.atui.hm), 
+                                 prunk(mat8.atui.hm), 
+                                 prunk(mat9.atui.hm), 
+                                prunk(mat10.atui.hm))
+
+unknown.relationships.atui.hs<-c(prunk(mat1.atui.hs), 
+                                 prunk(mat2.atui.hs), 
+                                 prunk(mat3.atui.hs), 
+                                 prunk(mat4.atui.hs), 
+                                 prunk(mat5.atui.hs), 
+                                 prunk(mat6.atui.hs), 
+                                 prunk(mat7.atui.hs), 
+                                 prunk(mat8.atui.hs), 
+                                 prunk(mat9.atui.hs), 
+                                prunk(mat10.atui.hs))
+
+unknown.relationships.atui.ho<-c(prunk(mat1.atui.ho), 
+                                 prunk(mat2.atui.ho), 
+                                 prunk(mat3.atui.ho), 
+                                 prunk(mat4.atui.ho), 
+                                 prunk(mat5.atui.ho), 
+                                 prunk(mat6.atui.ho), 
+                                 prunk(mat7.atui.ho), 
+                                 prunk(mat8.atui.ho), 
+                                 prunk(mat9.atui.ho), 
+                                prunk(mat10.atui.ho))
+
+total.unknown.relationships.atui<-data.frame("km"=unknown.relationships.atui.km)
+total.unknown.relationships.atui<-cbind(total.unknown.relationships.atui, "ks"=unknown.relationships.atui.ks, "ko"=unknown.relationships.atui.ko, "hm"=unknown.relationships.atui.hm, "hs"=unknown.relationships.atui.hs, "ho"=unknown.relationships.atui.ho)
+
+total.unknown.relationships.atui<-total.unknown.relationships.atui[seq(1, nrow(total.unknown.relationships.atui), 4), ]
+ur.atui.sum<-data.frame("km"=sum(total.unknown.relationships.atui[,1]),"ks"=sum(total.unknown.relationships.atui[,2]),"ko"=sum(total.unknown.relationships.atui[,3]),"hm"=sum(total.unknown.relationships.atui[,4]),"hs"=sum(total.unknown.relationships.atui[,5]),"ho"=sum(total.unknown.relationships.atui[,6]))
+total.unknown.relationships.atui<-rbind(total.unknown.relationships.atui, "Summed Totals"=ur.atui.sum)
+write.csv(total.unknown.relationships.atui,"~/Desktop/total.unknown.relationships.atui.csv")
+```
+
+#Probabilistic Clumped
+```{r}
+library(EloRating)
+
+unknown.relationships.cp.km<-c(prunk(mat1.cp.km), 
+                               prunk(mat2.cp.km), 
+                               prunk(mat3.cp.km), 
+                               prunk(mat4.cp.km), 
+                               prunk(mat5.cp.km), 
+                               prunk(mat6.cp.km), 
+                               prunk(mat7.cp.km), 
+                               prunk(mat8.cp.km), 
+                               prunk(mat9.cp.km), 
+                               prunk(mat10.cp.km))
+
+unknown.relationships.cp.ks<-c(prunk(mat1.cp.ks), 
+                               prunk(mat2.cp.ks), 
+                               prunk(mat3.cp.ks), 
+                               prunk(mat4.cp.ks), 
+                               prunk(mat5.cp.ks), 
+                               prunk(mat6.cp.ks), 
+                               prunk(mat7.cp.ks), 
+                               prunk(mat8.cp.ks), 
+                               prunk(mat9.cp.ks), 
+                               prunk(mat10.cp.ks))
+
+unknown.relationships.cp.ko<-c(prunk(mat1.cp.ko), 
+                               prunk(mat2.cp.ko), 
+                               prunk(mat3.cp.ko), 
+                               prunk(mat4.cp.ko), 
+                               prunk(mat5.cp.ko), 
+                               prunk(mat6.cp.ko), 
+                               prunk(mat7.cp.ko), 
+                               prunk(mat8.cp.ko), 
+                               prunk(mat9.cp.ko), 
+                               prunk(mat10.cp.ko))
+                               
+unknown.relationships.cp.hm<-c(prunk(mat1.cp.hm), 
+                               prunk(mat2.cp.hm), 
+                               prunk(mat3.cp.hm), 
+                               prunk(mat4.cp.hm), 
+                               prunk(mat5.cp.hm), 
+                               prunk(mat6.cp.hm), 
+                               prunk(mat7.cp.hm), 
+                               prunk(mat8.cp.hm), 
+                               prunk(mat9.cp.hm), 
+                               prunk(mat10.cp.hm))
+
+unknown.relationships.cp.hs<-c(prunk(mat1.cp.hs), 
+                               prunk(mat2.cp.hs), 
+                               prunk(mat3.cp.hs), 
+                               prunk(mat4.cp.hs), 
+                               prunk(mat5.cp.hs), 
+                               prunk(mat6.cp.hs), 
+                               prunk(mat7.cp.hs), 
+                               prunk(mat8.cp.hs), 
+                               prunk(mat9.cp.hs), 
+                               prunk(mat10.cp.hs))
+
+unknown.relationships.cp.ho<-c(prunk(mat1.cp.ho), 
+                               prunk(mat2.cp.ho), 
+                               prunk(mat3.cp.ho), 
+                               prunk(mat4.cp.ho), 
+                               prunk(mat5.cp.ho), 
+                               prunk(mat6.cp.ho), 
+                               prunk(mat7.cp.ho), 
+                               prunk(mat8.cp.ho), 
+                               prunk(mat9.cp.ho), 
+                               prunk(mat10.cp.ho))
+
+total.unknown.relationships.cp<-data.frame("km"=unknown.relationships.cp.km)
+total.unknown.relationships.cp<-cbind(total.unknown.relationships.cp, "ks"=unknown.relationships.cp.ks, "ko"=unknown.relationships.cp.ko, "hm"=unknown.relationships.cp.hm, "hs"=unknown.relationships.cp.hs, "ho"=unknown.relationships.cp.ho)
+
+total.unknown.relationships.cp<-total.unknown.relationships.cp[seq(1, nrow(total.unknown.relationships.cp), 4), ]
+ur.cp.sum<-data.frame("km"=sum(total.unknown.relationships.cp[,1]),"ks"=sum(total.unknown.relationships.cp[,2]),"ko"=sum(total.unknown.relationships.cp[,3]),"hm"=sum(total.unknown.relationships.cp[,4]),"hs"=sum(total.unknown.relationships.cp[,5]),"ho"=sum(total.unknown.relationships.cp[,6]))
+total.unknown.relationships.cp<-rbind(total.unknown.relationships.cp, "Summed Totals"=ur.cp.sum)
+write.csv(total.unknown.relationships.cp,"~/Desktop/total.unknown.relationships.cp.csv")
+```
+
+#Probabilistic Clumped Avoids
+```{r}
+library(EloRating)
+
+unknown.relationships.acp.km<-c(prunk(mat1.acp.km), 
+                               prunk(mat2.acp.km), 
+                               prunk(mat3.acp.km), 
+                               prunk(mat4.acp.km), 
+                               prunk(mat5.acp.km), 
+                               prunk(mat6.acp.km), 
+                               prunk(mat7.acp.km), 
+                               prunk(mat8.acp.km), 
+                               prunk(mat9.acp.km), 
+                               prunk(mat10.acp.km))
+
+unknown.relationships.acp.ks<-c(prunk(mat1.acp.ks), 
+                               prunk(mat2.acp.ks), 
+                               prunk(mat3.acp.ks), 
+                               prunk(mat4.acp.ks), 
+                               prunk(mat5.acp.ks), 
+                               prunk(mat6.acp.ks), 
+                               prunk(mat7.acp.ks), 
+                               prunk(mat8.acp.ks), 
+                               prunk(mat9.acp.ks), 
+                               prunk(mat10.acp.ks))
+
+unknown.relationships.acp.ko<-c(prunk(mat1.acp.ko), 
+                               prunk(mat2.acp.ko), 
+                               prunk(mat3.acp.ko), 
+                               prunk(mat4.acp.ko), 
+                               prunk(mat5.acp.ko), 
+                               prunk(mat6.acp.ko), 
+                               prunk(mat7.acp.ko), 
+                               prunk(mat8.acp.ko), 
+                               prunk(mat9.acp.ko), 
+                               prunk(mat10.acp.ko))
+                               
+unknown.relationships.acp.hm<-c(prunk(mat1.acp.hm), 
+                               prunk(mat2.acp.hm), 
+                               prunk(mat3.acp.hm), 
+                               prunk(mat4.acp.hm), 
+                               prunk(mat5.acp.hm), 
+                               prunk(mat6.acp.hm), 
+                               prunk(mat7.acp.hm), 
+                               prunk(mat8.acp.hm), 
+                               prunk(mat9.acp.hm), 
+                               prunk(mat10.acp.hm))
+
+unknown.relationships.acp.hs<-c(prunk(mat1.acp.hs), 
+                               prunk(mat2.acp.hs), 
+                               prunk(mat3.acp.hs), 
+                               prunk(mat4.acp.hs), 
+                               prunk(mat5.acp.hs), 
+                               prunk(mat6.acp.hs), 
+                               prunk(mat7.acp.hs), 
+                               prunk(mat8.acp.hs), 
+                               prunk(mat9.acp.hs), 
+                               prunk(mat10.acp.hs))
+
+unknown.relationships.acp.ho<-c(prunk(mat1.acp.ho), 
+                               prunk(mat2.acp.ho), 
+                               prunk(mat3.acp.ho), 
+                               prunk(mat4.acp.ho), 
+                               prunk(mat5.acp.ho), 
+                               prunk(mat6.acp.ho), 
+                               prunk(mat7.acp.ho), 
+                               prunk(mat8.acp.ho), 
+                               prunk(mat9.acp.ho), 
+                               prunk(mat10.acp.ho))
+
+total.unknown.relationships.acp<-data.frame("km"=unknown.relationships.acp.km)
+total.unknown.relationships.acp<-cbind(total.unknown.relationships.acp, "ks"=unknown.relationships.acp.ks, "ko"=unknown.relationships.acp.ko, "hm"=unknown.relationships.acp.hm, "hs"=unknown.relationships.acp.hs, "ho"=unknown.relationships.acp.ho)
+
+total.unknown.relationships.acp<-total.unknown.relationships.acp[seq(1, nrow(total.unknown.relationships.acp), 4), ]
+ur.acp.sum<-data.frame("km"=sum(total.unknown.relationships.acp[,1]),"ks"=sum(total.unknown.relationships.acp[,2]),"ko"=sum(total.unknown.relationships.acp[,3]),"hm"=sum(total.unknown.relationships.acp[,4]),"hs"=sum(total.unknown.relationships.acp[,5]),"ho"=sum(total.unknown.relationships.acp[,6]))
+total.unknown.relationships.acp<-rbind(total.unknown.relationships.acp, "Summed Totals"=ur.acp.sum)
+write.csv(total.unknown.relationships.acp,"~/Desktop/total.unknown.relationships.acp.csv")
+```
+
+#Probabilistic Clumped Attacks
+```{r}
+library(EloRating)
+
+unknown.relationships.atcp.km<-c(prunk(mat1.atcp.km), 
+                               prunk(mat2.atcp.km), 
+                               prunk(mat3.atcp.km), 
+                               prunk(mat4.atcp.km), 
+                               prunk(mat5.atcp.km), 
+                               prunk(mat6.atcp.km), 
+                               prunk(mat7.atcp.km), 
+                               prunk(mat8.atcp.km), 
+                               prunk(mat9.atcp.km), 
+                               prunk(mat10.atcp.km))
+
+unknown.relationships.atcp.ks<-c(prunk(mat1.atcp.ks), 
+                               prunk(mat2.atcp.ks), 
+                               prunk(mat3.atcp.ks), 
+                               prunk(mat4.atcp.ks), 
+                               prunk(mat5.atcp.ks), 
+                               prunk(mat6.atcp.ks), 
+                               prunk(mat7.atcp.ks), 
+                               prunk(mat8.atcp.ks), 
+                               prunk(mat9.atcp.ks), 
+                               prunk(mat10.atcp.ks))
+
+unknown.relationships.atcp.ko<-c(prunk(mat1.atcp.ko), 
+                               prunk(mat2.atcp.ko), 
+                               prunk(mat3.atcp.ko), 
+                               prunk(mat4.atcp.ko), 
+                               prunk(mat5.atcp.ko), 
+                               prunk(mat6.atcp.ko), 
+                               prunk(mat7.atcp.ko), 
+                               prunk(mat8.atcp.ko), 
+                               prunk(mat9.atcp.ko), 
+                               prunk(mat10.atcp.ko))
+                               
+unknown.relationships.atcp.hm<-c(prunk(mat1.atcp.hm), 
+                               prunk(mat2.atcp.hm), 
+                               prunk(mat3.atcp.hm), 
+                               prunk(mat4.atcp.hm), 
+                               prunk(mat5.atcp.hm), 
+                               prunk(mat6.atcp.hm), 
+                               prunk(mat7.atcp.hm), 
+                               prunk(mat8.atcp.hm), 
+                               prunk(mat9.atcp.hm), 
+                               prunk(mat10.atcp.hm))
+
+unknown.relationships.atcp.hs<-c(prunk(mat1.atcp.hs), 
+                               prunk(mat2.atcp.hs), 
+                               prunk(mat3.atcp.hs), 
+                               prunk(mat4.atcp.hs), 
+                               prunk(mat5.atcp.hs), 
+                               prunk(mat6.atcp.hs), 
+                               prunk(mat7.atcp.hs), 
+                               prunk(mat8.atcp.hs), 
+                               prunk(mat9.atcp.hs), 
+                               prunk(mat10.atcp.hs))
+
+unknown.relationships.atcp.ho<-c(prunk(mat1.atcp.ho), 
+                               prunk(mat2.atcp.ho), 
+                               prunk(mat3.atcp.ho), 
+                               prunk(mat4.atcp.ho), 
+                               prunk(mat5.atcp.ho), 
+                               prunk(mat6.atcp.ho), 
+                               prunk(mat7.atcp.ho), 
+                               prunk(mat8.atcp.ho), 
+                               prunk(mat9.atcp.ho), 
+                               prunk(mat10.atcp.ho))
+
+total.unknown.relationships.atcp<-data.frame("km"=unknown.relationships.atcp.km)
+total.unknown.relationships.atcp<-cbind(total.unknown.relationships.atcp, "ks"=unknown.relationships.atcp.ks, "ko"=unknown.relationships.atcp.ko, "hm"=unknown.relationships.atcp.hm, "hs"=unknown.relationships.atcp.hs, "ho"=unknown.relationships.atcp.ho)
+
+total.unknown.relationships.atcp<-total.unknown.relationships.atcp[seq(1, nrow(total.unknown.relationships.atcp), 4), ]
+ur.atcp.sum<-data.frame("km"=sum(total.unknown.relationships.atcp[,1]),"ks"=sum(total.unknown.relationships.atcp[,2]),"ko"=sum(total.unknown.relationships.atcp[,3]),"hm"=sum(total.unknown.relationships.atcp[,4]),"hs"=sum(total.unknown.relationships.atcp[,5]),"ho"=sum(total.unknown.relationships.atcp[,6]))
+total.unknown.relationships.atcp<-rbind(total.unknown.relationships.atcp, "Summed Totals"=ur.atcp.sum)
+write.csv(total.unknown.relationships.atcp,"~/Desktop/total.unknown.relationships.atcp.csv")
+```
+
+#Probabilistic Uniform
+```{r}
+library(EloRating)
+
+unknown.relationships.up.km<-c(prunk(mat1.up.km), 
+                               prunk(mat2.up.km), 
+                               prunk(mat3.up.km), 
+                               prunk(mat4.up.km), 
+                               prunk(mat5.up.km), 
+                               prunk(mat6.up.km), 
+                               prunk(mat7.up.km), 
+                               prunk(mat8.up.km), 
+                               prunk(mat9.up.km), 
+                               prunk(mat10.up.km))
+
+unknown.relationships.up.ks<-c(prunk(mat1.up.ks), 
+                               prunk(mat2.up.ks), 
+                               prunk(mat3.up.ks), 
+                               prunk(mat4.up.ks), 
+                               prunk(mat5.up.ks), 
+                               prunk(mat6.up.ks), 
+                               prunk(mat7.up.ks), 
+                               prunk(mat8.up.ks), 
+                               prunk(mat9.up.ks), 
+                               prunk(mat10.up.ks))
+
+unknown.relationships.up.ko<-c(prunk(mat1.up.ko), 
+                               prunk(mat2.up.ko), 
+                               prunk(mat3.up.ko), 
+                               prunk(mat4.up.ko), 
+                               prunk(mat5.up.ko), 
+                               prunk(mat6.up.ko), 
+                               prunk(mat7.up.ko), 
+                               prunk(mat8.up.ko), 
+                               prunk(mat9.up.ko), 
+                               prunk(mat10.up.ko))
+                               
+unknown.relationships.up.hm<-c(prunk(mat1.up.hm), 
+                               prunk(mat2.up.hm), 
+                               prunk(mat3.up.hm), 
+                               prunk(mat4.up.hm), 
+                               prunk(mat5.up.hm), 
+                               prunk(mat6.up.hm), 
+                               prunk(mat7.up.hm), 
+                               prunk(mat8.up.hm), 
+                               prunk(mat9.up.hm), 
+                               prunk(mat10.up.hm))
+
+unknown.relationships.up.hs<-c(prunk(mat1.up.hs), 
+                               prunk(mat2.up.hs), 
+                               prunk(mat3.up.hs), 
+                               prunk(mat4.up.hs), 
+                               prunk(mat5.up.hs), 
+                               prunk(mat6.up.hs), 
+                               prunk(mat7.up.hs), 
+                               prunk(mat8.up.hs), 
+                               prunk(mat9.up.hs), 
+                               prunk(mat10.up.hs))
+
+unknown.relationships.up.ho<-c(prunk(mat1.up.ho), 
+                               prunk(mat2.up.ho), 
+                               prunk(mat3.up.ho), 
+                               prunk(mat4.up.ho), 
+                               prunk(mat5.up.ho), 
+                               prunk(mat6.up.ho), 
+                               prunk(mat7.up.ho), 
+                               prunk(mat8.up.ho), 
+                               prunk(mat9.up.ho), 
+                               prunk(mat10.up.ho))
+
+total.unknown.relationships.up<-data.frame("km"=unknown.relationships.up.km)
+total.unknown.relationships.up<-cbind(total.unknown.relationships.up, "ks"=unknown.relationships.up.ks, "ko"=unknown.relationships.up.ko, "hm"=unknown.relationships.up.hm, "hs"=unknown.relationships.up.hs, "ho"=unknown.relationships.up.ho)
+
+total.unknown.relationships.up<-total.unknown.relationships.up[seq(1, nrow(total.unknown.relationships.up), 4), ]
+ur.up.sum<-data.frame("km"=sum(total.unknown.relationships.up[,1]),"ks"=sum(total.unknown.relationships.up[,2]),"ko"=sum(total.unknown.relationships.up[,3]),"hm"=sum(total.unknown.relationships.up[,4]),"hs"=sum(total.unknown.relationships.up[,5]),"ho"=sum(total.unknown.relationships.up[,6]))
+total.unknown.relationships.up<-rbind(total.unknown.relationships.up, "Summed Totals"=ur.up.sum)
+write.csv(total.unknown.relationships.up,"~/Desktop/total.unknown.relationships.up.csv")
+```
+
+#Probabilistic Uniform Avoids
+```{r}
+library(EloRating)
+
+unknown.relationships.aup.km<-c(prunk(mat1.aup.km), 
+                               prunk(mat2.aup.km), 
+                               prunk(mat3.aup.km), 
+                               prunk(mat4.aup.km), 
+                               prunk(mat5.aup.km), 
+                               prunk(mat6.aup.km), 
+                               prunk(mat7.aup.km), 
+                               prunk(mat8.aup.km), 
+                               prunk(mat9.aup.km), 
+                               prunk(mat10.aup.km))
+
+unknown.relationships.aup.ks<-c(prunk(mat1.aup.ks), 
+                               prunk(mat2.aup.ks), 
+                               prunk(mat3.aup.ks), 
+                               prunk(mat4.aup.ks), 
+                               prunk(mat5.aup.ks), 
+                               prunk(mat6.aup.ks), 
+                               prunk(mat7.aup.ks), 
+                               prunk(mat8.aup.ks), 
+                               prunk(mat9.aup.ks), 
+                               prunk(mat10.aup.ks))
+
+unknown.relationships.aup.ko<-c(prunk(mat1.aup.ko), 
+                               prunk(mat2.aup.ko), 
+                               prunk(mat3.aup.ko), 
+                               prunk(mat4.aup.ko), 
+                               prunk(mat5.aup.ko), 
+                               prunk(mat6.aup.ko), 
+                               prunk(mat7.aup.ko), 
+                               prunk(mat8.aup.ko), 
+                               prunk(mat9.aup.ko), 
+                               prunk(mat10.aup.ko))
+                               
+unknown.relationships.aup.hm<-c(prunk(mat1.aup.hm), 
+                               prunk(mat2.aup.hm), 
+                               prunk(mat3.aup.hm), 
+                               prunk(mat4.aup.hm), 
+                               prunk(mat5.aup.hm), 
+                               prunk(mat6.aup.hm), 
+                               prunk(mat7.aup.hm), 
+                               prunk(mat8.aup.hm), 
+                               prunk(mat9.aup.hm), 
+                               prunk(mat10.aup.hm))
+
+unknown.relationships.aup.hs<-c(prunk(mat1.aup.hs), 
+                               prunk(mat2.aup.hs), 
+                               prunk(mat3.aup.hs), 
+                               prunk(mat4.aup.hs), 
+                               prunk(mat5.aup.hs), 
+                               prunk(mat6.aup.hs), 
+                               prunk(mat7.aup.hs), 
+                               prunk(mat8.aup.hs), 
+                               prunk(mat9.aup.hs), 
+                               prunk(mat10.aup.hs))
+
+unknown.relationships.aup.ho<-c(prunk(mat1.aup.ho), 
+                               prunk(mat2.aup.ho), 
+                               prunk(mat3.aup.ho), 
+                               prunk(mat4.aup.ho), 
+                               prunk(mat5.aup.ho), 
+                               prunk(mat6.aup.ho), 
+                               prunk(mat7.aup.ho), 
+                               prunk(mat8.aup.ho), 
+                               prunk(mat9.aup.ho), 
+                               prunk(mat10.aup.ho))
+
+total.unknown.relationships.aup<-data.frame("km"=unknown.relationships.aup.km)
+total.unknown.relationships.aup<-cbind(total.unknown.relationships.aup, "ks"=unknown.relationships.aup.ks, "ko"=unknown.relationships.aup.ko, "hm"=unknown.relationships.aup.hm, "hs"=unknown.relationships.aup.hs, "ho"=unknown.relationships.aup.ho)
+
+total.unknown.relationships.aup<-total.unknown.relationships.aup[seq(1, nrow(total.unknown.relationships.aup), 4), ]
+ur.aup.sum<-data.frame("km"=sum(total.unknown.relationships.aup[,1]),"ks"=sum(total.unknown.relationships.aup[,2]),"ko"=sum(total.unknown.relationships.aup[,3]),"hm"=sum(total.unknown.relationships.aup[,4]),"hs"=sum(total.unknown.relationships.aup[,5]),"ho"=sum(total.unknown.relationships.aup[,6]))
+total.unknown.relationships.aup<-rbind(total.unknown.relationships.aup, "Summed Totals"=ur.aup.sum)
+write.csv(total.unknown.relationships.aup,"~/Desktop/total.unknown.relationships.aup.csv")
+```
+
+#Probabilistic Uniform Attacks
+```{r}
+library(EloRating)
+
+unknown.relationships.atup.km<-c(prunk(mat1.atup.km), 
+                               prunk(mat2.atup.km), 
+                               prunk(mat3.atup.km), 
+                               prunk(mat4.atup.km), 
+                               prunk(mat5.atup.km), 
+                               prunk(mat6.atup.km), 
+                               prunk(mat7.atup.km), 
+                               prunk(mat8.atup.km), 
+                               prunk(mat9.atup.km), 
+                               prunk(mat10.atup.km))
+
+unknown.relationships.atup.ks<-c(prunk(mat1.atup.ks), 
+                               prunk(mat2.atup.ks), 
+                               prunk(mat3.atup.ks), 
+                               prunk(mat4.atup.ks), 
+                               prunk(mat5.atup.ks), 
+                               prunk(mat6.atup.ks), 
+                               prunk(mat7.atup.ks), 
+                               prunk(mat8.atup.ks), 
+                               prunk(mat9.atup.ks), 
+                               prunk(mat10.atup.ks))
+
+unknown.relationships.atup.ko<-c(prunk(mat1.atup.ko), 
+                               prunk(mat2.atup.ko), 
+                               prunk(mat3.atup.ko), 
+                               prunk(mat4.atup.ko), 
+                               prunk(mat5.atup.ko), 
+                               prunk(mat6.atup.ko), 
+                               prunk(mat7.atup.ko), 
+                               prunk(mat8.atup.ko), 
+                               prunk(mat9.atup.ko), 
+                               prunk(mat10.atup.ko))
+                               
+unknown.relationships.atup.hm<-c(prunk(mat1.atup.hm), 
+                               prunk(mat2.atup.hm), 
+                               prunk(mat3.atup.hm), 
+                               prunk(mat4.atup.hm), 
+                               prunk(mat5.atup.hm), 
+                               prunk(mat6.atup.hm), 
+                               prunk(mat7.atup.hm), 
+                               prunk(mat8.atup.hm), 
+                               prunk(mat9.atup.hm), 
+                               prunk(mat10.atup.hm))
+
+unknown.relationships.atup.hs<-c(prunk(mat1.atup.hs), 
+                               prunk(mat2.atup.hs), 
+                               prunk(mat3.atup.hs), 
+                               prunk(mat4.atup.hs), 
+                               prunk(mat5.atup.hs), 
+                               prunk(mat6.atup.hs), 
+                               prunk(mat7.atup.hs), 
+                               prunk(mat8.atup.hs), 
+                               prunk(mat9.atup.hs), 
+                               prunk(mat10.atup.hs))
+
+unknown.relationships.atup.ho<-c(prunk(mat1.atup.ho), 
+                               prunk(mat2.atup.ho), 
+                               prunk(mat3.atup.ho), 
+                               prunk(mat4.atup.ho), 
+                               prunk(mat5.atup.ho), 
+                               prunk(mat6.atup.ho), 
+                               prunk(mat7.atup.ho), 
+                               prunk(mat8.atup.ho), 
+                               prunk(mat9.atup.ho), 
+                               prunk(mat10.atup.ho))
+
+total.unknown.relationships.atup<-data.frame("km"=unknown.relationships.atup.km)
+total.unknown.relationships.atup<-cbind(total.unknown.relationships.atup, "ks"=unknown.relationships.atup.ks, "ko"=unknown.relationships.atup.ko, "hm"=unknown.relationships.atup.hm, "hs"=unknown.relationships.atup.hs, "ho"=unknown.relationships.atup.ho)
+
+total.unknown.relationships.atup<-total.unknown.relationships.atup[seq(1, nrow(total.unknown.relationships.atup), 4), ]
+ur.atup.sum<-data.frame("km"=sum(total.unknown.relationships.atup[,1]),"ks"=sum(total.unknown.relationships.atup[,2]),"ko"=sum(total.unknown.relationships.atup[,3]),"hm"=sum(total.unknown.relationships.atup[,4]),"hs"=sum(total.unknown.relationships.atup[,5]),"ho"=sum(total.unknown.relationships.atup[,6]))
+total.unknown.relationships.atup<-rbind(total.unknown.relationships.atup, "Summed Totals"=ur.atup.sum)
+write.csv(total.unknown.relationships.atup,"~/Desktop/total.unknown.relationships.atup.csv")
+```
